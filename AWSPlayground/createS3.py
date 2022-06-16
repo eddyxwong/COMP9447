@@ -37,5 +37,10 @@ print("Bucket deleted successfully")
 
 
 
+response = s3.list_buckets()
+
+print(type(response))
+
+
 
 
