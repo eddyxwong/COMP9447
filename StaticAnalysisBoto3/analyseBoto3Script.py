@@ -5,7 +5,7 @@ from typing import Dict, List, Tuple
 from inspect import getmembers, isfunction, signature
 import inspect
 import re
-
+import pprint
 
 def analysePythonScript(filepath: str) -> json:
 
@@ -66,15 +66,25 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
         service = getService(line)
         if(service != None):
             objName = getUserObjectName(line)
-            serviceARNDict[service] = {}
+            serviceARNDict[service] = {"*": [], "exampleARN1": [] , "exampleARN2": []}
 
             userObjServiceDict[objName] = service
+        else:
+            callingObj = getCallingObject(line, userObjServiceDict)
+
+            if(callingObj != None):
+                callingObjAWS = convertUserObjtoService(userObjServiceDict, callingObj)
+                awsMethod = getAWSMethod(line, callingObjAWS)
+                serviceARNDict[callingObjAWS]["*"].append(awsMethod)
 
 
 
-    print(serviceARNDict)
-    print(userObjServiceDict)
-
+    # pprint.pprint(serviceARNDict)
+    # pprint.pprint(userObjServiceDict)
+    # print(serviceARNDict)
+    # print(userObjServiceDict)
+    print(json.dumps(serviceARNDict, sort_keys=False, indent=4))
+    # print(json.dumps(userObjServiceDict, sort_keys=False, indent=4))
 
 
 
@@ -91,6 +101,23 @@ def getUserObjectName(string:str) -> str:
 
     return objNames[0]
     
+def convertUserObjtoService( userObjServiceDict: Dict, userObj: str) -> str:
+    return userObjServiceDict[userObj]
+
+
+def getCallingObject(string: str, userObjServiceDict: Dict) -> str:
+    for objName in userObjServiceDict:
+        if objName in string:
+            return objName
+                   
+    return None
+
+def getAWSMethod(string: str, callingObjName: str) -> str:
+
+    awsMethod = re.findall("(?<=clientLambda\.).*(?=\()",string)
+
+    return awsMethod[0]
+
 
 '''
 {"s3": [list_bucket_names], 
