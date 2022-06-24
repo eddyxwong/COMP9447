@@ -41,17 +41,15 @@ def createAction(service: str, method: str) -> str:
 # "s3" : {"*": [], "resourcearn2": []}}
 
 
-temp = {"lambda" : {"resourcearn1": [], "resourcearn2": []}}
+# temp = {"lambda" : {"resourcearn1": [], "resourcearn2": []}}
 
 
-temp1 = {"userObjectName": "s3",
-        "userObjectName2" : "lambda"}
+# temp1 = {"userObjectName": "s3",
+#         "userObjectName2" : "lambda"}
 
 
 
 def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], Dict[str, str]]:
-
-    
 
 
     userObjDict = createUserObjtoAWSMapping(filepath)
@@ -61,8 +59,6 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
     file = open(filepath, 'r')
     lines = file.readlines()
 
-    # for userObj in userObjDict:
-    #         print(userObj)
 
     lineNum = 1
     for line in lines:
@@ -94,17 +90,12 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
     print(json.dumps(userObjDict, sort_keys=False, indent=4))
 
 
-'''
-
-
-'''
-
 def getMethodNameArg(lineNum: int) -> str:
     print(lineNum)
 
     return "*"
 
-#Code below extracts s3 from boto3.client('s3')
+
 
 def createAWSMethodDict(userObjDict: Dict) -> Dict:
     awsMethodDict = {}
@@ -129,29 +120,31 @@ def createUserObjtoAWSMapping(filepath) -> Dict[str, str]:
             userObjServiceDict[userObjName] = service
 
     return userObjServiceDict
-
+'''
+# Code below extracts 'lambda' from "clientLambda = boto3.client('lambda')""
+# Code below extracts 's3' from "clientLambda = boto3.client('s3')""
+'''
 def getService(string: str) -> List[str]:
     services = re.findall("(?<=boto3\.client\(').*(?='\))", string)
 
     if(len(services) == 0):
         return None
     return services[0]
-# Code below extract 'clientLambda' from clientLambda = boto3.client('lambda')
+# Code below extract 'clientLambda' from "clientLambda = boto3.client('lambda')""
 def getUserObjectName(string:str) -> str:
 
     objNames = re.findall("\w+(?=\s*\=\s*boto3\.client)", string)
 
     return objNames[0]
     
+# As example code below converts clientLambda to lambda
 def convertUserObjtoService( userObjDict: Dict, userObj: str) -> str:
     return userObjDict[userObj]
 
+# Code below extracts get_function from  response = clientLambda.get_function()
 def getAWSMethod(string: str, userObj: str) -> str:
 
     regex = r"(?<=" + re.escape(userObj) + r"\.).*(?=\(.*)"
-
-    # print(regex)
-    # print(string)
 
     awsMethod = re.findall(regex,string)
 
