@@ -5,7 +5,7 @@ from typing import Dict, List, Tuple
 from inspect import getmembers, isfunction, signature
 import inspect
 import re
-import pprint
+from unittest.util import strclass
 
 def analysePythonScript(filepath: str) -> json:
 
@@ -51,42 +51,84 @@ temp1 = {"userObjectName": "s3",
 
 def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], Dict[str, str]]:
 
+    
 
-    serviceARNDict = {}
-    userObjServiceDict = {}
 
+    userObjDict = createUserObjtoAWSMapping(filepath)
+
+    awsMethodDict = createAWSMethodDict(userObjDict)
 
     file = open(filepath, 'r')
     lines = file.readlines()
 
-    serviceARNDict = {}
+    # for userObj in userObjDict:
+    #         print(userObj)
 
+    lineNum = 1
+    for line in lines:
+
+        for userObj in userObjDict:
+            # print(userObj)
+            if(userObj in line):
+                if(getAWSMethod(line, userObj) != None):
+                    awsMethod = getAWSMethod(line, userObj)
+
+                    awsService = convertUserObjtoService(userObjDict, userObj)
+
+                    # print(awsMethod, userObj, awsService)
+
+                    nameArg = getMethodNameArg(lineNum)
+                    
+                    if(nameArg not in awsMethodDict[awsService]):
+                        awsMethodDict[awsService][nameArg] = []
+
+
+                    if(awsMethod not in awsMethodDict[awsService][nameArg]):
+                        awsMethodDict[awsService][nameArg].append(awsMethod)
+
+        lineNum +=1 
+                    
+        
+    print(json.dumps(awsMethodDict, sort_keys=False, indent=4))
+    print()
+    print(json.dumps(userObjDict, sort_keys=False, indent=4))
+
+
+'''
+
+
+'''
+
+def getMethodNameArg(lineNum: int) -> str:
+    print(lineNum)
+
+    return "*"
+
+#Code below extracts s3 from boto3.client('s3')
+
+def createAWSMethodDict(userObjDict: Dict) -> Dict:
+    awsMethodDict = {}
+    for value in userObjDict.values():
+        if(value not in awsMethodDict):
+            awsMethodDict[value] = {"*": []}
+
+    return awsMethodDict
+def createUserObjtoAWSMapping(filepath) -> Dict[str, str]:
+    userObjServiceDict = {}
+    
+    file = open(filepath, 'r')
+
+    lines = file.readlines()
 
     for line in lines:
+
         service = getService(line)
         if(service != None):
-            objName = getUserObjectName(line)
-            serviceARNDict[service] = {"*": [], "exampleARN1": [] , "exampleARN2": []}
+            userObjName = getUserObjectName(line)
 
-            userObjServiceDict[objName] = service
-        else:
-            callingObj = getCallingObject(line, userObjServiceDict)
+            userObjServiceDict[userObjName] = service
 
-            if(callingObj != None):
-                callingObjAWS = convertUserObjtoService(userObjServiceDict, callingObj)
-                awsMethod = getAWSMethod(line, callingObjAWS)
-                serviceARNDict[callingObjAWS]["*"].append(awsMethod)
-
-
-
-    # pprint.pprint(serviceARNDict)
-    # pprint.pprint(userObjServiceDict)
-    # print(serviceARNDict)
-    # print(userObjServiceDict)
-    print(json.dumps(serviceARNDict, sort_keys=False, indent=4))
-    # print(json.dumps(userObjServiceDict, sort_keys=False, indent=4))
-
-
+    return userObjServiceDict
 
 def getService(string: str) -> List[str]:
     services = re.findall("(?<=boto3\.client\(').*(?='\))", string)
@@ -94,27 +136,27 @@ def getService(string: str) -> List[str]:
     if(len(services) == 0):
         return None
     return services[0]
-
+# Code below extract 'clientLambda' from clientLambda = boto3.client('lambda')
 def getUserObjectName(string:str) -> str:
 
-    objNames = re.findall("\w*(?=\s*\=\s*boto3\.client)", string)
+    objNames = re.findall("\w+(?=\s*\=\s*boto3\.client)", string)
 
     return objNames[0]
     
-def convertUserObjtoService( userObjServiceDict: Dict, userObj: str) -> str:
-    return userObjServiceDict[userObj]
+def convertUserObjtoService( userObjDict: Dict, userObj: str) -> str:
+    return userObjDict[userObj]
 
+def getAWSMethod(string: str, userObj: str) -> str:
 
-def getCallingObject(string: str, userObjServiceDict: Dict) -> str:
-    for objName in userObjServiceDict:
-        if objName in string:
-            return objName
-                   
-    return None
+    regex = r"(?<=" + re.escape(userObj) + r"\.).*(?=\(.*)"
 
-def getAWSMethod(string: str, callingObjName: str) -> str:
+    # print(regex)
+    # print(string)
 
-    awsMethod = re.findall("(?<=clientLambda\.).*(?=\()",string)
+    awsMethod = re.findall(regex,string)
+
+    if(len(awsMethod) == 0):
+        return None
 
     return awsMethod[0]
 
@@ -292,7 +334,10 @@ Cloud Trail (Should be easy with all the helper functions i have)
 # getUsedServices('testScript.py')
 
 
-getUsedServicesAWS('./testLambdaScript.py')
+# getUsedServicesAWS('./testLambdaScript.py')
+
+
+getUsedServicesAWS('./testScript.py')
 
 
 

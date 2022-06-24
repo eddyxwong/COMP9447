@@ -11,6 +11,8 @@ import os
 # Set a global variable for s3
 s3 = boto3.client('s3')
 
+
+
 def createBucket(bucketName, region=None):
     #create new bucket
     newBucket=s3.create_bucket(Bucket=bucketName)
@@ -45,6 +47,7 @@ def deleteBucket(bucketName):
             quit()
     print("Deletion successful")
 
+
 # Function that allows file uploads to s3 bucket
 def uploadToBucket(file_name, bucket, object_name=None):
     """
@@ -66,20 +69,42 @@ def uploadToBucket(file_name, bucket, object_name=None):
     print('Successfully uploaded'+file_name+'to'+bucket)
     return True
 
+
+
+if(True):
+    clientLambda = boto3.client('lambda')
+    clientS3 = boto3.client('s3')
+
+
+response = clientLambda.list_functions(
+    FunctionVersion='ALL',
+    MaxItems=123
+)
 # At the same time we want to extract the functions used by the script for example, calling a cloudtrail function
-createBucket('zachbooket','None')
-deleteBucket('zachbooket')
+# createBucket('zachbooket','None')
+# deleteBucket('zachbooket')
 
-createBucket('zachbooket123')
-deleteBucket('zachbooket123')
+# createBucket('zachbooket123')
+# deleteBucket('zachbooket123')
 
-createBucket2('toosting')
-deleteBucket('toosting')
+# createBucket2('toosting')
+# deleteBucket('toosting')
 
 
 
-s3.create_bucket(Bucket='zachbucket222')
-s3.delete_bucket(Bucket='zachbucket222')
+# s3.create_bucket(Bucket='zachbucket222')
+# s3.delete_bucket(Bucket='zachbucket222')
 
-s3.create_bucket(Bucket='zachbucket2388742')
-s3.delete_bucket(Bucket='zachbucket2388742')
+# s3.create_bucket(Bucket='zachbucket2388742')
+# s3.delete_bucket(Bucket='zachbucket2388742')
+
+response = clientLambda.get_function(
+    FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
+)
+
+print(response)
+response = clientLambda.get_function(
+    FunctionName='testFunction',
+)
+
+print(response)
