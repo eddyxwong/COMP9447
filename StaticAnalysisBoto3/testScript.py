@@ -98,13 +98,11 @@ response = clientLambda.list_functions(
 # s3.create_bucket(Bucket='zachbucket2388742')
 # s3.delete_bucket(Bucket='zachbucket2388742')
 
-response = clientLambda.get_function(
+response = clientLambda.get_function( 
     FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
 )
-
-print(response)
+# print(response)
 response = clientLambda.get_function(
     FunctionName='testFunction',
 )
-
-print(response)
+# print(response)
