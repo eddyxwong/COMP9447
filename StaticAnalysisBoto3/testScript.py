@@ -97,12 +97,17 @@ response = clientLambda.list_functions(
 
 # s3.create_bucket(Bucket='zachbucket2388742')
 # s3.delete_bucket(Bucket='zachbucket2388742')
-
+'''
+create a function that extracts the name of the arn function from the method, i only have the line number, need the arn function name
+create a function that gets the user defined function and translates it to the arn function name
+'''
 response = clientLambda.get_function( 
     FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
 )
+
 # print(response)
 response = clientLambda.get_function(
     FunctionName='testFunction',
 )
+
 # print(response)

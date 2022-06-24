@@ -1,4 +1,5 @@
 import json
+from os import O_TEMPORARY
 from pickle import NONE
 from sys import prefix
 from typing import Dict, List, Tuple
@@ -60,7 +61,7 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
 
     file = open(filepath, 'r')
     lines = file.readlines()
-
+    # import module 
     # for userObj in userObjDict:
     #         print(userObj)
 
@@ -77,7 +78,7 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
 
                     # print(awsMethod, userObj, awsService)
 
-                    nameArg = getMethodNameArg(lineNum)
+                    nameArg = getMethodNameArg(lineNum, filepath,userObjDict)
                     
                     if(nameArg not in awsMethodDict[awsService]):
                         awsMethodDict[awsService][nameArg] = []
@@ -92,6 +93,7 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
     print(json.dumps(awsMethodDict, sort_keys=False, indent=4))
     print()
     print(json.dumps(userObjDict, sort_keys=False, indent=4))
+    # have to return dict obj to get the defined functions 
 
 
 '''
@@ -99,10 +101,10 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
 
 '''
 
-def getMethodNameArg(lineNum: int) -> str:
-    print(lineNum)
-
-    return "*"
+def getMethodNameArg(lineNum: int, filepath: str, dict: dict) -> str:
+    methodName = getMethodsFromDict(filepath, dict)
+    print(methodName)
+    return '*'
 
 #Code below extracts s3 from boto3.client('s3')
 
@@ -323,13 +325,77 @@ def removeFunctions(line, ignoreList):
             line = line.replace(ignore,'')
     return line
 
-'''
-To DO:
-Cloud Trail (Should be easy with all the helper functions i have)
+# create a function that extracts the name of the arn function from the method, i only have the line number, need the arn function name
+# First find function name
+def getMethodsFromDict(script, AWSDict):
+    arnList = []
+    cleanedScript = re.search('./(.+?).py',script).group(1)
+    module = __import__(cleanedScript)
+    # grab a function available in each key and use inspect to find the module name
+    # Keys are user defined variables that can call for instance foo.get_functions(FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction')
+    file = open(script, 'r')
+    lines = file.read()
+    userVarList = AWSDict.keys()
+    for obj in userVarList:
+        #find the particular objs while ignoring objs that do not have the get.function callable next to them
+        try:
+            func_to_run = getattr(module, obj)
+            # this obj is where we need to find the arn encolsed in its brackets
+            if getattr(func_to_run, 'get_function'):
+                # We want to find all occurances of this function in the string 
+                stringToFind = str(obj+'.get_function(')
+                # Returns list of indexes where our .getfunction is
+                indexList = find_all(lines, stringToFind)
+                for index in indexList:
+                    length = len(obj+'.get_function(')
+                    text = lines[index+length:]
+                    output = searchForPhrase(')', text)
+                    suffix = '='
+                    suffixIndex = output.rfind(suffix)
+                    arnName = output[suffixIndex:].strip("',=")
+                    # If it is in the form we want, just check and return it
+                    if re.search('arn:aws:',arnName):
+                       if arnName not in arnList:
+                            arnList.append(arnName)
+                    else:
+                        # If it is a user defined variable, we pass it to the extractor
+                        userArnName = arnExtractor(cleanedScript)
+                        if userArnName not in arnList:
+                            arnList.append(userArnName)
 
-'''
+                    # May need this (to be removed)
+                    functionName = output[:suffixIndex].strip(',=\n ')
+                    #resp = dir(func_to_run)
+                    #print(resp)
+        except:
+            continue
+
+    return arnList
 
 
+def arnExtractor(cleanedScript):
+    module = __import__(cleanedScript)
+    return (module.__dict__['response']['Configuration']['FunctionArn'])
+
+
+
+# Helper function, returns phrase ending with text specified
+def searchForPhrase(phrase, text):
+    obj = text.split(phrase)[0]
+    obj = obj.rstrip('\n')
+    return obj
+
+def find_all(string, substring):
+    result = []
+    k = 0
+    while k < len(string):
+        k = string.find(substring, k)
+        if k == -1:
+            return result
+        else:
+            result.append(k)
+            k += 1 #change to k += len(sub) to not search overlapping results
+    return result
 
 # getUsedServices('testScript.py')
 
@@ -338,6 +404,8 @@ Cloud Trail (Should be easy with all the helper functions i have)
 
 
 getUsedServicesAWS('./testScript.py')
+
+#getMethodsFromDict('./testScript.py')
 
 
 
