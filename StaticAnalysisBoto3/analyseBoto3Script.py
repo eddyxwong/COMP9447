@@ -207,6 +207,14 @@ def removeFunctions(line, ignoreList):
             line = line.replace(ignore,'')
     return line
 
+'''
+To DO:
+Cloud Trail (Should be easy with all the helper functions i have)
+
+'''
+
+
+
 getUsedServices('testScript.py')
 
 
