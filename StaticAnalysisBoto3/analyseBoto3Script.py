@@ -1,12 +1,8 @@
 import json
 from pickle import NONE
 from sys import prefix
-from tkinter.ttk import Separator
-from typing import Dict
+from typing import Dict, List, Tuple
 from inspect import getmembers, isfunction, signature
-import testScript
-from unittest import mock
-from unittest.mock import MagicMock
 import inspect
 import re
 
@@ -40,14 +36,65 @@ def createAllowStatement() ->json:
 
 def createAction(service: str, method: str) -> str:
     return "\""+ service+":"+method + "\""
+#"*": [], "resourcearn1": []
+# {"lambda" : { { * : [], resourcearn1: [], resourcearn2: []}, "userObjectNames:" []},
+# "s3" : {"*": [], "resourcearn2": []}}
+
+
+temp = {"lambda" : {"resourcearn1": [], "resourcearn2": []}}
+
+
+temp1 = {"userObjectName": "s3",
+        "userObjectName2" : "lambda"}
 
 
 
+def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], Dict[str, str]]:
+
+
+    serviceARNDict = {}
+    userObjServiceDict = {}
+
+
+    file = open(filepath, 'r')
+    lines = file.readlines()
+
+    serviceARNDict = {}
+
+
+    for line in lines:
+        service = getService(line)
+        if(service != None):
+            objName = getUserObjectName(line)
+            serviceARNDict[service] = {}
+
+            userObjServiceDict[objName] = service
+
+
+
+    print(serviceARNDict)
+    print(userObjServiceDict)
+
+
+
+
+def getService(string: str) -> List[str]:
+    services = re.findall("(?<=boto3\.client\(').*(?='\))", string)
+
+    if(len(services) == 0):
+        return None
+    return services[0]
+
+def getUserObjectName(string:str) -> str:
+
+    objNames = re.findall("\w*(?=\s*\=\s*boto3\.client)", string)
+
+    return objNames[0]
+    
 
 '''
 {"s3": [list_bucket_names], 
 "cloudtrail": [list_event_data_stores, list_trails]}
-
 
 '''
 '''
@@ -55,7 +102,7 @@ questions to ask frank
     1. Would we be assuming that the script passed in would be creating a bucket using boto3?
     2. If the script uses defined functions instead of s3, it may be an issue gonna try to solve it
 '''
-    
+
 def getUsedServices(filepath: str) -> Dict[str, str]:
     # File would be of type xx.py
     file = open(filepath, 'r')
@@ -215,11 +262,10 @@ Cloud Trail (Should be easy with all the helper functions i have)
 
 
 
-getUsedServices('testScript.py')
+# getUsedServices('testScript.py')
 
 
-    
-
+getUsedServicesAWS('./testLambdaScript.py')
 
 
 
