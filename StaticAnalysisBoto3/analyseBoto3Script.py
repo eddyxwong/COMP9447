@@ -91,7 +91,7 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
 
 
 def getMethodNameArg(lineNum: int) -> str:
-    print(lineNum)
+    # print(lineNum)
 
     return "*"
 
@@ -130,6 +130,8 @@ def getService(string: str) -> List[str]:
     if(len(services) == 0):
         return None
     return services[0]
+
+
 # Code below extract 'clientLambda' from "clientLambda = boto3.client('lambda')""
 def getUserObjectName(string:str) -> str:
 
