@@ -73,7 +73,9 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
                     # print(awsMethod, userObj, awsService)
 
                     nameArg = getMethodNameArg(lineNum, filepath, userObj)
-                    
+
+                    # print(nameArg)
+
                     if(nameArg not in awsMethodDict[awsService]):
                         awsMethodDict[awsService][nameArg] = []
 
@@ -422,14 +424,11 @@ def find_all(string, substring):
 
 getUsedServicesAWS('./testScript.py')
 
-print()
-print("*******")
-print()
-getUsedServicesAWS('./demoScript.py')
+# print()
+# print("*******")
+# print()
+# getUsedServicesAWS('./demoScript.py')
 
-
-
-#getMethodsFromDict('./testScript.py')
 
 
 
