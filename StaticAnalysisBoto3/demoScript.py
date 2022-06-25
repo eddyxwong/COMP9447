@@ -21,27 +21,11 @@ def listBuckets():
     return s3.list_buckets()
 
 
-# def getFunction():
-# response = clientLambda.get_function( 
-#     FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
-# )
 
-# response = clientLambda.get_function(
-#     FunctionName='testFunction',
-# )
+response = clientLambda.get_function( 
+    FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
+)
 
-
-'''
-when method calls are indented, there are extra characters on the extracted arn string
-even when method calls do not have an ARN, the first encountered ARN gets returned
-where there are functions with different ARNs, the furst encountered ARN gers returned
-
-
-issues likely due to searching over the entire file
-
-
-
-
-
-
-'''
+response = clientLambda.get_function(
+    FunctionName='testFunction',
+)

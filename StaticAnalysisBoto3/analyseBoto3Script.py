@@ -1,3 +1,4 @@
+from argparse import Action
 import json
 from pickle import NONE
 from sys import prefix
@@ -10,27 +11,55 @@ import ctypes
 
 def analysePythonScript(filepath: str) -> json:
 
-    respDict = getUsedServices(filepath)  
+    respDict = getUsedServicesAWS(filepath)  
+    print(json.dumps(respDict, sort_keys=False, indent=4))
+    statementNum = 1
+
 
     newPolicy = {"Version": "2012-10-17",
                 "Statement": [] }
 
-
-    newStatement = createAllowStatement()
-
     for service in respDict:
-        if("service" == "lambda"):
-            for method in respDict[service]:
-                newAction = createAction(service, method)
-                newStatement["Action"].append(newAction)
+        for resource in respDict[service]:
 
+            newPolicy["Statement"].append(createAllowStatement(resource, statementNum))
+
+            for method in respDict[service][resource]:
+                caseConverted = convertSnakeCasetoPascalCase(method)
+
+                addService = str(service)+":"+caseConverted
+
+
+                #list_buckets needs ListAllMyBuckets permission
+                if(addService == "s3:ListBuckets"):
+                    addService = "s3:ListAllMyBuckets"
+
+                newPolicy["Statement"][statementNum-1]["Action"].append(addService)
+                # print(newPolicy["Statement"][statementNum-1]["Action"])
+            statementNum +=1
+            # print(respDict[service][resource])
+
+    print("Generated IAM policy:")
+
+
+    print(json.dumps(newPolicy, sort_keys=False, indent=4))
     return newPolicy
 
 
-def createAllowStatement() ->json:
-    newStatement = {"Effect": "Allow",
+
+def convertSnakeCasetoPascalCase(string: str) -> str:
+
+    res = string.replace("_", " ").title().replace(" ", "")
+
+    return res
+
+
+
+def createAllowStatement(resource: str, statementNum: int) ->json:
+    newStatement = {"Sid": "Statement" + str(statementNum),
+                    "Effect": "Allow",
                     "Action": [],
-                    "Resource": "*"}
+                    "Resource": resource}
     
     return newStatement
 
@@ -85,10 +114,10 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
 
         lineNum +=1 
                     
-        
-    print(json.dumps(awsMethodDict, sort_keys=False, indent=4))
-    print()
-    print(json.dumps(userObjDict, sort_keys=False, indent=4))
+    return awsMethodDict
+    # print(json.dumps(awsMethodDict, sort_keys=False, indent=4))
+    # print()
+    # print(json.dumps(userObjDict, sort_keys=False, indent=4))
     # have to return dict obj to get the defined functions 
 
 
@@ -422,7 +451,9 @@ def find_all(string, substring):
 # getUsedServicesAWS('./testLambdaScript.py')
 
 
-getUsedServicesAWS('./testScript.py')
+analysePythonScript('./demoScript.py')
+
+# getUsedServicesAWS('./demoScript.py')
 
 # print()
 # print("*******")
