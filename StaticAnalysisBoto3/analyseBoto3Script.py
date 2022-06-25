@@ -1,5 +1,4 @@
 import json
-from os import O_TEMPORARY
 from pickle import NONE
 from sys import prefix
 from typing import Dict, List, Tuple
@@ -65,7 +64,6 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
     for line in lines:
 
         for userObj in userObjDict:
-            # print(userObj)
             if(userObj in line):
                 if(getAWSMethod(line, userObj) != None):
                     awsMethod = getAWSMethod(line, userObj)
@@ -100,9 +98,13 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
 def getMethodNameArg(lineNum: int, filepath: str, userobj: str) -> str:
     # returns a list of arns from the userobj, check if list contains arns before returning 
     methodName = getMethodsFromDict(filepath, userobj)
+    # print(methodName, lineNum)
     if methodName:
-        print(methodName)
-    return "*"
+        # print(methodName)
+        return methodName[0]
+    else:
+
+        return "*"
 
 
 
@@ -347,6 +349,8 @@ def getMethodsFromDict(script, obj):
             stringToFind = str(obj+'.get_function(')
             # Returns list of indexes where our .getfunction is
             indexList = find_all(lines, stringToFind)
+
+
             for index in indexList:
                 length = len(obj+'.get_function(')
                 text = lines[index+length:]
@@ -354,25 +358,29 @@ def getMethodsFromDict(script, obj):
                 suffix = '='
                 suffixIndex = output.rfind(suffix)
                 arnName = output[suffixIndex:].strip("',=")
+
                 # If it is in the form we want, just check and return it
                 if re.search('arn:aws:',arnName):
                     if arnName not in arnList:
                         arnList.append(arnName)
+
+                        return arnList
                 else:
                     # If it is a user defined variable, we pass it to the extractor
                     userArnName = arnExtractor(cleanedScript, obj, arnName)
                     if userArnName not in arnList:
                         arnList.append(userArnName)
-
+                        return arnList
                 # May need this (to be removed)
                 functionName = output[:suffixIndex].strip(',=\n ')
                 #resp = dir(func_to_run)
                 #print(resp)
     except:
-        pass
+        return ["*"]
         # print("user obj does not have get function")
-   
-    return arnList
+    # print(arnList)
+    return ["*"]
+    # return arnList
 
 # Extracts corresponding arn from user defined function name
 def arnExtractor(cleanedScript, functionName, arnName):
@@ -413,6 +421,13 @@ def find_all(string, substring):
 
 
 getUsedServicesAWS('./testScript.py')
+
+print()
+print("*******")
+print()
+getUsedServicesAWS('./demoScript.py')
+
+
 
 #getMethodsFromDict('./testScript.py')
 

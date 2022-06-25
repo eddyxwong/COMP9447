@@ -76,10 +76,7 @@ if(True):
     clientS3 = boto3.client('s3')
 
 
-response = clientLambda.list_functions(
-    FunctionVersion='ALL',
-    MaxItems=123
-)
+
 # At the same time we want to extract the functions used by the script for example, calling a cloudtrail function
 # createBucket('zachbooket','None')
 # deleteBucket('zachbooket')
@@ -101,13 +98,30 @@ response = clientLambda.list_functions(
 create a function that extracts the name of the arn function from the method, i only have the line number, need the arn function name
 create a function that gets the user defined function and translates it to the arn function name
 '''
+
 response = clientLambda.get_function( 
-    FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
+    FunctionName='arn:aws:lambda:us-east-1:221094580673:function:AnotherTestFunction',
+)
+
+
+response = clientLambda.list_functions(
+    FunctionVersion='ALL',
+    MaxItems=123
+)
+
+
+
+response = clientLambda.get_function( 
+    FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction2',
 )
 
 # print(response)
 response = clientLambda.get_function(
     FunctionName='testFunction',
+)
+
+response = clientLambda.get_function( 
+    FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
 )
 
 # print(response)
