@@ -7,6 +7,7 @@ from inspect import getmembers, isfunction, signature
 import inspect
 import re
 from unittest.util import strclass
+import ctypes
 
 def analysePythonScript(filepath: str) -> json:
 
@@ -73,7 +74,7 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
 
                     # print(awsMethod, userObj, awsService)
 
-                    nameArg = getMethodNameArg(lineNum, filepath,userObjDict)
+                    nameArg = getMethodNameArg(lineNum, filepath, userObj)
                     
                     if(nameArg not in awsMethodDict[awsService]):
                         awsMethodDict[awsService][nameArg] = []
@@ -96,10 +97,12 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
 
 '''
 
-def getMethodNameArg(lineNum: int, filepath: str, dict: dict) -> str:
-    methodName = getMethodsFromDict(filepath, dict)
-    print(methodName)
-    return '*'
+def getMethodNameArg(lineNum: int, filepath: str, userobj: str) -> str:
+    # returns a list of arns from the userobj, check if list contains arns before returning 
+    methodName = getMethodsFromDict(filepath, userobj)
+    if methodName:
+        print(methodName)
+    return "*"
 
 
 
@@ -326,7 +329,7 @@ def removeFunctions(line, ignoreList):
 
 # create a function that extracts the name of the arn function from the method, i only have the line number, need the arn function name
 # First find function name
-def getMethodsFromDict(script, AWSDict):
+def getMethodsFromDict(script, obj):
     arnList = []
     cleanedScript = re.search('./(.+?).py',script).group(1)
     module = __import__(cleanedScript)
@@ -334,47 +337,54 @@ def getMethodsFromDict(script, AWSDict):
     # Keys are user defined variables that can call for instance foo.get_functions(FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction')
     file = open(script, 'r')
     lines = file.read()
-    userVarList = AWSDict.keys()
-    for obj in userVarList:
-        #find the particular objs while ignoring objs that do not have the get.function callable next to them
-        try:
-            func_to_run = getattr(module, obj)
-            # this obj is where we need to find the arn encolsed in its brackets
-            if getattr(func_to_run, 'get_function'):
-                # We want to find all occurances of this function in the string 
-                stringToFind = str(obj+'.get_function(')
-                # Returns list of indexes where our .getfunction is
-                indexList = find_all(lines, stringToFind)
-                for index in indexList:
-                    length = len(obj+'.get_function(')
-                    text = lines[index+length:]
-                    output = searchForPhrase(')', text)
-                    suffix = '='
-                    suffixIndex = output.rfind(suffix)
-                    arnName = output[suffixIndex:].strip("',=")
-                    # If it is in the form we want, just check and return it
-                    if re.search('arn:aws:',arnName):
-                       if arnName not in arnList:
-                            arnList.append(arnName)
-                    else:
-                        # If it is a user defined variable, we pass it to the extractor
-                        userArnName = arnExtractor(cleanedScript)
-                        if userArnName not in arnList:
-                            arnList.append(userArnName)
+   
+    #find the particular objs while ignoring objs that do not have the get.function callable next to them
+    try:
+        func_to_run = getattr(module, obj)
+        # this obj is where we need to find the arn encolsed in its brackets
+        if getattr(func_to_run, 'get_function'):
+            # We want to find all occurances of this function in the string 
+            stringToFind = str(obj+'.get_function(')
+            # Returns list of indexes where our .getfunction is
+            indexList = find_all(lines, stringToFind)
+            for index in indexList:
+                length = len(obj+'.get_function(')
+                text = lines[index+length:]
+                output = searchForPhrase(')', text)
+                suffix = '='
+                suffixIndex = output.rfind(suffix)
+                arnName = output[suffixIndex:].strip("',=")
+                # If it is in the form we want, just check and return it
+                if re.search('arn:aws:',arnName):
+                    if arnName not in arnList:
+                        arnList.append(arnName)
+                else:
+                    # If it is a user defined variable, we pass it to the extractor
+                    userArnName = arnExtractor(cleanedScript, obj, arnName)
+                    if userArnName not in arnList:
+                        arnList.append(userArnName)
 
-                    # May need this (to be removed)
-                    functionName = output[:suffixIndex].strip(',=\n ')
-                    #resp = dir(func_to_run)
-                    #print(resp)
-        except:
-            continue
-
+                # May need this (to be removed)
+                functionName = output[:suffixIndex].strip(',=\n ')
+                #resp = dir(func_to_run)
+                #print(resp)
+    except:
+        pass
+        # print("user obj does not have get function")
+   
     return arnList
 
-
-def arnExtractor(cleanedScript):
+# Extracts corresponding arn from user defined function name
+def arnExtractor(cleanedScript, functionName, arnName):
     module = __import__(cleanedScript)
-    return (module.__dict__['response']['Configuration']['FunctionArn'])
+    func_to_run = getattr(module, functionName)
+    if getattr(func_to_run, 'list_functions'):
+        # functionDirectory Gives me a list of directories containing function names and corresponding arns
+        functionDirectory = func_to_run.list_functions()
+        # Iterate through to find the corresponding arns
+        for funcName in functionDirectory['Functions']:
+            if funcName['FunctionName'] == arnName:
+                return funcName['FunctionArn']
 
 
 
