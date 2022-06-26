@@ -99,15 +99,16 @@ create a function that extracts the name of the arn function from the method, i 
 create a function that gets the user defined function and translates it to the arn function name
 '''
 
-response = clientLambda.get_function( 
-    FunctionName='arn:aws:lambda:us-east-1:221094580673:function:AnotherTestFunction',
-)
 
+def doSomething():
+    response = clientLambda.get_function( 
+        FunctionName='arn:aws:lambda:us-east-1:221094580673:function:AnotherTestFunction',
+    )
 
-response = clientLambda.list_functions(
-    FunctionVersion='ALL',
-    MaxItems=123
-)
+    response = clientLambda.list_functions(
+        FunctionVersion='ALL',
+        MaxItems=123
+    )
 
 
 

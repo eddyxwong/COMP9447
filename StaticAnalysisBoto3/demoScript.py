@@ -23,9 +23,10 @@ def listBuckets():
 
 
 response = clientLambda.get_function( 
-    FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
+        FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
 )
 
+
 response = clientLambda.get_function(
-    FunctionName='testFunction',
+        FunctionName='testFunction',
 )
