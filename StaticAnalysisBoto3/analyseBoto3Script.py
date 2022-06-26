@@ -130,7 +130,7 @@ def getMethodNameArg(lineNum: int, filepath: str, userobj: str, arnList: list) -
     # returns a list of arns from the userobj, check if list contains arns before returning 
     methodName = getMethodsFromDict(filepath, userobj, arnList)
     # print(methodName, lineNum)
-    print(methodName)
+    # print(methodName)
     if methodName:
         # print(methodName)
         return methodName[0]
