@@ -59,7 +59,7 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
 
     file = open(filepath, 'r')
     lines = file.readlines()
-
+    arnList = []
     lineNum = 1
     for line in lines:
 
@@ -72,7 +72,7 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
 
                     # print(awsMethod, userObj, awsService)
 
-                    nameArg = getMethodNameArg(lineNum, filepath, userObj)
+                    nameArg = getMethodNameArg(lineNum, filepath, userObj, arnList)
 
                     # print(nameArg)
 
@@ -97,10 +97,11 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
 
 '''
 
-def getMethodNameArg(lineNum: int, filepath: str, userobj: str) -> str:
+def getMethodNameArg(lineNum: int, filepath: str, userobj: str, arnList: list) -> str:
     # returns a list of arns from the userobj, check if list contains arns before returning 
-    methodName = getMethodsFromDict(filepath, userobj)
+    methodName = getMethodsFromDict(filepath, userobj, arnList)
     # print(methodName, lineNum)
+    print(methodName)
     if methodName:
         # print(methodName)
         return methodName[0]
@@ -333,15 +334,13 @@ def removeFunctions(line, ignoreList):
 
 # create a function that extracts the name of the arn function from the method, i only have the line number, need the arn function name
 # First find function name
-def getMethodsFromDict(script, obj):
-    arnList = []
+def getMethodsFromDict(script, obj, arnList):
     cleanedScript = re.search('./(.+?).py',script).group(1)
     module = __import__(cleanedScript)
     # grab a function available in each key and use inspect to find the module name
     # Keys are user defined variables that can call for instance foo.get_functions(FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction')
     file = open(script, 'r')
     lines = file.read()
-   
     #find the particular objs while ignoring objs that do not have the get.function callable next to them
     try:
         func_to_run = getattr(module, obj)
@@ -351,32 +350,22 @@ def getMethodsFromDict(script, obj):
             stringToFind = str(obj+'.get_function(')
             # Returns list of indexes where our .getfunction is
             indexList = find_all(lines, stringToFind)
-
-
+            # find each index
             for index in indexList:
-                length = len(obj+'.get_function(')
+                length = len(stringToFind)
                 text = lines[index+length:]
-                output = searchForPhrase(')', text)
-                suffix = '='
-                suffixIndex = output.rfind(suffix)
-                arnName = output[suffixIndex:].strip("',=")
-
+                arnNameList = searchForPhrase(')', text)
                 # If it is in the form we want, just check and return it
-                if re.search('arn:aws:',arnName):
-                    if arnName not in arnList:
-                        arnList.append(arnName)
-
-                        return arnList
-                else:
-                    # If it is a user defined variable, we pass it to the extractor
-                    userArnName = arnExtractor(cleanedScript, obj, arnName)
-                    if userArnName not in arnList:
-                        arnList.append(userArnName)
-                        return arnList
-                # May need this (to be removed)
-                functionName = output[:suffixIndex].strip(',=\n ')
-                #resp = dir(func_to_run)
-                #print(resp)
+                for arnName in arnNameList:
+                    if re.search('arn:aws:',arnName):
+                        if arnName not in arnList:
+                            arnList.append(arnName)
+                    else:
+                        # If it is a user defined variable, we pass it to the extractor
+                        userArnName = arnExtractor(cleanedScript, obj, arnName)
+                        if (userArnName not in arnList and re.search('arn:aws:',arnName)):
+                            arnList.append(userArnName)
+                return arnList
     except:
         return ["*"]
         # print("user obj does not have get function")
@@ -388,21 +377,28 @@ def getMethodsFromDict(script, obj):
 def arnExtractor(cleanedScript, functionName, arnName):
     module = __import__(cleanedScript)
     func_to_run = getattr(module, functionName)
-    if getattr(func_to_run, 'list_functions'):
+    try: 
+        getattr(func_to_run, 'list_functions')
         # functionDirectory Gives me a list of directories containing function names and corresponding arns
         functionDirectory = func_to_run.list_functions()
         # Iterate through to find the corresponding arns
         for funcName in functionDirectory['Functions']:
             if funcName['FunctionName'] == arnName:
                 return funcName['FunctionArn']
+    except:
+        pass
 
 
 
 # Helper function, returns phrase ending with text specified
 def searchForPhrase(phrase, text):
-    obj = text.split(phrase)[0]
-    obj = obj.rstrip('\n')
-    return obj
+    functions = []
+    listOfFunc = text.split(phrase)
+    for x in listOfFunc:
+        clean = re.sub(r"[\n|?|$|.|!|,|'| ]",r'',x)
+        clean = re.sub(r'^.*?FunctionName=', '', clean)
+        functions.append(clean)
+    return functions
 
 def find_all(string, substring):
     result = []
@@ -435,9 +431,12 @@ getUsedServicesAWS('./testScript.py')
 '''
 when method calls are indented, there are extra characters on the extracted arn string
 even when method calls do not have an ARN, the first encountered ARN gets returned
-where there are functions with different ARNs, the furst encountered ARN gers returned
+where there are functions with different ARNs, the first encountered ARN gets returned
 
 
 issues likely due to searching over the entire file
+
+use franks line number to search for the onject then, should be faster and easier to do
+
 
 '''

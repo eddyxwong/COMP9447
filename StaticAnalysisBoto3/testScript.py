@@ -110,9 +110,9 @@ response = clientLambda.list_functions(
 )
 
 
-
-response = clientLambda.get_function( 
-    FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction2',
+def doSometyhing():
+    response = clientLambda.get_function( 
+        FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction2',
 )
 
 # print(response)
@@ -121,7 +121,19 @@ response = clientLambda.get_function(
 )
 
 response = clientLambda.get_function( 
+
+
+
+
+
+
     FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
+
+
+
+
+
+
 )
 
 # print(response)
