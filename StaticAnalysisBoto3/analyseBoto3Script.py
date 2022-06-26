@@ -11,6 +11,9 @@ import ctypes
 
 def analysePythonScript(filepath: str) -> json:
 
+    lineNumDict = createLineNumDict(filepath)
+
+
     respDict = getUsedServicesAWS(filepath)  
     print(json.dumps(respDict, sort_keys=False, indent=4))
     statementNum = 1
@@ -38,6 +41,13 @@ def analysePythonScript(filepath: str) -> json:
                 # print(newPolicy["Statement"][statementNum-1]["Action"])
             statementNum +=1
             # print(respDict[service][resource])
+
+
+    print("Zach's linenum mapping:")
+    print(json.dumps(lineNumDict, sort_keys=False, indent=4))
+
+
+
 
     print("Generated IAM policy:")
 
@@ -81,10 +91,10 @@ def createAction(service: str, method: str) -> str:
 
 def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], Dict[str, str]]:
 
-
     userObjDict = createUserObjtoAWSMapping(filepath)
 
     awsMethodDict = createAWSMethodDict(userObjDict)
+
 
     file = open(filepath, 'r')
     lines = file.readlines()
@@ -121,10 +131,37 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
     # have to return dict obj to get the defined functions 
 
 
-'''
+
+def createLineNumDict(filepath):
+
+    lineNumDict = {}
+    userObjDict = createUserObjtoAWSMapping(filepath)
+
+    file = open(filepath, 'r')
+
+    lines = file.readlines()
+
+    lineNum = 1
+
+    for line in lines:
+        for userObj in userObjDict:
+            if userObj in line:
+                if(userObj not in lineNumDict):
+                    lineNumDict[userObj] = [lineNum]
+
+                else:
+                    lineNumDict[userObj].append(lineNum)
+
+        lineNum+=1 
+
+    return lineNumDict
+    # for line in lines:
 
 
-'''
+
+
+    
+
 
 def getMethodNameArg(lineNum: int, filepath: str, userobj: str, arnList: list) -> str:
     # returns a list of arns from the userobj, check if list contains arns before returning 
