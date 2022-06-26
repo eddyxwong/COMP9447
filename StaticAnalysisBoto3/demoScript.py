@@ -20,13 +20,8 @@ def createS3Bucket():
 def listBuckets():
     return s3.list_buckets()
 
+def doThisThing():
+    response = clientLambda.get_function( 
+            FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
+    )
 
-
-response = clientLambda.get_function( 
-        FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
-)
-
-
-response = clientLambda.get_function(
-        FunctionName='testFunction',
-)
