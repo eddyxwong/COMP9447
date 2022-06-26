@@ -7,7 +7,6 @@ from inspect import getmembers, isfunction, signature
 import inspect
 import re
 from unittest.util import strclass
-import ctypes
 
 def analysePythonScript(filepath: str) -> json:
 
@@ -34,6 +33,7 @@ def analysePythonScript(filepath: str) -> json:
 
 
                 #list_buckets needs ListAllMyBuckets permission
+                #potentially hardcode others later on
                 if(addService == "s3:ListBuckets"):
                     addService = "s3:ListAllMyBuckets"
 
@@ -155,13 +155,6 @@ def createLineNumDict(filepath):
         lineNum+=1 
 
     return lineNumDict
-    # for line in lines:
-
-
-
-
-    
-
 
 def getMethodNameArg(lineNum: int, filepath: str, userobj: str, arnList: list) -> str:
     # returns a list of arns from the userobj, check if list contains arns before returning 
@@ -478,22 +471,10 @@ def find_all(string, substring):
             k += 1 #change to k += len(sub) to not search overlapping results
     return result
 
-# getUsedServices('testScript.py')
-
-
-# getUsedServicesAWS('./testLambdaScript.py')
-
 
 analysePythonScript('./demoScript.py')
 
 # getUsedServicesAWS('./demoScript.py')
-
-# print()
-# print("*******")
-# print()
-# getUsedServicesAWS('./demoScript.py')
-
-
 
 
 '''
