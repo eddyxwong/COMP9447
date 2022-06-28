@@ -2,7 +2,7 @@ from argparse import Action
 import json
 from pickle import NONE
 from sys import prefix
-from typing import Dict, List, Tuple
+from typing import Dict, List, Text, Tuple
 from inspect import getmembers, isfunction, signature
 import inspect
 import re
@@ -10,10 +10,11 @@ from unittest.util import strclass
 
 def analysePythonScript(filepath: str) -> json:
 
-    lineNumDict = createLineNumDict(filepath)
+    # return all line indexes of lines where aws services are called
+    lineNumList = createLineNumDict(filepath)
 
 
-    respDict = getUsedServicesAWS(filepath)  
+    respDict = getUsedServicesAWS(filepath, lineNumList)  
     print(json.dumps(respDict, sort_keys=False, indent=4))
     statementNum = 1
 
@@ -44,7 +45,7 @@ def analysePythonScript(filepath: str) -> json:
 
 
     print("Zach's linenum mapping:")
-    print(json.dumps(lineNumDict, sort_keys=False, indent=4))
+    print(json.dumps(lineNumList, sort_keys=False, indent=4))
 
 
 
@@ -89,7 +90,7 @@ def createAction(service: str, method: str) -> str:
 
 
 
-def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], Dict[str, str]]:
+def getUsedServicesAWS(filepath:str, lineNumList:list) -> Tuple[Dict[str, Dict[str, List[str]]], Dict[str, str]]:
 
     userObjDict = createUserObjtoAWSMapping(filepath)
 
@@ -110,9 +111,11 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
                     awsService = convertUserObjtoService(userObjDict, userObj)
 
                     # print(awsMethod, userObj, awsService)
-
-                    nameArg = getMethodNameArg(lineNum, filepath, userObj, arnList)
-
+                    # The text range i want must be put here a and b are indexes of the 
+                    # lines using the line num list generator
+                    for current, next in zip(lineNumList, lineNumList[1:]):
+                        extractedText = textExtraction(filepath, current,next)
+                        nameArg = getMethodNameArg(filepath, userObj, arnList, extractedText)
                     # print(nameArg)
 
                     if(nameArg not in awsMethodDict[awsService]):
@@ -134,31 +137,34 @@ def getUsedServicesAWS(filepath:str) -> Tuple[Dict[str, Dict[str, List[str]]], D
 
 def createLineNumDict(filepath):
 
-    lineNumDict = {}
+    lineNumList = []
     userObjDict = createUserObjtoAWSMapping(filepath)
 
     file = open(filepath, 'r')
 
     lines = file.readlines()
 
-    lineNum = 1
+    lineNum = 0
 
     for line in lines:
         for userObj in userObjDict:
             if userObj in line:
-                if(userObj not in lineNumDict):
-                    lineNumDict[userObj] = [lineNum]
+                if(userObj not in lineNumList):
+                    lineNumList.append(lineNum)
 
-                else:
-                    lineNumDict[userObj].append(lineNum)
+        lineNum+=1
+    # find last line number
+    file.seek(0)
+    lastLine = sum(1 for _ in file)
+    # append last line number to list
+    if lastLine not in lineNumList:
+        lineNumList.append(lastLine-1)
 
-        lineNum+=1 
+    return lineNumList
 
-    return lineNumDict
-
-def getMethodNameArg(lineNum: int, filepath: str, userobj: str, arnList: list) -> str:
+def getMethodNameArg(filepath: str, userobj: str, arnList: list, extractedText: str) -> str:
     # returns a list of arns from the userobj, check if list contains arns before returning 
-    methodName = getMethodsFromDict(filepath, userobj, arnList)
+    methodName = getMethodsFromDict(filepath, userobj, arnList, extractedText)
     # print(methodName, lineNum)
     # print(methodName)
     if methodName:
@@ -393,13 +399,12 @@ def removeFunctions(line, ignoreList):
 
 # create a function that extracts the name of the arn function from the method, i only have the line number, need the arn function name
 # First find function name
-def getMethodsFromDict(script, obj, arnList):
+def getMethodsFromDict(script, obj, arnList, extractedText):
     cleanedScript = re.search('./(.+?).py',script).group(1)
     module = __import__(cleanedScript)
     # grab a function available in each key and use inspect to find the module name
     # Keys are user defined variables that can call for instance foo.get_functions(FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction')
-    file = open(script, 'r')
-    lines = file.read()
+
     #find the particular objs while ignoring objs that do not have the get.function callable next to them
     try:
         func_to_run = getattr(module, obj)
@@ -408,11 +413,11 @@ def getMethodsFromDict(script, obj, arnList):
             # We want to find all occurances of this function in the string 
             stringToFind = str(obj+'.get_function(')
             # Returns list of indexes where our .getfunction is
-            indexList = find_all(lines, stringToFind)
+            indexList = find_all(extractedText, stringToFind)
             # find each index
             for index in indexList:
                 length = len(stringToFind)
-                text = lines[index+length:]
+                text = extractedText[index+length:]
                 arnNameList = searchForPhrase(')', text)
                 # If it is in the form we want, just check and return it
                 for arnName in arnNameList:
@@ -472,10 +477,25 @@ def find_all(string, substring):
     return result
 
 
-analysePythonScript('./demoScript.py')
+
+
+# Helper function to extract text we want from the script
+def textExtraction(filepath, a, b): 
+    # Open file
+    file = open(filepath, 'r')
+    # Get last line number to prevent errors in seeking if arn is on the last line 
+    lines = file.readlines()[a:b]
+    text = ' '.join(lines)
+    return text
+
+    # read lines and get the range from line number 1 - 3 for example and search within it. 
+    # As for the last item, it will read until the end of the file to ensure no errors.
+    #  
+
+
+analysePythonScript('./testScript.py')
 
 # getUsedServicesAWS('./demoScript.py')
-
 
 '''
 when method calls are indented, there are extra characters on the extracted arn string
