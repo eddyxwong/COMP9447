@@ -1,3 +1,4 @@
+import pytest
 from astStaticAnalysis.astBoto3 import convertSnakeCasetoPascalCase
 
 def test_basecase():
@@ -33,3 +34,7 @@ def test_EmptyString():
     response = convertSnakeCasetoPascalCase(testString)
 
     assert response == ""
+
+def NoInput():
+    with pytest.raises(Exception):
+            response = convertSnakeCasetoPascalCase(None)
