@@ -37,4 +37,4 @@ def test_EmptyString():
 
 def NoInput():
     with pytest.raises(Exception):
-            response = convertSnakeCasetoPascalCase(None)
+        response = convertSnakeCasetoPascalCase(None)

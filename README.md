@@ -110,7 +110,15 @@ The file [requirements.txt](requirements.txt) contains a updated list of depende
    $ python3 astBoto3.py astTest.py
    ```
 
-
+## Tests
+1. cd into tests directory
+  ```sh
+   $ cd tests
+   ```
+2. Run tests
+  ```sh
+   $ pytest
+   ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
