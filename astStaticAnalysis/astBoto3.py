@@ -13,7 +13,7 @@ def main(argv):
             analyzer = Analyzer()
             analyzer.visit(tree)
             respDict = analyzer.report()
-
+            print(respDict)
             
             response = generateIAMPolicy(respDict)
             print(json.dumps(response, sort_keys=False, indent=4))

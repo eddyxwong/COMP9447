@@ -69,6 +69,9 @@ Project developed by Frank Su, Eddy Wong, Zachary Ngooi and Alex Sanders for [CO
 * [Python](https://www.python.org/doc/)
 * [Python AST](https://docs.python.org/3/library/ast.html)
 
+### Tests written using 
+* [Pytest](https://docs.pytest.org/en/7.1.x/)
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
