@@ -7,4 +7,3 @@ def test_basecase():
 def test_basecase2():
     response = createAction("s3", "list_buckets")
     assert response == '"s3:list_buckets"'
-
