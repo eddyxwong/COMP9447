@@ -1,5 +1,4 @@
 astpretty==3.0.0
-<<<<<<< HEAD
 attrs==21.4.0
 iniconfig==1.1.1
 packaging==21.3
@@ -8,5 +7,3 @@ py==1.11.0
 pyparsing==3.0.9
 pytest==7.1.2
 tomli==2.0.1
-=======
->>>>>>> a668b27b62e4be29b8185da1e622eb1eb19aedc2
