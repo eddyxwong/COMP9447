@@ -1,3 +1,4 @@
+import pytest
 from astStaticAnalysis.astBoto3 import generateIAMPolicy
 
 
@@ -50,5 +51,8 @@ def test_emptyInput():
     "Statement": [
     ]
     }
+def test_IncorrectInput():
+    with pytest.raises(Exception):
+        response = generateIAMPolicy(None)
 
 
