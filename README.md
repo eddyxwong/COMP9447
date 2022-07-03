@@ -115,7 +115,7 @@ The file [requirements.txt](requirements.txt) contains a updated list of depende
   ```sh
    $ cd tests
    ```
-2. Run tests
+2. Run tests(Some tests fail to due testing of error handling which has not been implemented)
   ```sh
    $ pytest
    ```
