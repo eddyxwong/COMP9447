@@ -130,7 +130,7 @@ The file [requirements.txt](requirements.txt) contains a updated list of depende
 - [ ] IAM policy generator
 - [ ] Policy toxic combination checker
 - [ ] Policy 'git diff' checker
-- [ ] rules engine account for policies granting permissions not used in codebase
+- [ ] Rules engine to account for policies granting permissions not used in codebase
 See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
