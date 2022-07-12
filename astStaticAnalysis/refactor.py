@@ -47,8 +47,10 @@ class Analyzer(ast.NodeVisitor):
                 callingUserObj = node.value.func.value.id
 
                 if(callingUserObj in self.userObjDict):
+
+                    awsMethod = node.value.func.attr
                     # if node.value.keywords == []:
-                    print(callingUserObj)
+                    print(callingUserObj, awsMethod)
             
 
         except AttributeError:

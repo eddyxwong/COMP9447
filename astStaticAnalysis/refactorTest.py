@@ -9,6 +9,9 @@ resp = clientLambda.get_function(
     )
 response = clientLambda.list_functions()
 
+
+clientLambda.list_functions()
+
 temp = list("yoyo")
 # def doSomething():
 #     response = clientLambda.get_function( 
