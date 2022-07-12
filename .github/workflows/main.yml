@@ -33,5 +33,5 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8 #install the python needed
-      - name: run and print the py script # run the hello.py to get the latest data
-        run: run StaticAnalysisBoto3/analyseBoto3Script.py
+        run: |
+        python tests\test_GenerateIAMPolicy.py
