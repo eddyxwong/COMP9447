@@ -3,6 +3,8 @@ import json
 from pprint import pprint
 import astpretty
 import sys
+import os.path
+
 def main(argv):
     for arg in argv[1:]:
         print(arg)
@@ -17,8 +19,13 @@ def main(argv):
             
             response = generateIAMPolicy(respDict)
             print(json.dumps(response, sort_keys=False, indent=4))
-
-
+    
+    save_path = 'policies\\'
+    pyfile = str(argv[1]).replace('.\\astStaticAnalysis\\','',1)[:-3]
+    filename = os.path.join(save_path, pyfile+".txt")
+    output = open(filename, 'w')
+    output.write(json.dumps(response, sort_keys=False, indent=4))
+    output.close()
 
         # with open("astTest.py", "r") as source:
         #     tree = ast.parse(source.read())
