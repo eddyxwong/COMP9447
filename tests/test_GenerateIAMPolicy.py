@@ -56,3 +56,4 @@ def test_IncorrectInput():
         response = generateIAMPolicy(None)
 
 
+test_basecase()
