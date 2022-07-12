@@ -34,4 +34,4 @@ jobs:
         with:
           python-version: 3.8 #install the python needed
       - name: run and print the py script # run the hello.py to get the latest data
-        run: echo cat StaticAnalysisBoto3\analyseBoto3Script.py
+        run: cat StaticAnalysisBoto3\analyseBoto3Script.py
