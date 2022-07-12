@@ -30,10 +30,8 @@ jobs:
         run: echo Hello, world!
 
       - name: setup python
+        working-directory: ./tests
         uses: actions/setup-python@v2
         with:
           python-version: 3.8 #install the python needed
-      - name: run simple test
-        working-directory: ./tests
-        run: |
-        python test_GenerateIAMPolicy.py
+        run: python test_GenerateIAMPolicy.py
