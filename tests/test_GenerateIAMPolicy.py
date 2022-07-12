@@ -54,6 +54,3 @@ def test_emptyInput():
 def test_IncorrectInput():
     with pytest.raises(Exception):
         response = generateIAMPolicy(None)
-
-
-print("test")
