@@ -1,7 +1,7 @@
 import pytest
 from astStaticAnalysis.astBoto3 import generateIAMPolicy
 
-
+print("testing")
 
 def test_basecase():
     respDict = {'lambda': {'arn:aws:lambda:us-east-1:221094580673:function:testFunction': ['get_function'], 
