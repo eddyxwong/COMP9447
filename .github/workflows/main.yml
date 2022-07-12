@@ -36,4 +36,4 @@ jobs:
       
       - name: run 1st test
         working-directory: ./tests
-        run: ./test_GenerateIAMPolicy.py
+        run: python ./test_GenerateIAMPolicy.py
