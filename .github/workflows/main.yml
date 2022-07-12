@@ -36,4 +36,4 @@ jobs:
       
       - name: run 1st test
         working-directory: ./tests
-        run: echo cat test_GenerateIAMPolicy.py
+        run: cat test_GenerateIAMPolicy.py
