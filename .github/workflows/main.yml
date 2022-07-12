@@ -34,4 +34,4 @@ jobs:
         with:
           python-version: 3.8 #install the python needed
         run: |
-        ./tests/test_GenerateIAMPolicy.py
+        echo cat ./tests/test_GenerateIAMPolicy.py
