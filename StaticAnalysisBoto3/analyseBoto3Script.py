@@ -180,8 +180,8 @@ def createAWSMethodDict(userObjDict: Dict) -> Dict:
     awsMethodDict = {}
     for value in userObjDict.values():
         if(value not in awsMethodDict):
-            awsMethodDict[value] = {"*": []}
-
+            # awsMethodDict[value] = {"*": []}
+            awsMethodDict[value] = {}
     return awsMethodDict
 def createUserObjtoAWSMapping(filepath) -> Dict[str, str]:
     userObjServiceDict = {}
@@ -197,6 +197,8 @@ def createUserObjtoAWSMapping(filepath) -> Dict[str, str]:
             userObjName = getUserObjectName(line)
 
             userObjServiceDict[userObjName] = service
+    
+    # print(userObjServiceDict)
 
     return userObjServiceDict
 '''
