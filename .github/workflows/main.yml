@@ -44,7 +44,6 @@ jobs:
         run: python ./tests/test_GenerateIAMPolicy.py
 
       - name: Simple Policy Testing Generation
-        shell: bash
         run: |
           python ./astStaticAnalysis/astBoto3.py ./astStaticAnalysis/astTest.py > policy.txt
       
@@ -61,14 +60,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Download policy generated from job 1
         uses: actions/download-artifact@v3
         with:
           name: policy
 
       - name: Print the final result
-        shell: bash
         run: |
           value=`cat policy.txt`
           $value > policy.txt
