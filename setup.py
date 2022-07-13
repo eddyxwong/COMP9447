@@ -6,5 +6,5 @@ setup(
    description='A useful module',
    author='Man Foo',
    author_email='foomail@foo.example',
-   packages=['StaticAnalysisBoto3'],  #same as name
+   packages=['StaticAnalysisBoto3', 'astStaticAnalysis', 'AWSPlayground', 'tests'],  #same as name
 )
