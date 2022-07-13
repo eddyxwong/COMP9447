@@ -44,9 +44,9 @@ jobs:
         run: python ./tests/test_GenerateIAMPolicy.py
 
       - name: Simple Policy Testing Generation
+        shell: bash
         run: |
-          value = 'python ./astStaticAnalysis/astBoto3.py ./astStaticAnalysis/astTest.py'
-          $value > policy.txt
+          python ./astStaticAnalysis/astBoto3.py ./astStaticAnalysis/astTest.py > policy.txt
       
       #Upload for future artifact use (Git diff?)
       - name: Upload policy as a artifact
