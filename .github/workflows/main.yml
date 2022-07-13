@@ -54,3 +54,19 @@ jobs:
         with:
           name: policy
           path: policy.txt
+
+   job_2:
+    name: Display Policy
+    needs: job_1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download policy generated from job 1
+        uses: actions/download-artifact@v3
+        with:
+          name: policy
+      - name: Print the final result
+        shell: bash
+        run: |
+          value=`cat math-homework.txt`
+          $value > policy.txt
+          echo The result is $value
