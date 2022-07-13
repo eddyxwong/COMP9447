@@ -74,7 +74,7 @@ jobs:
       - name: Create txt file
         uses: jannekem/run-python-script-action@v1
         with:
-          script:
+          script: |
             f = open('script.txt', 'w')
             f.write($value)
             f.close()
