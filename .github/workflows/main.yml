@@ -69,4 +69,5 @@ jobs:
       - shell: bash
         run: |
           value=`cat policy.txt`
+          $value > policy.txt
           echo The result is $value
