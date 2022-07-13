@@ -43,5 +43,6 @@ jobs:
       - name: Run Simple Test
         run: python ./tests/test_GenerateIAMPolicy.py
 
-      - name: Simple Policy Testing
-        run: python ./tests/test_GenerateIAMPolicy.py # Create a Policy 
+      - name: Simple Policy Testing Generation
+        run: python ./astStaticAnalysis/astBoto3.py ./astStaticAnalysis/astTest.py
+

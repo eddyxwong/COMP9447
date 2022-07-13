@@ -25,6 +25,7 @@ def main(argv):
     filename = os.path.join(save_path, pyfile+".txt")
     output = open(filename, 'w')
     output.write(json.dumps(response, sort_keys=False, indent=4))
+    output.write("Github actions working!")
     output.close()
 
         # with open("astTest.py", "r") as source:
