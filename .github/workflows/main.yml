@@ -71,7 +71,7 @@ jobs:
           git config --global user.email "zacharyngooi@hotmail.com"
           git config --global user.name "zacharyngooi1"
           git add .
-          git commit -m "generated policy text file"
+          git diff-index --quiet HEAD || commit -m "generated policy text file"
           git push
 
 
