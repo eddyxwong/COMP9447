@@ -15,8 +15,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  job_1:
+    name: Set-up Github Actions
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -42,7 +42,13 @@ jobs:
 
       - name: Run Simple Test
         run: python ./tests/test_GenerateIAMPolicy.py
-
+      
       - name: Simple Policy Testing Generation
-        run: python ./astStaticAnalysis/astBoto3.py ./astStaticAnalysis/astTest.py
-
+        run: python ./astStaticAnalysis/astBoto3.py ./astStaticAnalysis/astTest.py > policy.txt
+      
+      #Upload for future artifact use (Git diff?)
+      - name: Upload math result for job 1
+        uses: actions/upload-artifact@v3
+        with:
+          name: policy
+          path: policy.txt
