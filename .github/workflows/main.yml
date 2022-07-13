@@ -68,7 +68,7 @@ jobs:
         run: |
           value=`cat policy.txt`
           echo The result is $value
-          echo $value > policy.txt
+          echo cat $value > policy.txt
           git config --global user.email "zacharyngooi@hotmail.com"
           git config --global user.name "zacharyngooi1"
           git add .
