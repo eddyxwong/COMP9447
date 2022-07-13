@@ -71,3 +71,4 @@ jobs:
           value=`cat policy.txt`
           echo $value > policy.txt
           echo The result is $value
+          echo 'test' > text.txt
