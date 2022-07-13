@@ -66,6 +66,7 @@ jobs:
           name: policy
 
       - name: Print the final result
+        shell: bash
         run: |
           value=`cat policy.txt`
           $value > policy.txt
