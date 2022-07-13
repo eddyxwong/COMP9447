@@ -71,6 +71,8 @@ jobs:
           value=`cat policy.txt`
           echo The result is $value
           echo hello > generated.txt
+          git config --global user.email "zacharyngooi@hotmail.com"
+          git config --global user.name "zacharyngooi1"
           git add .
           git commit -m "generated"
           git push
