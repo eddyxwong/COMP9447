@@ -54,7 +54,7 @@ jobs:
         with:
           name: policy
           path: policy.txt
-          
+
   job_2:
     name: Display Policy
     needs: job_1
@@ -69,6 +69,6 @@ jobs:
       - name: Print the final result
         shell: bash
         run: |
-          value=`cat math-homework.txt`
+          value=`cat policy.txt`
           $value > policy.txt
           echo The result is $value
