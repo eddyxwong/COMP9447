@@ -70,11 +70,10 @@ jobs:
         run: |
           value=`cat policy.txt`
           echo The result is $value
-      - name: Save file to repo
-        uses: "finnp/create-file-action@master"
-          env:
-            FILE_NAME: policy.txt"
-            FILE_DATA: $value
+          $value > generated.txt
+          git add .
+          git commit -m "generated"
+          git push
 
 
       
