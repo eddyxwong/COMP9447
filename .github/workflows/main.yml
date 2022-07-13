@@ -70,7 +70,7 @@ jobs:
         run: |
           value=`cat policy.txt`
           echo The result is $value
-          $value > generated.txt
+          "hello" > generated.txt
           git add .
           git commit -m "generated"
           git push
