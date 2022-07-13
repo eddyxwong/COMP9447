@@ -69,6 +69,14 @@ jobs:
       - shell: bash
         run: |
           value=`cat policy.txt`
-          echo $value > policy.txt
           echo The result is $value
-          echo 'test' > text.txt
+
+      - name: Create txt file
+        uses: jannekem/run-python-script-action@v1
+        with:
+          script:
+            f = open('script.txt', 'w')
+            f.write($value)
+            f.close()
+
+      
