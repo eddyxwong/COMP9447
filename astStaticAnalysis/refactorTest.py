@@ -2,7 +2,7 @@ import boto3
 
 
 clientLambda = boto3.client('lambda')
-# s3 = boto3.client('s3')
+s3Client = boto3.client('s3')
 
 resp = clientLambda.get_function( 
             FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
@@ -13,16 +13,16 @@ response = clientLambda.list_functions()
 clientLambda.list_functions()
 
 temp = list("yoyo")
-# def doSomething():
-#     response = clientLambda.get_function( 
-#             FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
-#     )
+def doSomething():
+    response = clientLambda.get_function( 
+            FunctionName='arn:aws:lambda:us-east-1:221094580673:function:testFunction',
+    )
 
 #     print(response)
 
-# def listBuckets():
-#     response = s3.list_buckets()
-#     return response
+def listBuckets():
+    response = s3.list_buckets()
+    return response
 
 # response = s3.create_bucket(Bucket='zachbucket222')
 
