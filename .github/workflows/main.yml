@@ -60,14 +60,13 @@ jobs:
     needs: job_1
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
       - name: Download policy generated from job 1
         uses: actions/download-artifact@v3
         with:
           name: policy
+
       - name: Print the final result
-        shell: bash
+        uses: actions/checkout@v3
         run: |
           value=`cat policy.txt`
           $value > policy.txt
