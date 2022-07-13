@@ -7,8 +7,6 @@ on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -70,11 +68,10 @@ jobs:
         run: |
           value=`cat policy.txt`
           echo The result is $value
-          echo hello > generated.txt
           git config --global user.email "zacharyngooi@hotmail.com"
           git config --global user.name "zacharyngooi1"
           git add .
-          git commit -m "generated"
+          git commit -m "generated policy text file"
           git push
 
 
