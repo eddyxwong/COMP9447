@@ -70,13 +70,11 @@ jobs:
         run: |
           value=`cat policy.txt`
           echo The result is $value
+      - name: Save file to repo
+        uses: "finnp/create-file-action@master"
+          env:
+            FILE_NAME: policy.txt"
+            FILE_DATA: $value
 
-      - name: Create txt file
-        uses: jannekem/run-python-script-action@v1
-        with:
-          script: |
-            f = open('script.txt', 'w')
-            f.write($value)
-            f.close()
 
       
