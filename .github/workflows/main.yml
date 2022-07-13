@@ -66,9 +66,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: policy
-
-      - name: Print the final result
+      - shell: bash
         run: |
           value=`cat policy.txt`
-          $value > policy.txt
           echo The result is $value
