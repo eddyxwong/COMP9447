@@ -56,7 +56,6 @@ jobs:
 
   job_2:
     name: Scan Repository For Python Files
-    needs: job_1
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -66,7 +65,7 @@ jobs:
           script: |
               import os
               print("Directory contents:")
-              for f in os.listdir():
+              for f in os.listdir("/testBoto3"):
                 print(f)
   
   job_3:
