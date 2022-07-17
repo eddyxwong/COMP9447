@@ -65,7 +65,7 @@ jobs:
           script: |
               import os
               print("Directory contents:")
-              for f in os.listdir("workflows/testBoto3"):
+              for f in os.listdir(path.join(process.env.GITHUB_WORKSPACE,'testBoto3')):
                 print(f)
 
 
