@@ -64,8 +64,11 @@ jobs:
         with:
           script: |
               import os
+              print("directorty name:")
+              cwd = os.getcwd()
+              print(cwd)
               print("Directory contents:")
-              for f in os.listdir(path.join(process.env.GITHUB_WORKSPACE,'testBoto3')):
+              for f in os.listdir():
                 print(f)
 
 
