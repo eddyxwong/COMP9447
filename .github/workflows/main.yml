@@ -90,5 +90,5 @@ jobs:
 
         - name: Run All Python Files
           run: |
-          python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt
-          echo cat policy.txt
+            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt
+            echo cat policy.txt
