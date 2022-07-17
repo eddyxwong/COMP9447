@@ -79,11 +79,11 @@ jobs:
             pythonFileNames=`cat pythonfiles.txt`
             echo The result is $pythonFileNames
 
-      - name: Installing All Dependancies
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install e .
+        - name: Installing All Dependancies
+          run: |
+            python -m pip install --upgrade pip
+            if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+            pip install e .
 
         - name: Run Simple Test
           run: python ./tests/test_GenerateIAMPolicy.py
