@@ -68,7 +68,7 @@ jobs:
               cwd = os.getcwd()
               print(cwd)
               print("Directory contents:")
-              for f in os.listdir():
+              for f in os.listdir(cwd+"/testBoto3"):
                 print(f)
 
 
