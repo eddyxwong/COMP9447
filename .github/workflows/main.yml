@@ -40,20 +40,6 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install e .
 
-      - name: Run Simple Test
-        run: python ./tests/test_GenerateIAMPolicy.py
-
-      - name: Simple Policy Testing Generation
-        run: |
-          python ./astStaticAnalysis/astBoto3.py ./astStaticAnalysis/astTest.py > policy.txt
-      
-      #Upload for future artifact use (Git diff?)
-      - name: Upload policy as a artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: policy
-          path: policy.txt
-
   job_2:
     name: Scan Repository For Python Files
     runs-on: ubuntu-latest
@@ -73,7 +59,27 @@ jobs:
         run: |
           echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
           for i in ${{ steps.pl.outputs.paths }}; do
-          echo $i
+          echo $i > pythonfiles.txt
           done
 
-      
+      - name: Upload python filenames as a artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: pythonfiles
+          path: pythonfiles.txt
+
+  job_3:
+      name: Display Python Files and Run
+      needs: job_2
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+
+        - name: Download python txt file generated from job 2
+          uses: actions/download-artifact@v3
+          with:
+            name: pythonfiles
+        - shell: bash
+          run: |
+            value=`cat pythonfiles.txt`
+            echo The result is $value
