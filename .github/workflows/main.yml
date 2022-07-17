@@ -81,5 +81,13 @@ jobs:
             name: pythonfiles
         - shell: bash
           run: |
-            value=`cat pythonfiles.txt`
-            echo The result is $value
+            pythonFileNames=`cat pythonfiles.txt`
+            echo The result is $pythonFileNames
+
+        - name: Run Simple Test
+          run: python ./tests/test_GenerateIAMPolicy.py
+
+        - name: Run All Python Files
+          run: |
+          python $pythonFileNames > policy.txt
+          echo cat policy.txt
