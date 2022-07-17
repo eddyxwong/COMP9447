@@ -59,7 +59,7 @@ jobs:
         run: |
           echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
           for i in ${{ steps.pl.outputs.paths }}; do
-          echo $i > pythonfiles.txt
+          echo $(i) >> pythonfiles.txt
           done
 
       - name: Upload python filenames as a artifact
@@ -69,7 +69,7 @@ jobs:
           path: pythonfiles.txt
 
   job_3:
-      name: Display Python Files and Run
+      name: Display Python Files and Run Analyser
       needs: job_2
       runs-on: ubuntu-latest
       steps:
