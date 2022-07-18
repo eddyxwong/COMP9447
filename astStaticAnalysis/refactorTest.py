@@ -21,7 +21,7 @@ def doSomething():
 #     print(response)
 
 def listBuckets():
-    response = s3.list_buckets()
+    response = s3Client.list_buckets()
     return response
 
 # response = s3.create_bucket(Bucket='zachbucket222')

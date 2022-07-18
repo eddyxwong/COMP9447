@@ -1,10 +1,24 @@
 import ast
 import json
 from pprint import pprint
-
+import argparse
 import astpretty
-from keyring import set_keyring
 
+
+'''
+arg parse 
+parsing of directorys, filter for python files in directory recursively, potentially can use walk
+python filter in built function
+
+
+AST walker, find boto3 object client (extensible for resources and sessions)
+webscraper convert action to correct IAM policy version
+have existing file in repo, with mapping of actions
+beautifulsoup, pickle 
+
+vscode collab extension.
+
+'''
 
 def main():
     with open("refactorTest.py", "r") as source:
@@ -23,7 +37,16 @@ def main():
     print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
 
 
+
 def generateIAMPolicy(respDict):
+    """Given actions extract from boto3 script generate an IAM policy
+
+    Args:
+        respDict (_type_): _description_
+
+    Returns:
+        str: IAM policy
+    """
     statementNum = 1
 
 
@@ -99,13 +122,14 @@ class Analyzer(ast.NodeVisitor):
 
         self.extractDict = {}
 
-
         '''
         userObjDict provides a mapping of the user created objects and the AWS service they interact with. 
         As example:
         {'clientLambda': 'lambda'}
 
-        This dictionary indicates that there is a user created object 'clientLambda' that interacts with the lambda service
+        Consider classes, self references
+
+        This dictionary indicates that there is a user created object 'clientLambda' that interfaces with the lambda service
         '''
         self.userObjDict = {}
 
@@ -143,14 +167,17 @@ class Analyzer(ast.NodeVisitor):
                         for keyword in node.value.keywords:
 
                             '''
-                            FunctionName refers to argument for lambda 
-                            s3 argument is sometimes 'Bucket'
+                            FunctionName refers to name argument for lambda 
+                            equivalent s3 argument is sometimes 'Bucket'
                             '''
                             if keyword.arg == 'FunctionName':
                                 nameArg = keyword.value.value
                                 '''
+                                session -> config ->
                                 Figure out how to translate testFunction to arn:aws:lambda:us-east-1:221094580673:function:testFunction
                                 '''
+
+
                     awsService = self.userObjDict[callingUserObj]   
                     
                     if nameArg not in self.extractDict[awsService]:
