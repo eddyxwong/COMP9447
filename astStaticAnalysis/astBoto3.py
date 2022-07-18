@@ -3,7 +3,7 @@ import json
 from pprint import pprint
 import argparse
 import astpretty
-
+import sys
 
 '''
 arg parse 
@@ -20,9 +20,12 @@ vscode collab extension.
 
 '''
 
-def main():
-    with open("refactorTest.py", "r") as source:
-        tree = ast.parse(source.read())
+def main(argv):
+    for arg in argv[1:]:
+        # print(arg)
+        # with open(arg, "r") as source:
+        with open(arg, "r") as source:
+            tree = ast.parse(source.read())
 
         '''
         Code below formats the AST and prints it out
