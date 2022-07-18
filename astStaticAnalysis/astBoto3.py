@@ -20,9 +20,16 @@ vscode collab extension.
 
 '''
 
-def main(argv):
-    for arg in argv[1:]:
-        # print(arg)
+def main():
+
+
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument('file', nargs='+')
+
+    args = parser.parse_args()
+    for arg in args.file:
+        print(arg)
         # with open(arg, "r") as source:
         with open(arg, "r") as source:
             tree = ast.parse(source.read())
@@ -202,4 +209,4 @@ class Analyzer(ast.NodeVisitor):
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main()
