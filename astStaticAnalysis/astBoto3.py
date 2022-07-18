@@ -32,12 +32,10 @@ def main(argv):
         '''
         # astpretty.pprint(tree, show_offsets=False)
 
-
-
-    analyzer = Analyzer()
-    analyzer.visit(tree)
-    resp = analyzer.report()
-    print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
+        analyzer = Analyzer()
+        analyzer.visit(tree)
+        resp = analyzer.report()
+        print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
 
 
 
@@ -204,4 +202,4 @@ class Analyzer(ast.NodeVisitor):
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv)
