@@ -7,9 +7,20 @@ import os
 import pandas as pd
 import subprocess
 import shlex
+import codecs
+
+json_files = []
+
+# Getting the current work directory (cwd)
+thisdir = os.getcwd()
+# r=root, d=directories, f = files
+for r, d, f in os.walk(thisdir):
+    for file in f:
+        if file.endswith(".json"):
+            abspath = os.path.join(r, file)
+            json_files.append(str(os.path.relpath(abspath).replace(os.path.sep, '/')))
 
 #From the policies, map it to the functions and list out what they can do
-json_files = [pos_json for pos_json in os.listdir() if pos_json.endswith('.json')]
 response = {'Policies': []}
 
 for jsonfile_name in json_files:
@@ -27,7 +38,6 @@ for dict in response['Policies']:
     jsonobj = json.dumps(jsonfile)
     policyobj = parliament.analyze_policy_string(jsonobj)
     shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
-    print(shellresponse)
     if 'Unknown' not in shellresponse:
         policy_actions= policyobj.get_allowed_actions()
         for action in policy_actions:
