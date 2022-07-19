@@ -1,13 +1,9 @@
-import jsondiff as jd
-from jsondiff import diff
 import json
-import jsondiff
 import parliament
 import os
 import pandas as pd
 import subprocess
 import shlex
-import codecs
 
 json_files = []
 
