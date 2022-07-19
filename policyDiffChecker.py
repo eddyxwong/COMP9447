@@ -34,6 +34,7 @@ for dict in response['Policies']:
     jsonfile_name = dict['Policy Name']
     file = open(jsonfile_name)
     print(jsonfile_name)
+    print(type(file))
     jsonfile = json.load(file)
     jsonobj = json.dumps(jsonfile)
     policyobj = parliament.analyze_policy_string(jsonobj)
