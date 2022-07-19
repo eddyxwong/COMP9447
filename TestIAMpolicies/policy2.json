@@ -22,7 +22,7 @@
             "Resource": "arn:aws:dynamodb:*:*:table/SampleTable/stream/* "
         },
         {
-            "Sid": "ThisIsMyDifferent",
+            "Sid": "ThisIsMyDifference",
             "Effect": "Allow",
             "Action": [
                 "Difference1:boo",
