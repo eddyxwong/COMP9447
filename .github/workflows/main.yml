@@ -96,7 +96,7 @@ jobs:
             policyResult=`cat policy.txt`
             echo The generated policies are $policyResult
 
-job_4:
+  job_4:
     name: Display Policy Differences
     needs: job_3
     runs-on: ubuntu-latest
