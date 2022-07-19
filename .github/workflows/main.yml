@@ -95,3 +95,25 @@ jobs:
             python ./astStaticAnalysis/astBoto3.py $testVal > policy.txt
             policyResult=`cat policy.txt`
             echo The generated policies are $policyResult
+
+job_4:
+    name: Display Policy Differences
+    needs: job_3
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+
+      - name: Download policy generated from job 1
+        uses: actions/download-artifact@v3
+        with:
+          name: policy
+      - shell: bash
+        run: |
+          value=`cat policy.txt`
+          echo The result is $value
+          echo $value > policy.txt
+
+      - name: Compare with Supplied Policy
+        run: |
+          echo ls

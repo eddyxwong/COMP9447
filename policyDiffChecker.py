@@ -24,12 +24,16 @@ for r, d, f in os.walk(thisdir):
 response = {'Policies': []}
 
 for jsonfile_name in json_files:
-    response['Policies'].append({
-        'Policy Name': jsonfile_name,
-        'Allowed Actions': [],
-        'Findings': ''
-    })
-
+    shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
+    if 'Unknown' not in shellresponse:
+        response['Policies'].append({
+            'Policy Name': jsonfile_name,
+            'Allowed Actions': [],
+            'Findings': ''
+        })
+    elif 'Unknown' in shellresponse:
+        print('Erorr: Json file ' +jsonfile_name+ ' is not a IAM policy file\nExiting...')
+        exit()
 
 for dict in response['Policies']:
     jsonfile_name = dict['Policy Name']
@@ -38,10 +42,9 @@ for dict in response['Policies']:
     jsonobj = json.dumps(jsonfile)
     policyobj = parliament.analyze_policy_string(jsonobj)
     shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
-    if 'Unknown' not in shellresponse:
-        policy_actions= policyobj.get_allowed_actions()
-        for action in policy_actions:
-            dict['Allowed Actions'].append(action)
+    policy_actions= policyobj.get_allowed_actions()
+    for action in policy_actions:
+        dict['Allowed Actions'].append(action)
     dict['Findings'] = list(shellresponse.split("\n"))
 
 print(json.dumps(response, sort_keys=False, indent=4))
