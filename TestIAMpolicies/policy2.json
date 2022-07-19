@@ -22,15 +22,6 @@
             "Resource": "arn:aws:dynamodb:*:*:table/SampleTable/stream/* "
         },
         {
-            "Sid": "ThisIsMyDifference",
-            "Effect": "Allow",
-            "Action": [
-                "Difference1:boo",
-                "Difference2:foo"
-            ],
-            "Resource": "*"
-        },
-        {
             "Sid": "CreateLogGroup",
             "Effect": "Allow",
             "Action": "logs:CreateLogGroup",
