@@ -92,15 +92,15 @@ jobs:
         - name: Run All Python Files
           run: |
             testVal=./astStaticAnalysis/astTest.py
-            python ./astStaticAnalysis/astBoto3.py $testVal > policy.json
-            policyResult=`cat policy.json`
+            python ./astStaticAnalysis/astBoto3.py $testVal > policy.txt
+            policyResult=`cat policy.txt`
             echo The generated policies are $policyResult
 
         - name: Upload python filenames as a artifact
           uses: actions/upload-artifact@v3
           with:
             name: policy
-            path: policy.json
+            path: policy.txt
 
   job_4:
     name: Display Policy Differences
@@ -116,9 +116,9 @@ jobs:
           name: policy
       - shell: bash
         run: |
-          value=`cat policy.json`
+          value=`cat policy.txt`
           echo The result is $value
-          echo $value > policy.json
+          echo $value > policy.txt
       - name: Installing All Dependancies
         run: |
           python -m pip install --upgrade pip
