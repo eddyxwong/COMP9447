@@ -96,6 +96,12 @@ jobs:
             policyResult=`cat policy.txt`
             echo The generated policies are $policyResult
 
+      - name: Upload python filenames as a artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: policy
+          path: policy.txt
+
   job_4:
     name: Display Policy Differences
     needs: job_3
