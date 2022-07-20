@@ -148,10 +148,11 @@ jobs:
             pip install e .
         - name: parliament runner
           id: output_test
+          continue_on_error: True
           run: |
             value=`cat jsonfiles.txt`
             for i in $value; do
-            [cat $i | parliament] || echo hello
+            cat $i | parliament
             done
         # Take the json file names and pass it to parliament using a python script here
 
