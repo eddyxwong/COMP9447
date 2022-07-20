@@ -3,6 +3,7 @@ import parliament
 import os
 import subprocess
 import pkg_resources
+import shlex
 
 
 # Grab a txt file of json files found
@@ -44,6 +45,8 @@ for r, d, f in os.walk(thisdir):
 #From the policies, map it to the functions and list out what they can do
 response = {'Policies': []}
 
+shellresponse = subprocess.getoutput('parliament --directory {}'.format(shlex.quote('TestIAMpolicies')))
+print(shellresponse)
 
 for jsonfile_name in json_files:
     print(jsonfile_name)
@@ -73,10 +76,3 @@ for dict in response['Policies']:
 print(json.dumps(response, sort_keys=False, indent=4))
 
 
-
-
-file = open('TestIAMpolicies\policy3.txt', 'r')
-policy = file.read()
-policyobj = parliament.analyze_policy_string(policy)
-print(parliament.enhance_finding(policyobj.findings[0]))
-print(parliament.json.dumps(policyobj.statements))

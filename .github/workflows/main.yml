@@ -120,7 +120,7 @@ jobs:
         - name: parliament runner
           id: output_test
           run: |
-            parliament --directory ./TestIAMpolicies
+            echo hello >> parliamentoutput.txt
             done
         - name: Upload python filenames as a artifact
           uses: actions/upload-artifact@v3
