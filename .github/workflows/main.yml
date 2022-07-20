@@ -149,7 +149,7 @@ jobs:
           shell: bash
           run: |
             value=`cat jsonfiles.txt`
-            for i in ${{ value }}; do
+            for i in $value; do
             echo -n $i
             done
         # Take the json file names and pass it to parliament using a python script here
