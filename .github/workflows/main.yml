@@ -132,7 +132,7 @@ jobs:
           path: jsonfiles.txt # Now that i have the json file names, we can take it and do our diff program
 
   job_5:
-      name: Display Json Files And 
+      name: Display Json Files And Pass it Diff Checker
       needs: [job_1, job_2]
       runs-on: ubuntu-latest
       steps:
@@ -147,11 +147,15 @@ jobs:
           run: |
             jsonfilenames=`cat jsonfiles.txt`
             echo The result is $jsonfilenames
+            while IFS= read -r line; do
+              echo "Text read from file: $line"
+            done < jsonfiles.txt
+        # Take the json file names and pass it to parliament using a python script here
 
-
+# take in both job 3 (policy.txt/json) and job 5 to take in the json files and run parliament with it 
   job_6:
     name: Display Policy Differences
-    needs: job_3
+    needs: [job_3, job_5]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -166,6 +170,7 @@ jobs:
           value=`cat policy.txt`
           echo The result is $value
           echo $value > policy.txt
+
       - name: Installing All Dependancies
         run: |
           python -m pip install --upgrade pip
