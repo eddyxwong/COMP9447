@@ -4,7 +4,6 @@ import os
 import subprocess
 import pkg_resources
 import shlex
-import difflib
 
 # Grab a txt file of json files found
 # Take json files and run parliament in github actions
