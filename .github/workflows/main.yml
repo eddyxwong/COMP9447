@@ -122,7 +122,7 @@ jobs:
         run: |
           echo "Found ${{ steps.p2.outputs.path_count }} file(s) with this extension:"
           for i in ${{ steps.p2.outputs.paths }}; do
-          echo -n $i " ">> jsonfiles.txt
+          echo -n parliament --file $i " ">> jsonfiles.txt
           done
 
       - name: Upload python filenames as a artifact
@@ -148,15 +148,9 @@ jobs:
           id: output_test
           shell: bash
           run: |
-            input_file="jsonfiles.txt"
-            while read line
-            do
-              jsonfile_text=$line
-              parliament_value = parliament --file $jsonfile_text 
-              echo ::set-output name=new_value::$parliament_value
-            done < "$input_file"
-            
-        - run: echo $parliament_value
+            value=`cat jsonfiles.txt`
+            echo The result is $value
+            echo $value > jsonfiles.txt
       
         # Take the json file names and pass it to parliament using a python script here
 
