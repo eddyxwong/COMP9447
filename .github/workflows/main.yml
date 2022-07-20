@@ -115,8 +115,7 @@ jobs:
       # Run the script ot grab all json file paths
       - name: Output results
         run: |
-          python jsonFileGrabber.py >> jsonfiles.txt
-          done
+          python jsonFileGrabber.py > jsonfiles.txt
 
       - name: Upload python filenames as a artifact
         uses: actions/upload-artifact@v3
