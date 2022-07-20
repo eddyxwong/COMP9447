@@ -143,12 +143,21 @@ jobs:
           uses: actions/download-artifact@v3
           with:
             name: jsonfiles
-        - shell: bash
+
+        - name: parliament ruuner
+          id: output_test
+          shell: bash
           run: |
+            input_file="jsonfiles.txt"
             while read line
             do
-              echo $line
-            done < jsonfiles.txt
+              jsonfile_text=$line
+              parliament_value = parliament --file $jsonfile_text
+            done < "$input_file"
+            echo ::set-output name=new_value::$parliament_value
+        - name: Echo checker
+        - run: echo ${​​​​{​​​​​​​​​​​ steps.output_test.outputs.new_value }​​​​​​​​​​​}​​​​​​​​​​​​​​​​​​
+      
         # Take the json file names and pass it to parliament using a python script here
 
 # take in both job 3 (policy.txt/json) and job 5 to take in the json files and run parliament with it 
