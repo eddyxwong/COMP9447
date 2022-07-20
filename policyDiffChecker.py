@@ -49,20 +49,23 @@ response = {'Policies': []}
 
 for jsonfile_name in json_files:
     shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
-    print(shellresponse)
     text = subprocess.run(['parliament' ,'--file',jsonfile_name],stdout=subprocess.PIPE, text=True)
-    print(text.stdout)
     file = open(jsonfile_name)
     jsonfile = json.load(file)
-    jsonobj = json.dumps(jsonfile)
+    jsonobj = json.dumps(jsonfile, sort_keys=True,
+    indent=4, separators=(',', ': '))
     policyobj = parliament.analyze_policy_string(jsonobj)
-    if 'Unknown' not in shellresponse:
+    #Run the analyse command
+    # Enhance the findings
+    for x in policyobj.findings:
+        print(x)
+    if 'UNKNOWN_ACTION' or 'MALFORMED_JSON' not in policyobj.findings:
         response['Policies'].append({
             'Policy Name': jsonfile_name,
             'Allowed Actions': [],
             'Findings': ''
         })
-    elif 'Unknown' in shellresponse:
+    elif 'UNKNOWN_ACTION' or 'MALFORMED_JSON' in policyobj.findings:
         print('Erorr: Json file ' +jsonfile_name+ ' is not a IAM policy file\nExiting...')
         exit()
 
