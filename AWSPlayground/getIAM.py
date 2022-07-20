@@ -11,7 +11,8 @@ response = iam.list_policies(
 for policy in response['Policies']:
     print(policy['PolicyName'])
 
-
-
+test = "dynamodb"
+test1 = "DeleteItem"
+print("\"" + test+":"+test1 + "\"")
 
 # print(response)
