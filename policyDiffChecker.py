@@ -49,24 +49,21 @@ response = {'Policies': []}
 
 for jsonfile_name in json_files:
     shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
-    print(jsonfile_name)
-    file = open(jsonfile_name)
-    jsonfile = json.load(file)
-    jsonobj = json.dumps(jsonfile, sort_keys=True,
-    indent=4, separators=(',', ': '))
-    jsonfile_name = jsonfile_name.replace("/", "\\")
-    text = subprocess.run('type '+jsonfile_name+' | parliament', shell=True, text=True, capture_output=True).stdout.strip("\n")
-    print(text)
-    policyobj = parliament.analyze_policy_string(jsonobj)
+    
+    try:
+        window_jsonfile_name = jsonfile_name.replace("/", "\\")
+        text = subprocess.run('type '+window_jsonfile_name+' | parliament', shell=True, text=True, capture_output=True).stdout.strip("\n")
+    except:
+        text = subprocess.run('cat '+jsonfile_name+' | parliament', shell=True, text=True, capture_output=True).stdout.strip("\n")
     #Run the analyse command
     # Enhance the findings
-    if 'UNKNOWN_ACTION' or 'MALFORMED_JSON' not in policyobj.findings:
+    if 'UNKNOWN_ACTION' or 'MALFORMED_JSON' not in text.findings:
         response['Policies'].append({
             'Policy Name': jsonfile_name,
             'Allowed Actions': [],
             'Findings': ''
         })
-    elif 'UNKNOWN_ACTION' or 'MALFORMED_JSON' in policyobj.findings:
+    elif 'UNKNOWN_ACTION' or 'MALFORMED_JSON' in text.findings:
         print('Erorr: Json file ' +jsonfile_name+ ' is not a IAM policy file\nExiting...')
         exit()
 
