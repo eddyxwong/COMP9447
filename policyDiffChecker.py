@@ -6,6 +6,13 @@ import shlex
 import pkg_resources
 
 
+# Grab a txt file of json files found
+# Take json files and run parliament in github actions
+# Take parliament output and put that inside the dictionary
+
+
+
+
 iam_definition_path = pkg_resources.resource_filename(__name__, "iam_definition.json")
 iam_definition = json.load(open(iam_definition_path, "r"))
 
@@ -43,7 +50,7 @@ response = {'Policies': []}
 for jsonfile_name in json_files:
     shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
     text = subprocess.run(['parliament' ,'--file',jsonfile_name],stdout=subprocess.PIPE, text=True)
-    g = text.args
+    g = text.
     print(str(g))
     file = open(jsonfile_name)
     jsonfile = json.load(file)

@@ -129,10 +129,10 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: jsonfiles
-          path: jsonfiles.txt # Now that i have the json file names, we can take it and do stuff
+          path: jsonfiles.txt # Now that i have the json file names, we can take it and do our diff program
 
   job_5:
-      name: Display Python Files and Run Analyser
+      name: Display Json Files And 
       needs: [job_1, job_2]
       runs-on: ubuntu-latest
       steps:
@@ -145,7 +145,7 @@ jobs:
             name: jsonfiles
         - shell: bash
           run: |
-            jsonefilenames=`cat jsonfiles.txt`
+            jsonfilenames=`cat jsonfiles.txt`
             echo The result is $jsonfilenames
 
 
