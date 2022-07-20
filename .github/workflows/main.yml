@@ -42,7 +42,7 @@ jobs:
       - uses: actions/setup-python@v2
       - uses: jannekem/run-python-script-action@v1
       
-      - name: Fetch action
+      - name: Fetch Python action
         id: pl
         uses: Rishabh510/Path-lister-action@master
         with:
@@ -61,6 +61,7 @@ jobs:
         with:
           name: pythonfiles
           path: pythonfiles.txt
+      
 
   job_3:
       name: Display Python Files and Run Analyser
@@ -96,13 +97,59 @@ jobs:
             policyResult=`cat policy.txt`
             echo The generated policies are $policyResult
 
-        - name: Upload python filenames as a artifact
+        - name: Upload generated policy output as an artifact
           uses: actions/upload-artifact@v3
           with:
             name: policy
-            path: policy.txt
+            path: policy.txt # Does this need to be in txt? if this is the final output then how will i cmpare it as this is not a IAM policy format
 
   job_4:
+    name: Scan Repository For Json Files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+      - uses: jannekem/run-python-script-action@v1
+      
+      - name: Fetch Json action
+        id: p2
+        uses: Rishabh510/Path-lister-action@master
+        with:
+          path: "/home/runner/work/COMP9447/COMP9447"
+          type: ".json"
+
+      - name: Output results
+        run: |
+          echo "Found ${{ steps.p2.outputs.path_count }} file(s) with this extension:"
+          for i in ${{ steps.p2.outputs.paths }}; do
+          echo -n $i " ">> jsonfiles.txt
+          done
+
+      - name: Upload python filenames as a artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: jsonfiles
+          path: jsonfiles.txt # Now that i have the json file names, we can take it and do stuff
+
+  job_5:
+      name: Display Python Files and Run Analyser
+      needs: [job_1, job_2]
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - uses: actions/setup-python@v2
+
+        - name: Download json txt file generated from job 2
+          uses: actions/download-artifact@v3
+          with:
+            name: jsonfiles
+        - shell: bash
+          run: |
+            jsonefilenames=`cat jsonfiles.txt`
+            echo The result is $jsonfilenames
+
+
+  job_6:
     name: Display Policy Differences
     needs: job_3
     runs-on: ubuntu-latest

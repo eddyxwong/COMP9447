@@ -42,8 +42,9 @@ response = {'Policies': []}
 
 for jsonfile_name in json_files:
     shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
-    text = subprocess.run(['parliament' ,'--file',jsonfile_name], text=True)
-    print(str(text))
+    text = subprocess.run(['parliament' ,'--file',jsonfile_name],stdout=subprocess.PIPE, text=True)
+    g = text.args
+    print(str(g))
     file = open(jsonfile_name)
     jsonfile = json.load(file)
     jsonobj = json.dumps(jsonfile)
