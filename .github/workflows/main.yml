@@ -120,7 +120,7 @@ jobs:
         - name: parliament runner
           id: output_test
           run: |
-            $(parliament --file TestIAMpolicies\policy1.json) && echo test
+            $(parliament --file ./TestIAMpolicies/policy2.json) && echo test
         - name: Upload python filenames as a artifact
           uses: actions/upload-artifact@v3
           with:
