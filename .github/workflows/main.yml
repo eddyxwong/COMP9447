@@ -202,6 +202,12 @@ jobs:
           path: "/home/runner/work/COMP9447/COMP9447"
           type: ".json"
 
+      - name: Installing All Dependancies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install e .
+          
       - name: Output results
         run: |
           echo "Found ${{ steps.p3.outputs.path_count }} file(s) with this extension:"
@@ -217,7 +223,7 @@ jobs:
           path: testfiles.txt
 
   job_8:
-      name: Display Python Files and Run Analyser
+      name: Display test Files and Run Analyser
       needs: [job_1, job_7]
       runs-on: ubuntu-latest
       steps:
