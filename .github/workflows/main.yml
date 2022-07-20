@@ -152,9 +152,9 @@ jobs:
             while read line
             do
               jsonfile_text=$line
-              parliament_value = parliament --file $jsonfile_text
-              echo $parliemnt value
+              parliament_value = parliament --file $jsonfile_text 
             done < "$input_file"
+            echo $parliament_value
       
         # Take the json file names and pass it to parliament using a python script here
 
