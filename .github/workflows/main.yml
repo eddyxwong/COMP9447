@@ -144,14 +144,19 @@ jobs:
           with:
             name: jsonfiles
 
-        - name: parliament ruuner
+        - name: Installing All Dependancies
+          run: |
+            python -m pip install --upgrade pip
+            if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+            pip install e .
+        - name: parliament runner
           id: output_test
           shell: bash
           run: |
             value=`cat jsonfiles.txt`
             for i in $value; do
             echo -n $i
-            parliament --file $i
+            echo parliament --file $i
             done
         # Take the json file names and pass it to parliament using a python script here
 
