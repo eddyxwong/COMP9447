@@ -27,22 +27,32 @@ def main():
     
     parser.add_argument('file', nargs='+')
 
+    astList = []
+
     args = parser.parse_args()
     for arg in args.file:
         print(arg)
         # with open(arg, "r") as source:
         with open(arg, "r") as source:
             tree = ast.parse(source.read())
+            astList.append(tree)
 
         '''
         Code below formats the AST and prints it out
         '''
         # astpretty.pprint(tree, show_offsets=False)
 
-        analyzer = Analyzer()
+
+
+    analyzer = Analyzer()
+
+
+    for tree in astList:
         analyzer.visit(tree)
-        resp = analyzer.report()
-        print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
+        # resp = analyzer.report()
+
+    resp = analyzer.report()
+    print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
 
 
 
@@ -193,8 +203,8 @@ class Analyzer(ast.NodeVisitor):
 
                     if(awsMethod not in self.extractDict[awsService][nameArg]):
                         self.extractDict[awsService][nameArg].append(awsMethod)          
-
-        except AttributeError:
+        # except AttributeError:
+        except:
             self.generic_visit(node)
 
 
