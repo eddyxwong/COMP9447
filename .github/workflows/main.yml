@@ -155,7 +155,6 @@ jobs:
             parliament_value= cat $i | parliament
             echo $parliament_value >> parliamentoutput.txt
             done
-            cat parliamentoutput.txt
         # Take the json file names and pass it to parliament using a python script here
 
 # take in both job 3 (policy.txt/json) and job 5 to take in the json files and run parliament with it 
@@ -186,3 +185,50 @@ jobs:
         shell: bash
         run: |
           python policyDiffChecker.py
+
+
+  job_7:
+    name: Scan Repository For test Files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+      - uses: jannekem/run-python-script-action@v1
+      
+      - name: Fetch Python action
+        id: p3
+        uses: Rishabh510/Path-lister-action@master
+        with:
+          path: "/home/runner/work/COMP9447/COMP9447"
+          type: ".json"
+
+      - name: Output results
+        run: |
+          echo "Found ${{ steps.p3.outputs.path_count }} file(s) with this extension:"
+          for i in ${{ steps.p3.outputs.paths }}; do
+          parliament_value= cat $i | parliament
+          echo -n $parliament_value " ">> testfiles.txt
+          done
+
+      - name: Upload python filenames as a artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: testfiles
+          path: testfiles.txt
+
+  job_8:
+      name: Display Python Files and Run Analyser
+      needs: [job_1, job_7]
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - uses: actions/setup-python@v2
+
+        - name: Download python txt file generated from job 2
+          uses: actions/download-artifact@v3
+          with:
+            name: testfiles
+        - shell: bash
+          run: |
+            val=`cat testfiles.txt`
+            echo The result is $val
