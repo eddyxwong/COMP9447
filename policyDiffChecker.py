@@ -48,7 +48,6 @@ for r, d, f in os.walk(thisdir):
 response = {'Policies': []}
 
 for jsonfile_name in json_files:
-    shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
     
     try:
         window_jsonfile_name = jsonfile_name.replace("/", "\\")
@@ -57,16 +56,14 @@ for jsonfile_name in json_files:
         text = subprocess.run('cat '+jsonfile_name+' | parliament', shell=True, text=True, capture_output=True).stdout.strip("\n")
     #Run the analyse command
     # Enhance the findings
-    print(text)
-    if 'UNKNOWN_ACTION' or 'MALFORMED_JSON' not in text.findings:
+    if 'JSON is malformed' not in text:
         response['Policies'].append({
             'Policy Name': jsonfile_name,
             'Allowed Actions': [],
             'Findings': ''
         })
-    elif 'UNKNOWN_ACTION' or 'MALFORMED_JSON' in text.findings:
-        print('Erorr: Json file ' +jsonfile_name+ ' is not a IAM policy file\nExiting...')
-        exit()
+    elif 'JSON is malformed' in text:
+        print('Erorr: Json file ' +jsonfile_name+ ' is not a IAM policy file')
 
 for dict in response['Policies']:
     jsonfile_name = dict['Policy Name']
@@ -74,7 +71,11 @@ for dict in response['Policies']:
     jsonfile = json.load(file)
     jsonobj = json.dumps(jsonfile)
     policyobj = parliament.analyze_policy_string(jsonobj)
-    shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
+    try:
+        window_jsonfile_name = jsonfile_name.replace("/", "\\")
+        shellresponse = subprocess.run('type '+window_jsonfile_name+' | parliament', shell=True, text=True, capture_output=True).stdout.strip("\n")
+    except:
+        shellresponse = subprocess.run('cat '+jsonfile_name+' | parliament', shell=True, text=True, capture_output=True).stdout.strip("\n")
     policy_actions= policyobj.get_allowed_actions()
     for action in policy_actions:
         actiondict = parliament.expand_action(action)[0]
