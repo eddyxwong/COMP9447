@@ -43,5 +43,34 @@ response = {'Policies': []}
 for jsonfile_name in json_files:
     shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
     text = subprocess.run(['parliament' ,'--file',jsonfile_name], text=True)
-    g = text.stdout
-    print(g)
+    print(str(text))
+    file = open(jsonfile_name)
+    jsonfile = json.load(file)
+    jsonobj = json.dumps(jsonfile)
+    policyobj = parliament.analyze_policy_string(jsonobj)
+    if 'Unknown' not in shellresponse:
+        response['Policies'].append({
+            'Policy Name': jsonfile_name,
+            'Allowed Actions': [],
+            'Findings': ''
+        })
+    elif 'Unknown' in shellresponse:
+        print('Erorr: Json file ' +jsonfile_name+ ' is not a IAM policy file\nExiting...')
+        exit()
+
+for dict in response['Policies']:
+    jsonfile_name = dict['Policy Name']
+    file = open(jsonfile_name)
+    jsonfile = json.load(file)
+    jsonobj = json.dumps(jsonfile)
+    policyobj = parliament.analyze_policy_string(jsonobj)
+    shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
+    policy_actions= policyobj.get_allowed_actions()
+    for action in policy_actions:
+        actiondict = parliament.expand_action(action)[0]
+        info = get_privilege_info(actiondict['service'], actiondict['action'])
+        dict['Allowed Actions'].append("Action: "+ action)
+        dict['Allowed Actions'].append("Service Info: "+ info['description'])
+    dict['Findings'] = list(shellresponse.split("\n"))
+
+print(json.dumps(response, sort_keys=False, indent=4))
