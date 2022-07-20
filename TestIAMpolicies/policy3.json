@@ -1,4 +1,19 @@
 {
-
-            "Resource": "*"
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ReadWriteTable",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetItem",
+                "dynamodb:Query",
+                "dynamodb:Scan",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem"
+            ],
+            "Resource": "arn:aws:dynamodb:*:*:table/SampleTable"
+        }
+    ]
 }
