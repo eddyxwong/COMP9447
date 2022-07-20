@@ -147,13 +147,13 @@ jobs:
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             pip install e .
         - name: parliament runner
-          continue-on-error: true
           id: output_test
           run: |
             value=`cat jsonfiles.txt`
             for i in $value; do
             parliament_value= cat $i | parliament || echo fun
-            echo $parliament_value >> parliamentoutput.txt
+            echo $parliamentoutput
+            echo -n $parliament_value >> parliamentoutput.txt
             done
         - name: Upload python filenames as a artifact
           uses: actions/upload-artifact@v3

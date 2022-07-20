@@ -10,8 +10,6 @@ import pkg_resources
 # Take parliament output and put that inside the dictionary
 
 
-
-
 iam_definition_path = pkg_resources.resource_filename(__name__, "iam_definition.json")
 iam_definition = json.load(open(iam_definition_path, "r"))
 
