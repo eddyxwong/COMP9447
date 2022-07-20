@@ -121,6 +121,7 @@ jobs:
           id: output_test
           run: |
             parliament --directory ./TestIAMpolicies
+            done
         - name: Upload python filenames as a artifact
           uses: actions/upload-artifact@v3
           with:

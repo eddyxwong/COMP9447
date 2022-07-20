@@ -55,7 +55,7 @@ for jsonfile_name in json_files:
     if 'MALFORMED_JSON' not in policyobj.finding_ids:
         response['Policies'].append({
             'Policy Name': jsonfile_name,
-            'Differences': [],
+            'Allowed Actions': [],
             'Findings': []
         })
     elif 'MALFORMED_JSON' in policyobj.finding_ids:
@@ -68,11 +68,6 @@ for dict in response['Policies']:
     jsonobj = json.dumps(jsonfile)
     policyobj = parliament.analyze_policy_string(jsonobj)
     policy_actions= policyobj.get_allowed_actions()
-    for action in policy_actions:
-        actiondict = parliament.expand_action(action)[0]
-        info = get_privilege_info(actiondict['service'], actiondict['action'])
-        dict['Allowed Actions'].append("Action: "+ action)
-        dict['Allowed Actions'].append("Service Info: "+ info['description'])
     for x in policyobj.findings:
         dict['Findings'].append(str(x))
 print(json.dumps(response, sort_keys=False, indent=4))
@@ -84,3 +79,4 @@ file = open('TestIAMpolicies\policy3.txt', 'r')
 policy = file.read()
 policyobj = parliament.analyze_policy_string(policy)
 print(parliament.enhance_finding(policyobj.findings[0]))
+print(parliament.json.dumps(policyobj.statements))
