@@ -121,13 +121,6 @@ jobs:
           id: output_test
           run: |
             echo hello >> parliamentoutput.txt
-            done
-        - name: Upload python filenames as a artifact
-          uses: actions/upload-artifact@v3
-          with:
-            name: parliamentoutput
-            path: parliamentoutput.txt
-  
         # Take the json file names and pass it to parliament using a python script here
 
 # take in both job 3 (policy.txt/json) and job 5 to take in the json files and run parliament with it 
