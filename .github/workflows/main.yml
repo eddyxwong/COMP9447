@@ -152,7 +152,6 @@ jobs:
             value=`cat jsonfiles.txt`
             for i in $value; do
             cat $i | parliament
-            done
         # Take the json file names and pass it to parliament using a python script here
 
 # take in both job 3 (policy.txt/json) and job 5 to take in the json files and run parliament with it 
