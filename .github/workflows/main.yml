@@ -143,12 +143,11 @@ jobs:
             pip install e .
         - name: parliament runner
           id: output_test
-          shell: bash
           run: |
             value=`cat jsonfiles.txt`
             for i in $value; do
             echo -n $i
-            echo parliament --file policy1.json
+            parliament --file policy1.json
             done
         # Take the json file names and pass it to parliament using a python script here
 
