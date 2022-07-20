@@ -147,7 +147,7 @@ jobs:
             value=`cat jsonfiles.txt`
             for i in $value; do
             echo -n $i
-            parliament --file < cat ./TestIAMpolicies/policy2.json
+            parliament --file cat ./TestIAMpolicies/policy2.json
             done
         # Take the json file names and pass it to parliament using a python script here
 
