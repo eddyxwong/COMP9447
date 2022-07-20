@@ -146,7 +146,6 @@ jobs:
           run: |
             value=`cat jsonfiles.txt`
             for i in $value; do
-            echo -n $i
             cat $i | parliament
             done
         # Take the json file names and pass it to parliament using a python script here
