@@ -103,6 +103,7 @@ jobs:
             name: policy
             path: policy.txt # Does this need to be in txt? if this is the final output then how will i cmpare it as this is not a IAM policy format
 
+# Job 4 is gonna run the script to grab all relative json file paths to be passed to parliament
   job_4:
     name: Scan Repository For Json Files
     runs-on: ubuntu-latest
@@ -111,18 +112,10 @@ jobs:
       - uses: actions/setup-python@v2
       - uses: jannekem/run-python-script-action@v1
       
-      - name: Fetch Json action
-        id: p2
-        uses: Rishabh510/Path-lister-action@master
-        with:
-          path: "/home/runner/work/COMP9447/COMP9447"
-          type: ".json"
-
+      # Run the script ot grab all json file paths
       - name: Output results
         run: |
-          echo "Found ${{ steps.p2.outputs.path_count }} file(s) with this extension:"
-          for i in ${{ steps.p2.outputs.paths }}; do
-          echo -n $i " ">> jsonfiles.txt
+          python jsonFileGrabber.py >> jsonfiles.txt
           done
 
       - name: Upload python filenames as a artifact
