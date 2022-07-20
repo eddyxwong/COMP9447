@@ -55,15 +55,12 @@ for jsonfile_name in json_files:
 
 for dict in response['Policies']:
     jsonfile_name = dict['Policy Name']
-    file = open(jsonfile_name)
-    jsonfile = json.load(file)
-    jsonobj = json.dumps(jsonfile)
-    policyobj = parliament.analyze_policy_string(jsonobj)
-    policy_actions= policyobj.get_allowed_actions()
     for x in shellresponse:
         reformed = x.replace(r'\\', '/')
         if jsonfile_name in reformed:
             dict['Findings'].append(str(reformed))
+    if len(dict['Findings']) == 0:
+        dict['Findings'].append('No faults found within policy')
     for jsonfile_name2 in json_files:
         filename1 = jsonfile_name
         filename2 = jsonfile_name2
