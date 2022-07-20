@@ -9,7 +9,7 @@
                 "dynamodb:GetItem",
                 "dynamodb:Query",
                 "dynamodb:Scan",
-                "dynamodb:BatchWriteItemsss",
+                "dynamodb:BatchWriteItem",
                 "dynamodb:PutItem",
                 "dynamodb:UpdateItem"
             ],
