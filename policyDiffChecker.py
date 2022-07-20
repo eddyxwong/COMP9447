@@ -15,6 +15,7 @@ iam_definition_path = pkg_resources.resource_filename(__name__, "iam_definition.
 iam_definition = json.load(open(iam_definition_path, "r"))
 
 
+# Helper Function To Get Priviledge info
 def get_privilege_info(service, action):
     """
     Given a service, like "s3"
@@ -30,13 +31,12 @@ def get_privilege_info(service, action):
                     return privilege_info
 
 
-
 json_files = []
 
 # Getting the current work directory (cwd)
 thisdir = os.getcwd()
 # r=root, d=directories, f = files
-for r, d, f in os.walk(thisdir):
+for r, d, f in os.walk('TestIAMpolicies'):
     for file in f:
         if file.endswith(".json"):
             abspath = os.path.join(r, file)
@@ -45,24 +45,13 @@ for r, d, f in os.walk(thisdir):
 #From the policies, map it to the functions and list out what they can do
 response = {'Policies': []}
 
-shellresponse = subprocess.getoutput('parliament --directory {}'.format(shlex.quote('TestIAMpolicies')))
-print(shellresponse)
+shellresponse = subprocess.getoutput('parliament --directory {}'.format(shlex.quote('TestIAMpolicies'))).split('\n')
 
 for jsonfile_name in json_files:
-    print(jsonfile_name)
-    file = open(jsonfile_name)
-    jsonfile = json.load(file)
-    jsonobj = json.dumps(jsonfile)
-    policyobj = parliament.analyze_policy_string(jsonobj)
-    policyobj.analyze
-    if 'MALFORMED_JSON' not in policyobj.finding_ids:
-        response['Policies'].append({
-            'Policy Name': jsonfile_name,
-            'Allowed Actions': [],
-            'Findings': []
-        })
-    elif 'MALFORMED_JSON' in policyobj.finding_ids:
-        print('Erorr: Json file ' +jsonfile_name+ ' is not a IAM policy file')
+    response['Policies'].append({
+        'Policy Name': jsonfile_name,
+        'Findings': []
+    })
 
 for dict in response['Policies']:
     jsonfile_name = dict['Policy Name']
@@ -71,8 +60,10 @@ for dict in response['Policies']:
     jsonobj = json.dumps(jsonfile)
     policyobj = parliament.analyze_policy_string(jsonobj)
     policy_actions= policyobj.get_allowed_actions()
-    for x in policyobj.findings:
-        dict['Findings'].append(str(x))
+    for x in shellresponse:
+        reformed = x.replace(r'\\', '/')
+        if jsonfile_name in reformed:
+            dict['Findings'].append(str(reformed))
 print(json.dumps(response, sort_keys=False, indent=4))
 
 
