@@ -152,7 +152,7 @@ jobs:
           run: |
             value=`cat jsonfiles.txt`
             for i in $value; do
-            parliament_value= cat $i | parliament
+            parliament_value= cat $i | parliament || echo fun
             echo $parliament_value >> parliamentoutput.txt
             done
         - name: Upload python filenames as a artifact
