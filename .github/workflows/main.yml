@@ -105,9 +105,9 @@ jobs:
 
 
 # take in both job 3 (policy.txt/json) and job 5 to take in the json files and run parliament with it 
-  job_6:
+  job_4:
     name: Display Policy Differences
-    needs: [job_3, job_5]
+    needs: [job_3]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
