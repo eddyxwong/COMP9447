@@ -207,12 +207,12 @@ jobs:
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install e .
-          
+
       - name: Output results
         run: |
           echo "Found ${{ steps.p3.outputs.path_count }} file(s) with this extension:"
           for i in ${{ steps.p3.outputs.paths }}; do
-          parliament_value= cat $i | parliament
+          parliament_value= (cat $i | parliament) || echo Error
           echo -n $parliament_value " ">> testfiles.txt
           done
 
