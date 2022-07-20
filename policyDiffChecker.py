@@ -48,10 +48,10 @@ for r, d, f in os.walk(thisdir):
 response = {'Policies': []}
 
 for jsonfile_name in json_files:
-    shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
+    shellresponse = subprocess.check_output('parliament --file {}'.format(shlex.quote(jsonfile_name)))
+    print(shellresponse)
     text = subprocess.run(['parliament' ,'--file',jsonfile_name],stdout=subprocess.PIPE, text=True)
-    g = text.stdout
-    print(str(g))
+    print(text.stdout)
     file = open(jsonfile_name)
     jsonfile = json.load(file)
     jsonobj = json.dumps(jsonfile)
