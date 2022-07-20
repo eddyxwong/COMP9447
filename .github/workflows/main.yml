@@ -133,7 +133,7 @@ jobs:
 
   job_5:
       name: Display Json Files And Pass it Diff Checker
-      needs: [job_1, job_2]
+      needs: [job_1, job_4]
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v3
@@ -145,10 +145,9 @@ jobs:
             name: jsonfiles
         - shell: bash
           run: |
-            jsonfilenames=`cat jsonfiles.txt`
-            echo The result is $jsonfilenames
-            while IFS= read -r line; do
-              echo "Text read from file: $line"
+            while read line
+            do
+              echo $line
             done < jsonfiles.txt
         # Take the json file names and pass it to parliament using a python script here
 
