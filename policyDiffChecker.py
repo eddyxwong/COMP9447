@@ -57,6 +57,7 @@ for jsonfile_name in json_files:
         text = subprocess.run('cat '+jsonfile_name+' | parliament', shell=True, text=True, capture_output=True).stdout.strip("\n")
     #Run the analyse command
     # Enhance the findings
+    print(text)
     if 'UNKNOWN_ACTION' or 'MALFORMED_JSON' not in text.findings:
         response['Policies'].append({
             'Policy Name': jsonfile_name,
