@@ -142,6 +142,7 @@ jobs:
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             pip install e .
         - name: parliament runner
+          continue-on-error: true
           id: output_test
           run: |
             value=`cat jsonfiles.txt`

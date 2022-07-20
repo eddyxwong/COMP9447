@@ -49,7 +49,8 @@ response = {'Policies': []}
 
 for jsonfile_name in json_files:
     shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
-    text = subprocess.run(['parliament' ,'--file',jsonfile_name],stdout=subprocess.PIPE, text=True)
+    text = subprocess.run('cat '+jsonfile_name+' | parliament' ,stdout=subprocess.PIPE, text=True, shell=True)
+    print(text)
     file = open(jsonfile_name)
     jsonfile = json.load(file)
     jsonobj = json.dumps(jsonfile, sort_keys=True,
@@ -58,7 +59,7 @@ for jsonfile_name in json_files:
     #Run the analyse command
     # Enhance the findings
     for x in policyobj.findings:
-        print(x)
+        print('blank')
     if 'UNKNOWN_ACTION' or 'MALFORMED_JSON' not in policyobj.findings:
         response['Policies'].append({
             'Policy Name': jsonfile_name,
