@@ -212,7 +212,8 @@ jobs:
         run: |
           echo "Found ${{ steps.p3.outputs.path_count }} file(s) with this extension:"
           for i in ${{ steps.p3.outputs.paths }}; do
-          parliament_value= (cat $i | parliament) || echo Error
+          parliament_value= cat $i | parliament
+          if: ${{ failure() && steps.p3.conclusion == 'failure' }}
           echo -n $parliament_value " ">> testfiles.txt
           done
 
