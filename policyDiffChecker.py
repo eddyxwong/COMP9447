@@ -2,7 +2,6 @@ import json
 import parliament
 import os
 import subprocess
-import shlex
 import pkg_resources
 
 
@@ -74,6 +73,9 @@ for dict in response['Policies']:
     try:
         window_jsonfile_name = jsonfile_name.replace("/", "\\")
         shellresponse = subprocess.run('type '+window_jsonfile_name+' | parliament', shell=True, text=True, capture_output=True).stdout.strip("\n")
+        proc = subprocess.Popen('type '+ window_jsonfile_name+' | parliament', stdout=subprocess.PIPE, shell=True)
+        (out, err) = proc.communicate()
+        print("program output:", out)
     except:
         shellresponse = subprocess.run('cat '+jsonfile_name+' | parliament', shell=True, text=True, capture_output=True).stdout.strip("\n")
     policy_actions= policyobj.get_allowed_actions()

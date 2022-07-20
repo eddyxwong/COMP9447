@@ -1,5 +1,6 @@
 import os
-
+import parliament
+import json
 
 json_files = []
 
@@ -13,5 +14,14 @@ for r, d, f in os.walk(thisdir):
             json_files.append(str(os.path.relpath(abspath).replace(os.path.sep, '/')))
 
 
-for x in json_files:
-    print(x)
+for jsonfile_name in json_files:
+    file = open(jsonfile_name)
+    jsonfile = json.load(file)
+    jsonobj = json.dumps(jsonfile)
+    policyobj = parliament.analyze_policy_string(jsonobj)
+    policyobj.analyze
+    if 'MALFORMED_JSON' in policyobj.finding_ids:
+        json_files.remove(jsonfile_name)
+
+for jsonfile_name in json_files:
+    print(jsonfile_name)
