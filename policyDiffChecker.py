@@ -55,7 +55,7 @@ for jsonfile_name in json_files:
     if 'MALFORMED_JSON' not in policyobj.finding_ids:
         response['Policies'].append({
             'Policy Name': jsonfile_name,
-            'Allowed Actions': [],
+            'Differences': [],
             'Findings': []
         })
     elif 'MALFORMED_JSON' in policyobj.finding_ids:
