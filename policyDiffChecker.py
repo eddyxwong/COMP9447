@@ -49,12 +49,14 @@ response = {'Policies': []}
 
 for jsonfile_name in json_files:
     shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
-    text = subprocess.run("type "+jsonfile_name+" | parliament" ,shell=True)
-    print(text)
+    print(jsonfile_name)
     file = open(jsonfile_name)
     jsonfile = json.load(file)
     jsonobj = json.dumps(jsonfile, sort_keys=True,
     indent=4, separators=(',', ': '))
+    jsonfile_name = jsonfile_name.replace("/", "\\")
+    text = subprocess.run('type '+jsonfile_name+' | parliament', shell=True, text=True, capture_output=True).stdout.strip("\n")
+    print(text)
     policyobj = parliament.analyze_policy_string(jsonobj)
     #Run the analyse command
     # Enhance the findings
