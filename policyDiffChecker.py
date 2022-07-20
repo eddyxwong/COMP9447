@@ -4,7 +4,7 @@ import os
 import subprocess
 import pkg_resources
 import shlex
-
+import difflib
 
 # Grab a txt file of json files found
 # Take json files and run parliament in github actions
@@ -50,7 +50,8 @@ shellresponse = subprocess.getoutput('parliament --directory {}'.format(shlex.qu
 for jsonfile_name in json_files:
     response['Policies'].append({
         'Policy Name': jsonfile_name,
-        'Findings': []
+        'Findings': [],
+        'Differences': {}
     })
 
 for dict in response['Policies']:
@@ -64,6 +65,17 @@ for dict in response['Policies']:
         reformed = x.replace(r'\\', '/')
         if jsonfile_name in reformed:
             dict['Findings'].append(str(reformed))
+    for jsonfile_name2 in json_files:
+        filename1 = jsonfile_name
+        filename2 = jsonfile_name2
+        if filename1 == filename2:
+            continue
+        file1contents = set(open(filename1).readlines())
+        file2contents = set(open(filename2).readlines())
+        if file1contents == file2contents:
+            print("Yup they're the same!")
+        else:
+            dict['Differences'].update({"Contents found in "+filename1+" but not in "+filename2: []})
+            for diffLine in file1contents - file2contents:
+                dict['Differences']["Contents found in "+filename1+" but not in "+filename2].append(" ".join(str(diffLine).split()))
 print(json.dumps(response, sort_keys=False, indent=4))
-
-
