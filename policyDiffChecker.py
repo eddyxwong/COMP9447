@@ -42,6 +42,12 @@ response = {'Policies': []}
 
 for jsonfile_name in json_files:
     shellresponse = subprocess.getoutput('parliament --file {}'.format(shlex.quote(jsonfile_name)))
+    text = subprocess.run(['parliament' ,'--file',jsonfile_name], stdout=subprocess.PIPE, text=True)
+    print(text)
+    file = open(jsonfile_name)
+    jsonfile = json.load(file)
+    jsonobj = json.dumps(jsonfile)
+    policyobj = parliament.analyze_policy_string(jsonobj)
     if 'Unknown' not in shellresponse:
         response['Policies'].append({
             'Policy Name': jsonfile_name,
@@ -65,7 +71,6 @@ for dict in response['Policies']:
         info = get_privilege_info(actiondict['service'], actiondict['action'])
         dict['Allowed Actions'].append("Action: "+ action)
         dict['Allowed Actions'].append("Service Info: "+ info['description'])
-    print(shellresponse)
     dict['Findings'] = list(shellresponse.split("\n"))
 
 print(json.dumps(response, sort_keys=False, indent=4))
