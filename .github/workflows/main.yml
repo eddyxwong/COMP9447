@@ -156,7 +156,7 @@ jobs:
               echo ::set-output name=new_value::$parliament_value
             done < "$input_file"
             
-          run: echo $parliament_value
+        - run: echo $parliament_value
       
         # Take the json file names and pass it to parliament using a python script here
 
