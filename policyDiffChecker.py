@@ -44,22 +44,21 @@ for r, d, f in os.walk(thisdir):
 #From the policies, map it to the functions and list out what they can do
 response = {'Policies': []}
 
+
 for jsonfile_name in json_files:
-    
-    try:
-        window_jsonfile_name = jsonfile_name.replace("/", "\\")
-        text = subprocess.run('type '+window_jsonfile_name+' | parliament', shell=True, text=True, capture_output=True).stdout.strip("\n")
-    except:
-        text = subprocess.run('cat '+jsonfile_name+' | parliament', shell=True, text=True, capture_output=True).stdout.strip("\n")
-    #Run the analyse command
-    # Enhance the findings
-    if 'JSON is malformed' not in text:
+    print(jsonfile_name)
+    file = open(jsonfile_name)
+    jsonfile = json.load(file)
+    jsonobj = json.dumps(jsonfile)
+    policyobj = parliament.analyze_policy_string(jsonobj)
+    policyobj.analyze
+    if 'MALFORMED_JSON' not in policyobj.finding_ids:
         response['Policies'].append({
             'Policy Name': jsonfile_name,
             'Allowed Actions': [],
-            'Findings': ''
+            'Findings': []
         })
-    elif 'JSON is malformed' in text:
+    elif 'MALFORMED_JSON' in policyobj.finding_ids:
         print('Erorr: Json file ' +jsonfile_name+ ' is not a IAM policy file')
 
 for dict in response['Policies']:
@@ -68,20 +67,20 @@ for dict in response['Policies']:
     jsonfile = json.load(file)
     jsonobj = json.dumps(jsonfile)
     policyobj = parliament.analyze_policy_string(jsonobj)
-    try:
-        window_jsonfile_name = jsonfile_name.replace("/", "\\")
-        shellresponse = subprocess.run('type '+window_jsonfile_name+' | parliament', shell=True, text=True, capture_output=True).stdout.strip("\n")
-        proc = subprocess.Popen('type '+ window_jsonfile_name+' | parliament', stdout=subprocess.PIPE, shell=True)
-        (out, err) = proc.communicate()
-        print("program output:", out)
-    except:
-        shellresponse = subprocess.run('cat '+jsonfile_name+' | parliament', shell=True, text=True, capture_output=True).stdout.strip("\n")
     policy_actions= policyobj.get_allowed_actions()
     for action in policy_actions:
         actiondict = parliament.expand_action(action)[0]
         info = get_privilege_info(actiondict['service'], actiondict['action'])
         dict['Allowed Actions'].append("Action: "+ action)
         dict['Allowed Actions'].append("Service Info: "+ info['description'])
-    dict['Findings'] = list(shellresponse.split("\n"))
-
+    for x in policyobj.findings:
+        dict['Findings'].append(str(x))
 print(json.dumps(response, sort_keys=False, indent=4))
+
+
+
+
+file = open('TestIAMpolicies\policy3.txt', 'r')
+policy = file.read()
+policyobj = parliament.analyze_policy_string(policy)
+print(parliament.enhance_finding(policyobj.findings[0]))

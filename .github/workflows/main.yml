@@ -151,9 +151,7 @@ jobs:
           run: |
             value=`cat jsonfiles.txt`
             for i in $value; do
-            parliament_value= cat $i | parliament || echo fun
-            echo $parliamentoutput
-            echo -n $parliament_value >> parliamentoutput.txt
+            $(parliament --file TestIAMpolicies\policy1.json) && echo test
             done
         - name: Upload python filenames as a artifact
           uses: actions/upload-artifact@v3
@@ -191,21 +189,3 @@ jobs:
         shell: bash
         run: |
           python policyDiffChecker.py
-
-
-  job_8:
-      name: Display parliament Files and Run Analyser
-      needs: [job_1, job_5]
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - uses: actions/setup-python@v2
-
-        - name: Download parliament txt file generated from job 2
-          uses: actions/download-artifact@v3
-          with:
-            name: parliamentoutput
-        - shell: bash
-          run: |
-            val=`cat parliamentoutput.txt`
-            echo The result is $val
