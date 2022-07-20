@@ -149,12 +149,12 @@ jobs:
         - name: parliament runner
           id: output_test
           continue_on_error: true
-          run: |
-            value=`cat jsonfiles.txt`
-            for i in $value; do
-            parliament_value= cat $i | parliament
-            echo -n $parliament_value " ">> pythonfiles.txt
-            done
+            run: |
+              value=`cat jsonfiles.txt`
+              for i in $value; do
+              parliament_value= cat $i | parliament
+              echo $parliament_value >> parliamentoutput.txt
+              done
         # Take the json file names and pass it to parliament using a python script here
 
 # take in both job 3 (policy.txt/json) and job 5 to take in the json files and run parliament with it 
