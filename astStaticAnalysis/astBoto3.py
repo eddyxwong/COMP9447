@@ -22,17 +22,17 @@ vscode collab extension.
 
 def main():
 
-
+    
     parser = argparse.ArgumentParser()
     
+    #add help details about argument
     parser.add_argument('file', nargs='+')
 
     astList = []
 
     args = parser.parse_args()
     for arg in args.file:
-        print(arg)
-        # with open(arg, "r") as source:
+        # print(arg)
         with open(arg, "r") as source:
             tree = ast.parse(source.read())
             astList.append(tree)
@@ -42,10 +42,7 @@ def main():
         '''
         # astpretty.pprint(tree, show_offsets=False)
 
-
-
     analyzer = Analyzer()
-
 
     for tree in astList:
         analyzer.visit(tree)
@@ -138,6 +135,11 @@ class Analyzer(ast.NodeVisitor):
     def __init__(self):
         self.stats = {"import": [], "from": []}
 
+
+        '''
+        extractDict contains all extracted actions from a boto3 script file which will
+        be used in the IAM policy generation
+        '''
         self.extractDict = {}
 
         '''
@@ -179,10 +181,11 @@ class Analyzer(ast.NodeVisitor):
 
                     keywords = node.value.keywords
 
-                    if node.value.keywords == []:
+                    # node.value.keywords
+                    if keywords == []:
                         nameArg = "*"
                     else:
-                        for keyword in node.value.keywords:
+                        for keyword in keywords:
 
                             '''
                             FunctionName refers to name argument for lambda 
@@ -194,8 +197,6 @@ class Analyzer(ast.NodeVisitor):
                                 session -> config ->
                                 Figure out how to translate testFunction to arn:aws:lambda:us-east-1:221094580673:function:testFunction
                                 '''
-
-
                     awsService = self.userObjDict[callingUserObj]   
                     
                     if nameArg not in self.extractDict[awsService]:
