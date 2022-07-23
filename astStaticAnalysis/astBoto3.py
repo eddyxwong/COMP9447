@@ -6,36 +6,49 @@ import astpretty
 import sys
 
 '''
-arg parse 
+general style refactoring, pylint
+arg parse (add details, !directory argument!)
+comparable function CLI. 
 parsing of directorys, filter for python files in directory recursively, potentially can use walk
 python filter in built function
 
 
-AST walker, find boto3 object client (extensible for resources and sessions)
-webscraper convert action to correct IAM policy version
-have existing file in repo, with mapping of actions
-beautifulsoup, pickle 
-
-vscode collab extension.
+AST walker, find boto3 object client (extensible for resources and sessions) medium
+have existing file in repo, with mapping of actions (iann file) do first
 
 '''
 
-def main(argv):
-    for arg in argv[1:]:
+def main():
+
+    
+    parser = argparse.ArgumentParser()
+    
+    #add help details about argument "enter a list of files"
+    parser.add_argument('file', nargs='+')
+
+    #add a comment explaining what this datastructure is for
+    astList = []
+
+    args = parser.parse_args()
+    for arg in args.file:
         # print(arg)
-        # with open(arg, "r") as source:
         with open(arg, "r") as source:
             tree = ast.parse(source.read())
+            astList.append(tree)
 
         '''
         Code below formats the AST and prints it out
         '''
         # astpretty.pprint(tree, show_offsets=False)
 
-        analyzer = Analyzer()
+    analyzer = Analyzer()
+
+    for tree in astList:
         analyzer.visit(tree)
-        resp = analyzer.report()
-        print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
+        # resp = analyzer.report()
+
+    resp = analyzer.report()
+    print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
 
 
 
@@ -121,6 +134,11 @@ class Analyzer(ast.NodeVisitor):
     def __init__(self):
         self.stats = {"import": [], "from": []}
 
+
+        '''
+        extractDict contains all extracted actions from a boto3 script file which will
+        be used in the IAM policy generation
+        '''
         self.extractDict = {}
 
         '''
@@ -162,10 +180,11 @@ class Analyzer(ast.NodeVisitor):
 
                     keywords = node.value.keywords
 
-                    if node.value.keywords == []:
+                    # node.value.keywords
+                    if keywords == []:
                         nameArg = "*"
                     else:
-                        for keyword in node.value.keywords:
+                        for keyword in keywords:
 
                             '''
                             FunctionName refers to name argument for lambda 
@@ -177,8 +196,6 @@ class Analyzer(ast.NodeVisitor):
                                 session -> config ->
                                 Figure out how to translate testFunction to arn:aws:lambda:us-east-1:221094580673:function:testFunction
                                 '''
-
-
                     awsService = self.userObjDict[callingUserObj]   
                     
                     if nameArg not in self.extractDict[awsService]:
@@ -186,8 +203,8 @@ class Analyzer(ast.NodeVisitor):
 
                     if(awsMethod not in self.extractDict[awsService][nameArg]):
                         self.extractDict[awsService][nameArg].append(awsMethod)          
-
-        except AttributeError:
+        # except AttributeError:
+        except:
             self.generic_visit(node)
 
 
@@ -202,4 +219,4 @@ class Analyzer(ast.NodeVisitor):
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main()
