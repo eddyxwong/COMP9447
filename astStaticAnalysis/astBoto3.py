@@ -6,17 +6,15 @@ import astpretty
 import sys
 
 '''
-arg parse 
+general style refactoring, pylint
+arg parse (add details, !directory argument!)
+comparable function CLI. 
 parsing of directorys, filter for python files in directory recursively, potentially can use walk
 python filter in built function
 
 
-AST walker, find boto3 object client (extensible for resources and sessions)
-webscraper convert action to correct IAM policy version
-have existing file in repo, with mapping of actions
-beautifulsoup, pickle 
-
-vscode collab extension.
+AST walker, find boto3 object client (extensible for resources and sessions) medium
+have existing file in repo, with mapping of actions (iann file) do first
 
 '''
 
@@ -25,9 +23,10 @@ def main():
     
     parser = argparse.ArgumentParser()
     
-    #add help details about argument
+    #add help details about argument "enter a list of files"
     parser.add_argument('file', nargs='+')
 
+    #add a comment explaining what this datastructure is for
     astList = []
 
     args = parser.parse_args()
