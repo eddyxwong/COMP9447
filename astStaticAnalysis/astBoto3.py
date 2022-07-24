@@ -203,8 +203,8 @@ class Analyzer(ast.NodeVisitor):
 
                     if(awsMethod not in self.extractDict[awsService][nameArg]):
                         self.extractDict[awsService][nameArg].append(awsMethod)          
-        # except AttributeError:
-        except:
+        except AttributeError:
+        # except:
             self.generic_visit(node)
 
 
