@@ -7,6 +7,21 @@
   pointer-events: none;
 }
 
+.Upload {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.Drop {
+  justify-content: center;
+  align-items: center;
+  border: 2px dashed;
+  text-align: center;
+  line-height: 2em;
+}
+
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

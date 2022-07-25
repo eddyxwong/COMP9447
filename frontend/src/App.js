@@ -1,7 +1,10 @@
 // import logo from './logo.svg';
 import './App.css';
 import React, { useState } from 'react';
-import Button from '@mui/material/Button';
+import Dropzone from 'react-dropzone';
+import InputInstructions from './components/InputInstructions';
+import Diff from './components/Diff';
+
 
 export default function App() {
     // let multiple = async (e) => {
@@ -39,16 +42,7 @@ export default function App() {
     };
 
     return (
-        <div
-            className="App"
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '100vh',
-            }}
-        >
+        <div className="App">
             <h1>IAM STATIC</h1>
             Welcome to IAM Static, your very own IAM policy generator that
             enforces least privilege!
@@ -56,17 +50,52 @@ export default function App() {
             Currently we only support python boto3 scripts to generate your IAM
             policy files but stay tuned!
             <br></br>
-            <Button variant="contained" component="label">
-                Upload
-                <input
-                    hidden
-                    accept=".py"
-                    multiple
-                    type="file"
-                    // value={selectedFile}
-                    onChange={multiple}
-                />
-            </Button>
+            <div className="Upload">
+                <div className="Left">
+                    <h2>New Policy</h2>
+                <Dropzone multiple={false} onDrop={acceptedFiles => console.log(acceptedFiles)}>
+                    {({getRootProps, getInputProps}) => (
+                        <section className='Drop'>
+                        <div {...getRootProps()}>
+                            <input {...getInputProps()} 
+                                hidden
+                                accept=".py"
+                                multiple
+                                type="file"
+                                // value={selectedFile}
+                                onChange={multiple}
+                            />
+                            <InputInstructions/>
+                        </div>
+                        </section>
+                )}
+                </Dropzone>
+                </div>
+                
+                <div className="Right">
+                    <h2>Current Policy</h2>
+                <Dropzone multiple={false} onDrop={acceptedFiles => console.log(acceptedFiles)}>
+                    {({getRootProps, getInputProps}) => (
+                        <section className="Drop">
+                        <div {...getRootProps()}>
+                            <input {...getInputProps()} 
+                                hidden
+                                accept=".py"
+                                multiple
+                                type="file"
+                                // value={selectedFile}
+                                onChange={multiple}
+                            />
+                            <InputInstructions/>
+                        </div>
+                        </section>
+                )}
+                </Dropzone>
+                </div>
+            </div>
+            <div>
+                <Diff/>
+            </div>
         </div>
     );
 }
