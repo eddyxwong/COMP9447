@@ -1,5 +1,6 @@
 import ast
 import json
+import os
 from pprint import pprint
 import argparse
 import astpretty
@@ -24,13 +25,14 @@ def main():
     parser = argparse.ArgumentParser()
     
     #add help details about argument "enter a list of files"
-    parser.add_argument('file', nargs='+')
+    parser.add_argument('--files', nargs='+', help='a list of files')
 
+    parser.add_argument('--dir', nargs='?', help= 'a directory')
     #add a comment explaining what this datastructure is for
     astList = []
 
     args = parser.parse_args()
-    for arg in args.file:
+    for arg in args.files:
         # print(arg)
         with open(arg, "r") as source:
             tree = ast.parse(source.read())
@@ -180,6 +182,7 @@ class Analyzer(ast.NodeVisitor):
 
                     keywords = node.value.keywords
 
+                    nameArg = "*"
                     # node.value.keywords
                     if keywords == []:
                         nameArg = "*"
