@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import InputInstructions from './components/InputInstructions';
 import Diff from './components/Diff';
+import logo from './assets/Transparent.png';
 
 
 export default function App() {
@@ -43,13 +44,17 @@ export default function App() {
 
     return (
         <div className="App">
-            <h1>IAM STATIC</h1>
-            Welcome to IAM Static, your very own IAM policy generator that
-            enforces least privilege!
-            <br></br>
-            Currently we only support python boto3 scripts to generate your IAM
-            policy files but stay tuned!
-            <br></br>
+            <img src={logo}/>
+            <div className="Description">
+               <p>
+                    Welcome to IAM Static, your very own IAM policy generator that
+                    enforces least privilege!
+                    <br></br>
+                    Currently we only support python boto3 scripts to generate your IAM
+                    policy files but stay tuned!
+                    <br></br>
+                </p>
+            </div>
             <div className="Upload">
                 <div className="Left">
                     <h2>New Policy</h2>

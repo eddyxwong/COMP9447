@@ -1,3 +1,8 @@
+:root {
+  --main-bg-color: #2d4354;
+  --main-s-color: #d6bd54;
+}
+
 .App {
   text-align: center;
 }
@@ -10,7 +15,7 @@
 .Upload {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 50px
 }
 
 .Drop {
@@ -19,6 +24,8 @@
   border: 2px dashed;
   text-align: center;
   line-height: 2em;
+  padding: 200px;
+  color: white;
 }
 
 
@@ -50,4 +57,23 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.Description {
+  background-color: #FFFDD0;
+  width: 30%;
+  padding: 10px;
+  border: 2px solid var(--main-s-color);
+  border-radius: 15px;
+  -moz-border-radius: 15px;
+  margin: auto;
+  margin-top: -100px;
+}
+
+body {
+  background-color: var(--main-bg-color);
+}
+
+h2 {
+  color: white;
 }
