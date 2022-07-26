@@ -25,9 +25,9 @@ def main():
     parser = argparse.ArgumentParser()
     
     #add help details about argument "enter a list of files"
-    parser.add_argument('--files', nargs='+', help='a list of files')
+    parser.add_argument('--files', nargs='+', help="list of files")
+    parser.add_argument('--dir' ,nargs='?', help="a directory of files")
 
-    parser.add_argument('--dir', nargs='?', help= 'a directory')
     #add a comment explaining what this datastructure is for
     astList = []
 
@@ -51,6 +51,7 @@ def main():
 
     resp = analyzer.report()
     print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
+    return json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
 
 
 
@@ -218,6 +219,7 @@ class Analyzer(ast.NodeVisitor):
         pprint(self.userObjDict)
         pprint(self.extractDict)
         print()
+
         return self.extractDict
 
 
