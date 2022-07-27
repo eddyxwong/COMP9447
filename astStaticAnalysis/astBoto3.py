@@ -1,5 +1,6 @@
 import ast
 import json
+import os
 from pprint import pprint
 import argparse
 import astpretty
@@ -19,28 +20,24 @@ have existing file in repo, with mapping of actions (iann file) do first
 '''
 
 def main():
+    args = parseArgs()
+    astList = fileASTConvert(args)
+    resp = analyseASTList(astList)
 
-    
-    parser = argparse.ArgumentParser()
-    
-    #add help details about argument "enter a list of files"
-    parser.add_argument('file', nargs='+')
+    iamPolicy = json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
 
-    #add a comment explaining what this datastructure is for
-    astList = []
+    createPolicyFile(iamPolicy)
+    # print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
+    return json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
 
-    args = parser.parse_args()
-    for arg in args.file:
-        # print(arg)
-        with open(arg, "r") as source:
-            tree = ast.parse(source.read())
-            astList.append(tree)
 
-        '''
-        Code below formats the AST and prints it out
-        '''
-        # astpretty.pprint(tree, show_offsets=False)
+def createPolicyFile(iamPolicy):
+    with open('policy.json', 'w') as f:
+        f.write(iamPolicy)
 
+
+
+def analyseASTList(astList):
     analyzer = Analyzer()
 
     for tree in astList:
@@ -48,9 +45,28 @@ def main():
         # resp = analyzer.report()
 
     resp = analyzer.report()
-    print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
+
+    return resp
+
+def fileASTConvert(args: str):
+    astList = []
+
+    for arg in args.files:
+        with open(arg, "r") as source:
+            tree = ast.parse(source.read())
+            astList.append(tree)
+
+    #Code below formats the AST and prints it out
+    #astpretty.pprint(tree, show_offsets=False)
+    return astList
 
 
+def parseArgs():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('files', nargs='+', help="list of files")
+    parser.add_argument('--dir' ,nargs='?', help="a directory of files")
+
+    return parser.parse_args()
 
 def generateIAMPolicy(respDict):
     """Given actions extract from boto3 script generate an IAM policy
@@ -180,6 +196,7 @@ class Analyzer(ast.NodeVisitor):
 
                     keywords = node.value.keywords
 
+                    nameArg = "*"
                     # node.value.keywords
                     if keywords == []:
                         nameArg = "*"
@@ -203,8 +220,8 @@ class Analyzer(ast.NodeVisitor):
 
                     if(awsMethod not in self.extractDict[awsService][nameArg]):
                         self.extractDict[awsService][nameArg].append(awsMethod)          
-        # except AttributeError:
-        except:
+        except AttributeError:
+        # except:
             self.generic_visit(node)
 
 
@@ -215,6 +232,7 @@ class Analyzer(ast.NodeVisitor):
         pprint(self.userObjDict)
         pprint(self.extractDict)
         print()
+
         return self.extractDict
 
 
