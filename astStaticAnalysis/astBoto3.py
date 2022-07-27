@@ -24,8 +24,17 @@ def main():
     astList = fileASTConvert(args)
     resp = analyseASTList(astList)
 
-    print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
+    iamPolicy = json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
+
+    createPolicyFile(iamPolicy)
+    # print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
     return json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
+
+
+def createPolicyFile(iamPolicy):
+    with open('policy.json', 'w') as f:
+        f.write(iamPolicy)
+
 
 
 def analyseASTList(astList):
