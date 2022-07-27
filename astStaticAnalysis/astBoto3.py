@@ -103,9 +103,12 @@ def generateIAMPolicy(respDict):
                 
                 iamPermission = mapping[addServiceMap]
 
-                addService = str(service)+":"+caseConverted
+
+                newPolicy["Statement"][statementNum-1]["Action"].append(iamPermission)
 
 
+                #Code below is old version when we didnt have the mapping
+                # addService = str(service)+":"+caseConverted
                 #list_buckets needs ListAllMyBuckets permission
                 #potentially hardcode others later on
                 # if(addService == "s3:ListBuckets"):
@@ -113,7 +116,6 @@ def generateIAMPolicy(respDict):
 
                 # newPolicy["Statement"][statementNum-1]["Action"].append(addService)
 
-                newPolicy["Statement"][statementNum-1]["Action"].append(iamPermission)
                 # print(newPolicy["Statement"][statementNum-1]["Action"])
             statementNum +=1
             # print(respDict[service][resource])
