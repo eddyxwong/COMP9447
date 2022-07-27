@@ -20,29 +20,15 @@ have existing file in repo, with mapping of actions (iann file) do first
 '''
 
 def main():
+    args = parseArgs()
+    astList = fileASTConvert(args)
+    resp = analyseASTList(astList)
 
-    
-    parser = argparse.ArgumentParser()
-    
-    #add help details about argument "enter a list of files"
-    parser.add_argument('--files', nargs='+', help="list of files")
-    parser.add_argument('--dir' ,nargs='?', help="a directory of files")
+    print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
+    return json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
 
-    #add a comment explaining what this datastructure is for
-    astList = []
 
-    args = parser.parse_args()
-    for arg in args.files:
-        # print(arg)
-        with open(arg, "r") as source:
-            tree = ast.parse(source.read())
-            astList.append(tree)
-
-        '''
-        Code below formats the AST and prints it out
-        '''
-        # astpretty.pprint(tree, show_offsets=False)
-
+def analyseASTList(astList):
     analyzer = Analyzer()
 
     for tree in astList:
@@ -50,10 +36,28 @@ def main():
         # resp = analyzer.report()
 
     resp = analyzer.report()
-    print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
-    return json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
+
+    return resp
+
+def fileASTConvert(args: str):
+    astList = []
+
+    for arg in args.files:
+        with open(arg, "r") as source:
+            tree = ast.parse(source.read())
+            astList.append(tree)
+
+    #Code below formats the AST and prints it out
+    #astpretty.pprint(tree, show_offsets=False)
+    return astList
 
 
+def parseArgs():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('files', nargs='+', help="list of files")
+    parser.add_argument('--dir' ,nargs='?', help="a directory of files")
+
+    return parser.parse_args()
 
 def generateIAMPolicy(respDict):
     """Given actions extract from boto3 script generate an IAM policy
