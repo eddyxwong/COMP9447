@@ -77,6 +77,13 @@ def generateIAMPolicy(respDict):
     Returns:
         str: IAM policy
     """
+    with open('map.json') as json_file:
+        mapping = json.load(json_file)
+
+
+
+
+
     statementNum = 1
 
 
@@ -91,15 +98,22 @@ def generateIAMPolicy(respDict):
             for method in respDict[service][resource]:
                 caseConverted = convertSnakeCasetoPascalCase(method)
 
+                
+                addServiceMap = str(service).capitalize()+"."+caseConverted
+                
+                iamPermission = mapping[addServiceMap]
+
                 addService = str(service)+":"+caseConverted
 
 
                 #list_buckets needs ListAllMyBuckets permission
                 #potentially hardcode others later on
-                if(addService == "s3:ListBuckets"):
-                    addService = "s3:ListAllMyBuckets"
+                # if(addService == "s3:ListBuckets"):
+                #     addService = "s3:ListAllMyBuckets"
 
-                newPolicy["Statement"][statementNum-1]["Action"].append(addService)
+                # newPolicy["Statement"][statementNum-1]["Action"].append(addService)
+
+                newPolicy["Statement"][statementNum-1]["Action"].append(iamPermission)
                 # print(newPolicy["Statement"][statementNum-1]["Action"])
             statementNum +=1
             # print(respDict[service][resource])
