@@ -131,4 +131,4 @@ jobs:
       - name: Compare with Supplied Policy
         shell: bash
         run: |
-          python policyDiffChecker.py
+          python policyDiffChecker.py TestIAMpolicies

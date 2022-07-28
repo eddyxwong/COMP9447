@@ -1,5 +1,5 @@
 import json
-import parliament
+from parliament import analyze_policy_string
 import os
 import sys
 import subprocess
@@ -28,6 +28,16 @@ def main(argv):
     response = directInit(response, json_files)
 
     response = diffcheck(shellresponse,response,json_files)
+
+    policy = analyze_policy_string(
+            """{
+    "Version": "2012-10-17",
+    "Statement": {
+        "Effect": "Allow",
+        "Action": "s3:GetObject",
+        "Resource": "arn:aws:s3:::secretbucket/*"}}""",
+        )
+    print(policy.findings)
 
     print(json.dumps(response, sort_keys=False, indent=4))
 
@@ -77,6 +87,7 @@ def diffcheck(shellresponse: list, response: dict, json_files: list) -> dict:
                 for diffLine in file1contents - file2contents:
                     dict['Differences']["Contents found in "+filename1+" but not in "+filename2].append(" ".join(str(diffLine).split()))
     return response
+
 
 if __name__ == "__main__":
     main(sys.argv)
