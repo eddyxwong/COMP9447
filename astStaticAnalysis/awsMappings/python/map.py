@@ -8,7 +8,7 @@ with open('test.json') as data_file:
 
     for sdkMethod in data["sdk_method_iam_mappings"]:
 
-        mappingDict[sdkMethod] = data["sdk_method_iam_mappings"][sdkMethod][0]['action']
+        mappingDict[sdkMethod.lower()] = data["sdk_method_iam_mappings"][sdkMethod][0]['action']
 
         # if(sdkMethod == "S3.ListBuckets"):
         #     print(data["sdk_method_iam_mappings"][sdkMethod][0]['action'])

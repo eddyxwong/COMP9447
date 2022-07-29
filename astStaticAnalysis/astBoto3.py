@@ -1,11 +1,12 @@
 import ast
 import json
+from ntpath import join
 import os
 from pprint import pprint
 import argparse
 import astpretty
 import sys
-
+import subprocess
 '''
 general style refactoring, pylint
 arg parse (add details, !directory argument!)
@@ -21,19 +22,31 @@ have existing file in repo, with mapping of actions (iann file) do first
 
 def main():
     args = parseArgs()
-    astList = fileASTConvert(args)
+    astList = fileASTConvert(args.files)
     resp = analyseASTList(astList)
 
     iamPolicy = json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
 
-    createPolicyFile(iamPolicy)
+    policyFile = createPolicyFile(iamPolicy)
+
+    createTerraformTemplate(args.tf, policyFile)
+
+
     # print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
     return json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
 
+def createTerraformTemplate(tfArg: bool, policyFile:json):
+    if(tfArg):
+        p = subprocess.Popen(["iam-policy-json-to-terraform < "+ policyFile+" > policy.tf"], stdout=subprocess.PIPE,shell=True)
+    
+    return 
 
-def createPolicyFile(iamPolicy):
+
+def createPolicyFile(iamPolicy:json):
     with open('policy.json', 'w') as f:
         f.write(iamPolicy)
+
+    return "policy.json"
 
 
 
@@ -47,11 +60,11 @@ def analyseASTList(astList):
     resp = analyzer.report()
 
     return resp
-
-def fileASTConvert(args: str):
+#args.files as input
+def fileASTConvert(fileargs):
     astList = []
 
-    for arg in args.files:
+    for arg in fileargs:
         with open(arg, "r") as source:
             tree = ast.parse(source.read())
             astList.append(tree)
@@ -65,6 +78,7 @@ def parseArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('files', nargs='+', help="list of files")
     parser.add_argument('--dir' ,nargs='?', help="a directory of files")
+    parser.add_argument('--tf' ,action='store_true', help="a flag for if you also want a terraform template")
 
     return parser.parse_args()
 
@@ -77,11 +91,8 @@ def generateIAMPolicy(respDict):
     Returns:
         str: IAM policy
     """
-    with open('map.json') as json_file:
+    with open('./awsMappings/python/map.json') as json_file:
         mapping = json.load(json_file)
-
-
-
 
 
     statementNum = 1
@@ -100,7 +111,7 @@ def generateIAMPolicy(respDict):
 
                 
                 addServiceMap = str(service).capitalize()+"."+caseConverted
-                
+                addServiceMap = addServiceMap.lower()
                 iamPermission = mapping[addServiceMap]
 
 
@@ -247,7 +258,7 @@ class Analyzer(ast.NodeVisitor):
         # pprint(self.stats)
         pprint(self.userObjDict)
         pprint(self.extractDict)
-        print()
+        # print()
 
         return self.extractDict
 

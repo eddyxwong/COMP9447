@@ -5,6 +5,14 @@
             "Sid": "Statement1",
             "Effect": "Allow",
             "Action": [
+                "lambda:GetFunction"
+            ],
+            "Resource": "arn:aws:lambda:us-east-1:221094580673:function:testFunction"
+        },
+        {
+            "Sid": "Statement2",
+            "Effect": "Allow",
+            "Action": [
                 "s3:ListAllMyBuckets"
             ],
             "Resource": "*"
