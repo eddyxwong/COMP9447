@@ -1,11 +1,13 @@
 import ast
 import json
+from ntpath import join
 import os
 from pprint import pprint
 import argparse
+from typing import List
 import astpretty
 import sys
-
+import subprocess
 '''
 general style refactoring, pylint
 arg parse (add details, !directory argument!)
@@ -21,23 +23,60 @@ have existing file in repo, with mapping of actions (iann file) do first
 
 def main():
     args = parseArgs()
-    astList = fileASTConvert(args)
+    astList = fileASTConvert(args.files)
     resp = analyseASTList(astList)
 
     iamPolicy = json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
 
-    createPolicyFile(iamPolicy)
+    policyFile = createPolicyFile(iamPolicy)
+
+    createTerraformTemplate(args.tf, policyFile)
+
+
     # print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
     return json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
 
+def createTerraformTemplate(tfArg: bool, policyFile:json):
+    if(tfArg):
+        p = subprocess.Popen(["iam-policy-json-to-terraform < "+ policyFile+" > policy.tf"], stdout=subprocess.PIPE,shell=True)
+    
+    return 
 
-def createPolicyFile(iamPolicy):
+
+def createPolicyFile(iamPolicy:json)->str:
+    """Writes a given IAM policy is json format to a file titled policy.json in the same directory
+
+    Args:
+        iamPolicy (json): IAM policy in json format
+
+    Returns:
+        str : name of the created IAM policy file
+    """
     with open('policy.json', 'w') as f:
         f.write(iamPolicy)
 
+    return "policy.json"
 
 
-def analyseASTList(astList):
+
+def analyseASTList(astList: List[ast.AST]) -> dict:
+    """Given a list of ASTs traverses each ast extracting information
+
+    Args:
+        astList (List[ast.AST]): list of asts
+
+    Returns:
+        dict: a dictionary with the extract information which will be used in IAM policy generation
+
+        Example return:
+
+        {'lambda': 
+            {'arn:aws:lambda:us-east-1:221094580673:function:testFunction': 
+                ['get_function']},
+        's3': 
+            {'*':
+                ['list_buckets']}}
+    """
     analyzer = Analyzer()
 
     for tree in astList:
@@ -47,11 +86,19 @@ def analyseASTList(astList):
     resp = analyzer.report()
 
     return resp
+#args.files as input
+def fileASTConvert(fileargs):
+    """Given a list of files parsed in as arguments, generates the AST of each file before appending to a list
 
-def fileASTConvert(args: str):
+    Args:
+        fileargs (str): a string of file names
+
+    Returns:
+        List(ast): list of asts
+    """
     astList = []
 
-    for arg in args.files:
+    for arg in fileargs:
         with open(arg, "r") as source:
             tree = ast.parse(source.read())
             astList.append(tree)
@@ -65,6 +112,7 @@ def parseArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('files', nargs='+', help="list of files")
     parser.add_argument('--dir' ,nargs='?', help="a directory of files")
+    parser.add_argument('--tf' ,action='store_true', help="a flag for if you also want a terraform template")
 
     return parser.parse_args()
 
@@ -77,6 +125,10 @@ def generateIAMPolicy(respDict):
     Returns:
         str: IAM policy
     """
+    with open('./awsMappings/python/map.json') as json_file:
+        mapping = json.load(json_file)
+
+
     statementNum = 1
 
 
@@ -91,15 +143,24 @@ def generateIAMPolicy(respDict):
             for method in respDict[service][resource]:
                 caseConverted = convertSnakeCasetoPascalCase(method)
 
-                addService = str(service)+":"+caseConverted
+                
+                addServiceMap = str(service).capitalize()+"."+caseConverted
+                addServiceMap = addServiceMap.lower()
+                iamPermission = mapping[addServiceMap]
 
 
+                newPolicy["Statement"][statementNum-1]["Action"].append(iamPermission)
+
+
+                #Code below is old version when we didnt have the mapping
+                # addService = str(service)+":"+caseConverted
                 #list_buckets needs ListAllMyBuckets permission
                 #potentially hardcode others later on
-                if(addService == "s3:ListBuckets"):
-                    addService = "s3:ListAllMyBuckets"
+                # if(addService == "s3:ListBuckets"):
+                #     addService = "s3:ListAllMyBuckets"
 
-                newPolicy["Statement"][statementNum-1]["Action"].append(addService)
+                # newPolicy["Statement"][statementNum-1]["Action"].append(addService)
+
                 # print(newPolicy["Statement"][statementNum-1]["Action"])
             statementNum +=1
             # print(respDict[service][resource])
@@ -231,7 +292,7 @@ class Analyzer(ast.NodeVisitor):
         # pprint(self.stats)
         pprint(self.userObjDict)
         pprint(self.extractDict)
-        print()
+        # print()
 
         return self.extractDict
 
