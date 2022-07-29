@@ -4,6 +4,7 @@ from ntpath import join
 import os
 from pprint import pprint
 import argparse
+from typing import List
 import astpretty
 import sys
 import subprocess
@@ -42,7 +43,15 @@ def createTerraformTemplate(tfArg: bool, policyFile:json):
     return 
 
 
-def createPolicyFile(iamPolicy:json):
+def createPolicyFile(iamPolicy:json)->str:
+    """Writes a given IAM policy is json format to a file titled policy.json in the same directory
+
+    Args:
+        iamPolicy (json): IAM policy in json format
+
+    Returns:
+        str : name of the created IAM policy file
+    """
     with open('policy.json', 'w') as f:
         f.write(iamPolicy)
 
@@ -50,7 +59,24 @@ def createPolicyFile(iamPolicy:json):
 
 
 
-def analyseASTList(astList):
+def analyseASTList(astList: List[ast.AST]) -> dict:
+    """Given a list of ASTs traverses each ast extracting information
+
+    Args:
+        astList (List[ast.AST]): list of asts
+
+    Returns:
+        dict: a dictionary with the extract information which will be used in IAM policy generation
+
+        Example return:
+
+        {'lambda': 
+            {'arn:aws:lambda:us-east-1:221094580673:function:testFunction': 
+                ['get_function']},
+        's3': 
+            {'*':
+                ['list_buckets']}}
+    """
     analyzer = Analyzer()
 
     for tree in astList:
@@ -62,6 +88,14 @@ def analyseASTList(astList):
     return resp
 #args.files as input
 def fileASTConvert(fileargs):
+    """Given a list of files parsed in as arguments, generates the AST of each file before appending to a list
+
+    Args:
+        fileargs (str): a string of file names
+
+    Returns:
+        List(ast): list of asts
+    """
     astList = []
 
     for arg in fileargs:
