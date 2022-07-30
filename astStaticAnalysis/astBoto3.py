@@ -22,7 +22,12 @@ have existing file in repo, with mapping of actions (iann file) do first
 
 def main():
     args = parseArgs()
+
     astList = fileASTConvert(args.files)
+
+    astList +=dirAstConvert(args.dir)
+
+
     resp = analyseASTList(astList)
 
     iamPolicy = json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
@@ -35,6 +40,21 @@ def main():
 
     # print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
     return json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
+
+def dirAstConvert(dirargs):
+
+    pythonFiles = []
+    for dir in dirargs:
+        for root, dirs, files in os.walk(dir, topdown = False):
+            for file in files:
+                if file.endswith(".py"):
+                    pythonFiles.append(os.path.join(os.path.abspath(root), file))
+
+    return fileASTConvert(pythonFiles)
+
+
+
+
 
 def createCFNTemplate(cfnArg:bool, iamPolicy:json):
     if(cfnArg):
@@ -127,7 +147,7 @@ def fileASTConvert(fileargs):
 
 def parseArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument('files', nargs='+', help="list of files")
+    parser.add_argument('files', nargs='*', help="list of files")
     parser.add_argument('--dir' ,nargs='+', help="a directory of files")
     parser.add_argument('--tf' ,action='store_true', help="a flag for if you also want a terraform template")
     parser.add_argument('--cfn', action='store_true', help="a flag for if you also want a cloudformation template" )
