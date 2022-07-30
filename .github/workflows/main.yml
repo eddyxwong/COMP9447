@@ -42,7 +42,7 @@ jobs:
       - uses: actions/setup-python@v2
       - uses: jannekem/run-python-script-action@v1
       
-      - name: Fetch action
+      - name: Fetch Python action
         id: pl
         uses: Rishabh510/Path-lister-action@master
         with:
@@ -61,6 +61,7 @@ jobs:
         with:
           name: pythonfiles
           path: pythonfiles.txt
+      
 
   job_3:
       name: Display Python Files and Run Analyser
@@ -95,3 +96,39 @@ jobs:
             python ./astStaticAnalysis/astBoto3.py $testVal > policy.txt
             policyResult=`cat policy.txt`
             echo The generated policies are $policyResult
+
+        - name: Upload generated policy output as an artifact
+          uses: actions/upload-artifact@v3
+          with:
+            name: policy
+            path: policy.txt # Does this need to be in txt? if this is the final output then how will i cmpare it as this is not a IAM policy format
+
+
+# take in both job 3 (policy.txt/json) and job 5 to take in the json files and run parliament with it 
+  job_4:
+    name: Display Policy Differences
+    needs: [job_3]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+
+      - name: Download policy generated from job 1
+        uses: actions/download-artifact@v3
+        with:
+          name: policy
+      - shell: bash
+        run: |
+          value=`cat policy.txt`
+          echo The result is $value
+          echo $value > policy.txt
+
+      - name: Installing All Dependancies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install e .
+      - name: Compare with Supplied Policy
+        shell: bash
+        run: |
+          python policyDiffChecker.py TestIAMpolicies
