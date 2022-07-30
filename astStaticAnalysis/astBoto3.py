@@ -1,6 +1,5 @@
 import ast
 import json
-from ntpath import join
 import os
 from pprint import pprint
 import argparse
@@ -32,13 +31,32 @@ def main():
 
     createTerraformTemplate(args.tf, policyFile)
 
+    createCFNTemplate(args.cfn, iamPolicy)
 
     # print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
     return json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
 
+def createCFNTemplate(cfnArg:bool, iamPolicy:json):
+    if(cfnArg):
+        with open('./templates/cfnSample.json') as json_file:
+            cfnTemplate = json.load(json_file)
+            iamPolicy = json.loads(iamPolicy)
+
+            cfnTemplate["Resources"]["MyIAMPolicy"]["Properties"]["PolicyDocument"] = iamPolicy
+            print(iamPolicy)
+
+
+        with open('cfnTemplate.json', 'w') as f:
+            f.write(json.dumps(cfnTemplate, sort_keys=False, indent=4))
+    
+    return
+
+
+
+
 def createTerraformTemplate(tfArg: bool, policyFile:json):
     if(tfArg):
-        p = subprocess.Popen(["iam-policy-json-to-terraform < "+ policyFile+" > policy.tf"], stdout=subprocess.PIPE,shell=True)
+        p = subprocess.Popen(["iam-policy-json-to-terraform < "+ policyFile+" > tfTemplate.tf"], stdout=subprocess.PIPE,shell=True)
     
     return 
 
@@ -113,6 +131,7 @@ def parseArgs():
     parser.add_argument('files', nargs='+', help="list of files")
     parser.add_argument('--dir' ,nargs='?', help="a directory of files")
     parser.add_argument('--tf' ,action='store_true', help="a flag for if you also want a terraform template")
+    parser.add_argument('--cfn', action='store_true', help="a flag for if you also want a cloudformation template" )
 
     return parser.parse_args()
 

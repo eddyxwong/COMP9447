@@ -1,0 +1,13 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Sample cloudformation template",
+    "Resources": {
+        "MyIAMPolicy":{
+            "Type": "AWS::IAM::Policy",
+            "Properties": {
+                "PolicyName": "AutogenPolicy",
+                "PolicyDocument": {}
+            }
+        }
+    }
+}
