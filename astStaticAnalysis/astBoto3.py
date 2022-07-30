@@ -43,7 +43,6 @@ def createCFNTemplate(cfnArg:bool, iamPolicy:json):
             iamPolicy = json.loads(iamPolicy)
 
             cfnTemplate["Resources"]["MyIAMPolicy"]["Properties"]["PolicyDocument"] = iamPolicy
-            print(iamPolicy)
 
 
         with open('cfnTemplate.json', 'w') as f:
@@ -129,7 +128,7 @@ def fileASTConvert(fileargs):
 def parseArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument('files', nargs='+', help="list of files")
-    parser.add_argument('--dir' ,nargs='?', help="a directory of files")
+    parser.add_argument('--dir' ,nargs='+', help="a directory of files")
     parser.add_argument('--tf' ,action='store_true', help="a flag for if you also want a terraform template")
     parser.add_argument('--cfn', action='store_true', help="a flag for if you also want a cloudformation template" )
 
