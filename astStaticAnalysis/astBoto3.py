@@ -5,7 +5,6 @@ from pprint import pprint
 import argparse
 from typing import List
 import astpretty
-import sys
 import subprocess
 '''
 general style refactoring, pylint

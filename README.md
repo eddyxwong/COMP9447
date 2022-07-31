@@ -82,7 +82,11 @@ Project developed by Frank Su, Eddy Wong, Zachary Ngooi and Alex Sanders for [CO
 
 ### Prerequisites
 
-The file [requirements.txt](requirements.txt) contains a updated list of dependencies used in this project. This project was developed and tested on Python3 3.8.10 64-bit.
+The file [requirements.txt](requirements.txt) contains a updated list of dependencies used in this project that can be installed using pip. This project was developed and tested on Python3 3.8.10 64-bit.
+
+This project also uses existing CLI tooling for the feature to convert a json IAM policy to a Terraform template. Installation instructions 
+can be found [here](https://github.com/flosell/iam-policy-json-to-terraform#installation). The 1.8.0 release is the version used in this 
+project.
 
 ### Installation
 
@@ -94,7 +98,7 @@ The file [requirements.txt](requirements.txt) contains a updated list of depende
    ```sh
    $ pip install -r requirements.txt
    ```
-
+3. Install any other dependencies. Refer to prerequisites.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
