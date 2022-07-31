@@ -44,11 +44,12 @@ def main():
 def dirAstConvert(dirargs):
 
     pythonFiles = []
-    for dir in dirargs:
-        for root, dirs, files in os.walk(dir, topdown = False):
-            for file in files:
-                if file.endswith(".py"):
-                    pythonFiles.append(os.path.join(os.path.abspath(root), file))
+    if(dirargs):
+        for dir in dirargs:
+            for root, dirs, files in os.walk(dir, topdown = False):
+                for file in files:
+                    if file.endswith(".py"):
+                        pythonFiles.append(os.path.join(os.path.abspath(root), file))
 
     return fileASTConvert(pythonFiles)
 
