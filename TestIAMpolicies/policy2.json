@@ -10,7 +10,7 @@
                 "dynamodb:Query",
                 "dynamodb:Scan",
                 "dynamodb:BatchWriteItem",
-                "dynamodb:PutItem",
+                "dynamodb:PutItemfuygefjrf",
                 "dynamodb:UpdateItem"
             ],
             "Resource": "arn:aws:dynamodb:*:*:table/SampleTable"
@@ -20,15 +20,6 @@
             "Effect": "Allow",
             "Action": "dynamodb:GetRecords",
             "Resource": "arn:aws:dynamodb:*:*:table/SampleTable/stream/* "
-        },
-        {
-            "Sid": "ThisIsMyDifferent",
-            "Effect": "Allow",
-            "Action": [
-                "Difference1:boo",
-                "Difference2:foo"
-            ],
-            "Resource": "*"
         },
         {
             "Sid": "CreateLogGroup",
