@@ -157,27 +157,21 @@ jobs:
       - name: Adding To Modifications.txt ⚙️
         run: |
           echo "All:" >> modifications.txt
-          echo  >> modifications.txt
           echo "${{ steps.abc.outputs.all }}" >> modifications.txt
           echo  >> modifications.txt
           echo "Added:" >> modifications.txt
-          echo  >> modifications.txt
           echo "${{ steps.abc.outputs.added }}" >> modifications.txt
           echo  >> modifications.txt
           echo "Removed:" >> modifications.txt
-          echo  >> modifications.txt
           echo "${{ steps.abc.outputs.removed }}" >> modifications.txt
           echo  >> modifications.txt
           echo "Renamed:" >> modifications.txt
-          echo  >> modifications.txt
           echo "${{ steps.abc.outputs.renamed }}" >> modifications.txt
           echo  >> modifications.txt
           echo "Modified:" >> modifications.txt
-          echo  >> modifications.txt
           echo "${{ steps.abc.outputs.modified }}" >> modifications.txt
           echo  >> modifications.txt
           echo "Added+Modified:" >> modifications.txt
-          echo  >> modifications.txt
           echo "${{ steps.abc.outputs.added_modified }}" >> modifications.txt
 
       - name: Uploading modifications.txt as an Artifact 🎁
