@@ -82,9 +82,9 @@ jobs:
           name: Analysing 🔎📂
           run: |
             echo Grabbing the python files 🪝
-            pythonFileNames=`cat pythonfiles.txt`
+            echo pythonFileNames=`cat pythonfiles.txt`
             echo Running the boto3 analyser ⚙️
-            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > modifiedPolicy.json
+            echo python ./astStaticAnalysis/astBoto3.py $pythonFileNames > modifiedPolicy.json
             echo Displaying the output 👁️👄👁️
             echo --------------------------------------------------------------------------------
             cat modifiedPolicy.json
