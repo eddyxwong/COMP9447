@@ -61,6 +61,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
+
+      - name: Installing All Dependancies 🖥️
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install e .
+
       - uses: jannekem/run-python-script-action@v1
         with:
           script: |
@@ -72,13 +79,6 @@ jobs:
                       abspath = os.path.join(r, file)
                       shellresponse = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
                       print(shellresponse)
-
-
-      - name: Installing All Dependancies 🖥️
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install e .
 
       - shell: bash
         name: Testing ideas
