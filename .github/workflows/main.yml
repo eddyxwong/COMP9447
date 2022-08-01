@@ -276,7 +276,7 @@ jobs:
           echo  >> masterAnalysis.txt
           cat parliament.txt
           while IFS='' read -r line; do
-            echo $line >> masterAnalysis.txt
+              echo $line >> masterAnalysis.txt
           done < parliament.txt
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
@@ -328,6 +328,7 @@ jobs:
                       opener.write('\n')
                       opener.write('----------------------------------------------')
                       opener.close
+      
       - shell: bash
         name: Grab Parliament Findings For All Json Files 🪝
         run: |
