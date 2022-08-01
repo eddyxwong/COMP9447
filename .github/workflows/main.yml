@@ -137,8 +137,14 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install e .
       - name: Compare with Supplied Policy
+        uses: actions/download-artifact@v3
+        with:
+          name: modifiedPolicy
         shell: bash
         run: |
+          while IFS= read -r line; do
+          echo $line >> ./TestIAMpolicies/createdPolicy.json
+          done < modifiedPolicy.json
           python policyDiffChecker.py TestIAMpolicies
 
 
