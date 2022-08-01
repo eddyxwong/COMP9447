@@ -235,8 +235,7 @@ jobs:
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
-          jesus=`cat modifiedPolicy.json | jq .`
-          echo $jesus >> masterAnalysis.txt
+          cat modifiedPolicy.json | jq .
           done < modifiedPolicy.json
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
