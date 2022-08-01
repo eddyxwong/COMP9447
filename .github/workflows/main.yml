@@ -302,6 +302,7 @@ jobs:
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
+          cat masterAnalysis.txt
 
       - name: Uploading masterAnalysis.txt as an Artifact 🎁
         uses: actions/upload-artifact@v3
