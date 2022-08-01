@@ -229,7 +229,7 @@ jobs:
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
           json=`cat modifiedPolicy.json`
-          echo $json >> masterAnalysis.txt | python -m json.tool
+          echo ($json | python -m json.tool) >> masterAnalysis.txt
           done < modifiedPolicy.json
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
