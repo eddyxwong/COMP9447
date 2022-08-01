@@ -137,7 +137,9 @@ jobs:
       - shell: bash
         name: Testing ideas
         run: |
-          find . -name \*.json -exec cat {} | parliament || true \;
+          find . -name "*.json"|while read file; do
+            value=`(cat $file | parliament) || true`
+            echo this is my $file findings: $value
           done
 
 
