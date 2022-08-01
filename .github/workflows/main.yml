@@ -94,10 +94,7 @@ jobs:
       - shell: bash
         name: Grab Parliament Findings For All Json Files 🪝
         run: |
-          while IFS='' read -r line; do
-              echo $line >> parliament.txt
-          done < tempJsonFile.txt
-          cat tempJsonFile.txt
+            echo `cat tempJsonFile.txt` > parliament.txt
 
       - name: Uploading files as an Artifact 🎁
         uses: actions/upload-artifact@v3
