@@ -87,7 +87,7 @@ jobs:
           path: parliament.txt
       
       - name: Fetch action
-      - uses: jannekem/run-python-script-action@v1
+        uses: jannekem/run-python-script-action@v1
         with:
         script: |
           import os
