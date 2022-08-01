@@ -44,10 +44,16 @@ jobs:
       - name: Scanning 🔎
         run: |
           file=`find . -type f -name '*.py'`
-          echo filepath is $file
+          echo Python files found are: 
+          echo --------------------------------------------------------------------------------
+          echo
+          echo $file
+          echo
+          echo --------------------------------------------------------------------------------
+          echo
           echo -n $file >> pythonfiles.txt
 
-      - name: Uploading files as an Artifact ⚙️
+      - name: Uploading files as an Artifact 🎁
         uses: actions/upload-artifact@v3
         with:
           name: pythonfiles
@@ -68,7 +74,7 @@ jobs:
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             pip install e .
 
-        - name: Run A Simple Test 🤔
+        - name: Run A Simple Test 🐧
           run: python ./tests/test_GenerateIAMPolicy.py
         
         - name: Create a Policy Using The Analyser 🐧
@@ -79,10 +85,14 @@ jobs:
           run: |
             echo Listing the python filenames 📂
             echo The names of all python files found are:
+            echo
             echo --------------------------------------------------------------------------------
+            echo
             cat pythonfiles.txt
+            echo
             echo --------------------------------------------------------------------------------
-            echo Running the analyser and saving the output ⚙️
+            echo Running the analyser and saving the output 🎁
+            pythonFileNames=`cat pythonfiles.txt`
             python ./astStaticAnalysis/astBoto3.py $pythonFileNames > newPolicy.json
             echo Displaying the output 👀
             while IFS= read -r line; do
