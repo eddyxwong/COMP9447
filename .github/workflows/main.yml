@@ -129,7 +129,7 @@ jobs:
         run: |
           value=`cat newPolicy.json`
           echo The result is $value
-          echo $value > newPolicy.json
+          echo $value > TestIAMpolicies/newPolicy.json
 
       - name: Installing All Dependancies
         run: |

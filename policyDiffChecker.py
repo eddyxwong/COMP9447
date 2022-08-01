@@ -60,19 +60,20 @@ def diffcheck(shellresponse: list, response: dict, json_files: list) -> dict:
                 dict['Findings'].append(str(reformed))
         if len(dict['Findings']) == 0:
             dict['Findings'].append('No faults found within policy')
-        for jsonfile_name2 in json_files:
-            filename1 = jsonfile_name
-            filename2 = jsonfile_name2
-            if filename1 == filename2:
-                continue
-            file1contents = set(open(filename1).readlines())
-            file2contents = set(open(filename2).readlines())
-            if file1contents == file2contents:
-                print("Yup they're the same!")
-            else:
-                dict['Differences'].update({"Contents found in "+filename1+" but not in "+filename2: []})
-                for diffLine in file1contents - file2contents:
-                    dict['Differences']["Contents found in "+filename1+" but not in "+filename2].append(" ".join(str(diffLine).split()))
+        if len(json_files) > 1:
+            for jsonfile_name2 in json_files:
+                filename1 = jsonfile_name
+                filename2 = jsonfile_name2
+                if filename1 == filename2:
+                    continue
+                file1contents = set(open(filename1).readlines())
+                file2contents = set(open(filename2).readlines())
+                if file1contents == file2contents:
+                    print("Yup they're the same!")
+                else:
+                    dict['Differences'].update({"Contents found in "+filename1+" but not in "+filename2: []})
+                    for diffLine in file1contents - file2contents:
+                        dict['Differences']["Contents found in "+filename1+" but not in "+filename2].append(" ".join(str(diffLine).split()))
     return response
 
 
