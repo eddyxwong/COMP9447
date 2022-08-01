@@ -24,14 +24,11 @@ def main(argv):
     # include reasoning why this is here
     shellresponse = subprocess.getoutput('parliament --directory {}'.format(shlex.quote(directory))).split('\n')
 
-
     response = directInit(response, json_files)
 
     response = diffcheck(shellresponse,response,json_files)
 
     print(json.dumps(response, sort_keys=False, indent=4))
-
-
 
 def folderWalker(directory: str, jsonList: list) -> list:
 
