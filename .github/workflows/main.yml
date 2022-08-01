@@ -92,9 +92,7 @@ jobs:
         # python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt is the correct command
         - name: Run All Python Files
           run: |
-            cd ./astStaticAnalysis
-            ls
-            testValue=`python astBoto3.py $pythonFileNames`
+            testValue=`python ./astStaticAnalysis/astBoto3.py $pythonFileNames`
             python astBoto3.py $pythonFileNames > policy.txt
             cat $testValue
             policyResult=`cat policy.txt`

@@ -1,6 +1,8 @@
 import ast
 import json
+from operator import contains
 import os
+from pickle import NONE
 from pprint import pprint
 import argparse
 from typing import List
@@ -164,9 +166,16 @@ def generateIAMPolicy(respDict):
     Returns:
         str: IAM policy
     """
-    with open('./awsMappings/python/map.json') as json_file:
-        mapping = json.load(json_file)
-
+    #with open('./awsMappings/python/map.json') as json_file:
+     #   mapping = json.load(json_file)
+    
+    # If you change anything our fragile code will break
+    for r, d, f in os.walk("."):
+        if 'astStaticAnalysis' and 'awsMappings' and 'python' in r:
+            for file in f:
+                if file.endswith("map.json"):
+                    abspath = os.path.join(r, file)
+                    mapping = json.load(open(abspath))
 
     statementNum = 1
 
