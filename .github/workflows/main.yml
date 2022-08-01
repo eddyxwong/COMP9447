@@ -127,9 +127,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: modifiedPolicy
-
-      - shell: bash
-        name:  Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder
         run: |
           echo Uploading Each Line For Formatting Purposes... ⚙️
           cat modifiedPolicy.json > ./comparePolicies/createdPolicy.json
