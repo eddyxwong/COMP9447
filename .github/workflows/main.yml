@@ -140,7 +140,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: modifiedPolicy
-        shell: bash
+      - shell: bash
         run: |
           while IFS= read -r line; do
           echo $line >> ./TestIAMpolicies/createdPolicy.json
