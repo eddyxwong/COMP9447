@@ -247,7 +247,6 @@ jobs:
           script: |
             import os
             import subprocess
-            open("tempJsonFile.txt", "x")
             for r, d, f in os.walk("."):
               for file in f:
                   if file.endswith(".json"):
@@ -255,9 +254,9 @@ jobs:
                       opener = open("masterAnalysis.txt", "a")
                       opener.write('\n')
                       opener.write("Findings for " + str(abspath)+":\n")
-                      shellresponse = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
-                      print(shellresponse)
-                      opener.write(shellresponse)
+                      shelly = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
+                      print(shelly)
+                      opener.write(shelly)
                       opener.write('\n')
                       opener.write('----------------------------------------------\n')
                       opener.close
