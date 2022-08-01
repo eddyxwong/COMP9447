@@ -143,7 +143,7 @@ jobs:
       - shell: bash
         run: |
           while IFS= read -r line; do
-          $line >> ./TestIAMpolicies/createdPolicy.json
+          echo $line >> ./TestIAMpolicies/createdPolicy.json
           done < modifiedPolicy.json
           cat ./TestIAMpolicies/createdPolicy.json
           python policyDiffChecker.py TestIAMpolicies
