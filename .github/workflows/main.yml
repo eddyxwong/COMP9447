@@ -88,13 +88,11 @@ jobs:
 
         - name: Run Simple Test
           run: python ./tests/test_GenerateIAMPolicy.py
-        
+        # astStaticAnalysis\astBoto3.py
         # python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt is the correct command
         - name: Run All Python Files
           run: |
-            testValue=`python ./astStaticAnalysis/astBoto3.py $pythonFileNames`
-            python astBoto3.py $pythonFileNames > policy.txt
-            cat $testValue
+            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt
             policyResult=`cat policy.txt`
             echo The generated policies are $policyResult
 
