@@ -69,7 +69,7 @@ jobs:
               for file in f:
                   if file.endswith(".json"):
                       abspath = os.path.join(r, file)
-                      print(abspath)
+                      abspath >> jsonFIles.txt
 
 
       - name: Installing All Dependancies 🖥️
