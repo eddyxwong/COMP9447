@@ -103,6 +103,7 @@ jobs:
             ls
             pythonFileNames=`cat pythonfiles.txt`
             file=`find . -type f -name '*.py'`
+            echo filepath is $file
             echo The result is $pythonFileNames
             python ./astStaticAnalysis/astBoto3.py policyDiffChecker.py > policy.txt
             policyResult=`cat policy.txt`
