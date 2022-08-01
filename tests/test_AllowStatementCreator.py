@@ -1,5 +1,5 @@
 import pytest
-from astStaticAnalysis.astBoto3 import createAllowStatement
+from astStaticAnalysis.astBoto3OLD import createAllowStatement
 
 def test_basecase():
     resource = "*"
