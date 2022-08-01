@@ -44,13 +44,10 @@ jobs:
       - name: Scanning 🔎
         run: |
           file=`find . -type f -name '*.py'`
-          echo Python files found are: 
+          echo Displaying python files found 👀
           echo --------------------------------------------------------------------------------
-          echo
           echo $file
-          echo
           echo --------------------------------------------------------------------------------
-          echo
           echo -n $file >> pythonfiles.txt
 
       - name: Uploading files as an Artifact 🎁
@@ -87,17 +84,16 @@ jobs:
             echo The names of all python files found are:
             echo
             echo --------------------------------------------------------------------------------
-            echo
             cat pythonfiles.txt
             echo
             echo --------------------------------------------------------------------------------
             echo Running the analyser and saving the output 🎁
             pythonFileNames=`cat pythonfiles.txt`
-            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > newPolicy.json
+            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > modifiedPolicy.json
             echo Displaying the output 👀
             while IFS= read -r line; do
-            echo $line >> modifiedPolicy.json
-            done < newPolicy.json
+            echo $line
+            done < modifiedPolicy.json
 
         - name: Upload generated policy output as an artifact
           uses: actions/upload-artifact@v3
