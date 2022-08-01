@@ -146,6 +146,7 @@ jobs:
 
   job_3:
     name: Modification Check 🤔
+    needs: [job_1]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.1.0
@@ -210,9 +211,8 @@ jobs:
       - shell: bash
         name: Adding To Master Analysis ⚙️
         run: |
-          while IFS='' read -r line; do
-              echo $line >> masterAnalysis.txt
-          done < pythonfiles.txt
+          pythonfilenames=`cat pythonfiles.txt`
+          $pythonfilenames >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
