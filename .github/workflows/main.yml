@@ -145,45 +145,45 @@ jobs:
           path: policyDifference.txt
 
   job_3:
-        name: Modification Check 🤔
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@v2.1.0
-          - uses: jitterbit/get-changed-files@v1
-            id: abc
-            with:
-              format: space-delimited
-          - name: Adding To Modifications.txt ⚙️
-            run: |
-              echo "All:" >> modifications.txt
-              echo  >> modifications.txt
-              echo "${{ steps.abc.outputs.all }}" >> modifications.txt
-              echo  >> modifications.txt
-              echo "Added:" >> modifications.txt
-              echo  >> modifications.txt
-              echo "${{ steps.abc.outputs.added }}" >> modifications.txt
-              echo  >> modifications.txt
-              echo "Removed:" >> modifications.txt
-              echo  >> modifications.txt
-              echo "${{ steps.abc.outputs.removed }}" >> modifications.txt
-              echo  >> modifications.txt
-              echo "Renamed:" >> modifications.txt
-              echo  >> modifications.txt
-              echo "${{ steps.abc.outputs.renamed }}" >> modifications.txt
-              echo  >> modifications.txt
-              echo "Modified:" >> modifications.txt
-              echo  >> modifications.txt
-              echo "${{ steps.abc.outputs.modified }}" >> modifications.txt
-              echo  >> modifications.txt
-              echo "Added+Modified:" >> modifications.txt
-              echo  >> modifications.txt
-              echo "${{ steps.abc.outputs.added_modified }}" >> modifications.txt
+    name: Modification Check 🤔
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.1.0
+      - uses: jitterbit/get-changed-files@v1
+        id: abc
+        with:
+          format: space-delimited
+      - name: Adding To Modifications.txt ⚙️
+        run: |
+          echo "All:" >> modifications.txt
+          echo  >> modifications.txt
+          echo "${{ steps.abc.outputs.all }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Added:" >> modifications.txt
+          echo  >> modifications.txt
+          echo "${{ steps.abc.outputs.added }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Removed:" >> modifications.txt
+          echo  >> modifications.txt
+          echo "${{ steps.abc.outputs.removed }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Renamed:" >> modifications.txt
+          echo  >> modifications.txt
+          echo "${{ steps.abc.outputs.renamed }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Modified:" >> modifications.txt
+          echo  >> modifications.txt
+          echo "${{ steps.abc.outputs.modified }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Added+Modified:" >> modifications.txt
+          echo  >> modifications.txt
+          echo "${{ steps.abc.outputs.added_modified }}" >> modifications.txt
 
-        - name: Uploading modifications.txt as an Artifact 🎁
-          uses: actions/upload-artifact@v3
-          with:
-            name: modifications
-            path: modifications.txt
+      - name: Uploading modifications.txt as an Artifact 🎁
+        uses: actions/upload-artifact@v3
+        with:
+          name: modifications
+          path: modifications.txt
 
 
   job_7:
