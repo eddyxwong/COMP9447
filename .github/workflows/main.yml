@@ -130,7 +130,7 @@ jobs:
           name: newPolicy
       - shell: bash
         run: |
-          value=`cat ./TestIAMpolicies/newPolicy.json`
+          value=`cat newPolicy.json`
           echo The result is $value
 
       - name: Installing All Dependancies
