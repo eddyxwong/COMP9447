@@ -266,6 +266,47 @@ jobs:
         run: |
             cat masterAnalysis.txt
 
+###########################################
+      - name: Grabbing The Created Policy 🪝
+        uses: actions/download-artifact@v3
+        with:
+          name: modifiedPolicy
+
+      - shell: bash
+        name: Displaying The Policy Found 👁️👄👁️
+        run: |
+          echo The created policy is: 👁️👄👁️
+          echo --------------------------------------------------------------------------------
+          cat modifiedPolicy.json
+          echo --------------------------------------------------------------------------------
+
+      - name: Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder 🤔
+        run: |
+          cat modifiedPolicy.json > ./comparePolicies/createdPolicy.json
+          echo Visual Check Of Temporary File 👁️👄👁️
+          echo --------------------------------------------------------------------------------
+          cat ./comparePolicies/createdPolicy.json
+          echo --------------------------------------------------------------------------------
+          echo Running The Policy Difference Checker ⚙️
+          python policyDiffChecker.py comparePolicies > policyDifference.txt
+          echo The Differences Are: 👁️👄👁️
+          echo --------------------------------------------------------------------------------
+          cat policyDifference.txt
+          echo --------------------------------------------------------------------------------
+          echo  >> masterAnalysis.txt
+          echo Policy Comparison For All Valid .json Policies In comparePolicies Folder: >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          while read -r line; do
+            echo $line >> masterAnalysis.txt
+          done < policyDifference.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+
+
+###########################################
       - name: Grabbing Policy Difference List 🪝
         uses: actions/download-artifact@v3
         with:
