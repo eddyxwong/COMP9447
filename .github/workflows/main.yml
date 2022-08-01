@@ -137,7 +137,7 @@ jobs:
       - shell: bash
         name: Testing ideas
         run: |
-          for i in `find . -name "*.java" -type f`; do
+          for i in `find . -name "*.json" -type f`; do
             value=`(cat $file | parliament) || true`
             echo this is my $file findings: $value
           done
