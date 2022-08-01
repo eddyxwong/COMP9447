@@ -35,27 +35,19 @@ jobs:
           python-version: 3.8 #install the python needed
 
   job_2:
-    name: Scan Repository For Python Files
+    name: 🔎 Scan Repository For All Python Files
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
-      - uses: jannekem/run-python-script-action@v1
-      
-      - name: Fetch Python action
-        id: pl
-        uses: Rishabh510/Path-lister-action@master
-        with:
-          path: "/home/runner/work/COMP9447/COMP9447"
-          type: ".py"
 
-      - name: Output results
+      - name: 🔎 Scanning...
         run: |
           file=`find . -type f -name '*.py'`
           echo filepath is $file
           echo -n $file >> pythonfiles.txt
 
-      - name: Upload python filenames as a artifact
+      - name: 💡 Upload python filenames as an artifact to pythonfiles.txt
         uses: actions/upload-artifact@v3
         with:
           name: pythonfiles
