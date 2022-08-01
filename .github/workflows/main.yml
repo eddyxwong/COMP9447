@@ -79,8 +79,8 @@ jobs:
           with:
             name: pythonfiles
         - shell: bash
+          name: Listing the python filenames 📂
           run: |
-            echo Listing the python filenames 📂
             echo The names of all python files found are:
             echo --------------------------------------------------------------------------------
             while IFS= read -r line; do
