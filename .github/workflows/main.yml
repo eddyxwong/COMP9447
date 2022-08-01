@@ -307,24 +307,6 @@ jobs:
 
 
 ###########################################
-      - name: Grabbing Policy Difference List 🪝
-        uses: actions/download-artifact@v3
-        with:
-          name: policyDifference
-      - shell: bash
-        name: Adding To Master Analysis ⚙️
-        run: |
-          echo  >> masterAnalysis.txt
-          echo Policy Comparison For All Valid .json Policies In comparePolicies Folder: >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
-          echo ------------------------------------- >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
-          while read -r line; do
-            echo $line >> masterAnalysis.txt
-          done < policyDifference.txt
-          echo  >> masterAnalysis.txt
-          echo ------------------------------------- >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
 
       - name: Grabbing Modifications Made 🪝
         uses: actions/download-artifact@v3
