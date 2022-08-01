@@ -150,6 +150,7 @@ job_5:
     # Grab all json files and run it with parliament. If parliament using cat
     # If parliament doesnt contain that weird ass parsing or unknown or wtv bs then put the file inside the same virtual directory
     # if it does just output the parliament thing
+    runs-on: ubuntu-latest
     steps:
       - id: files
         uses: jitterbit/get-changed-files@v1
