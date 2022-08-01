@@ -40,7 +40,7 @@ def main():
 
     createCFNTemplate(args.cfn, iamPolicy)
 
-    # print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
+    print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
     return json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
 
 def dirAstConvert(dirargs):
@@ -338,8 +338,8 @@ class Analyzer(ast.NodeVisitor):
 
     def report(self):
         # pprint(self.stats)
-        pprint(self.userObjDict)
-        pprint(self.extractDict)
+        # pprint(self.userObjDict)
+        # pprint(self.extractDict)
         # print()
 
         return self.extractDict
