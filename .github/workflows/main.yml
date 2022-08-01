@@ -112,7 +112,7 @@ jobs:
           uses: actions/upload-artifact@v3
           with:
             name: newPolicy
-            path: newPolicy.json # Does this need to be in txt? if this is the final output then how will i cmpare it as this is not a IAM policy format
+            path: ./TestIAMpolicies/newPolicy.json # Does this need to be in txt? if this is the final output then how will i cmpare it as this is not a IAM policy format
 
 
 # take in both job 3 (policy.txt/json) and job 5 to take in the json files and run parliament with it 
@@ -130,7 +130,7 @@ jobs:
           name: newPolicy
       - shell: bash
         run: |
-          value=`cat newPolicy.json`
+          value=`cat ./TestIAMpolicies/newPolicy.json`
           echo The result is $value
 
       - name: Installing All Dependancies
