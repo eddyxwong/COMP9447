@@ -39,7 +39,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v2
 
       - name: Scanning 🔎📂
         run: |
@@ -82,10 +81,10 @@ jobs:
           name: Analysing 🔎📂
           run: |
             echo Grabbing the python files 🪝
-            echo pythonFileNames=`cat pythonfiles.txt`
+            pythonFileNames=`cat pythonfiles.txt`
             echo Running the boto3 analyser ⚙️
-            echo python ./astStaticAnalysis/astBoto3.py $pythonFileNames > modifiedPolicy.json
-            echo Displaying the output 👁️👄👁️
+            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > modifiedPolicy.json
+            echo The created policy is: 👁️👄👁️
             echo --------------------------------------------------------------------------------
             cat modifiedPolicy.json
             echo --------------------------------------------------------------------------------
@@ -97,40 +96,53 @@ jobs:
             path: modifiedPolicy.json
 
 
-# take in both job 3 (policy.txt/json) and job 5 to take in the json files and run parliament with it 
   job_4:
-    name: Display Policy Differences
+    name: Comparing The Created Policy With Any Existing Policies 🤔
     needs: [job_3]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
 
-      - name: Download policy generated from job 1
+      - name: Grabbing The Created Policy 🪝
         uses: actions/download-artifact@v3
         with:
           name: modifiedPolicy
-      - shell: bash
-        run: |
-          value=`cat modifiedPolicy.json`
-          echo The result is $value
 
-      - name: Installing All Dependancies
+      - shell: bash
+        name: Displaying The Policy Found 👁️👄👁️
+        run: |
+          echo The created policy is: 👁️👄👁️
+          echo --------------------------------------------------------------------------------
+          cat modifiedPolicy.json
+          echo --------------------------------------------------------------------------------
+
+      - name: Installing All Dependancies 🖥️
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install e .
-      - name: Compare with Supplied Policy
+
+      - name: Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder 🤔
         uses: actions/download-artifact@v3
         with:
           name: modifiedPolicy
+
       - shell: bash
+        name: Save The Policy In A Temp Directory
         run: |
+          echo Uploading Each Line For Formatting Purposes... ⚙️
           while IFS= read -r line; do
-          echo $line >> ./TestIAMpolicies/createdPolicy.json
+          echo $line >> ./comparePolicies/createdPolicy.json
           done < modifiedPolicy.json
-          cat ./TestIAMpolicies/createdPolicy.json
-          python policyDiffChecker.py TestIAMpolicies
+          echo Visual Check Of Temporary File 👁️👄👁️
+          echo --------------------------------------------------------------------------------
+          cat ./comparePolicies/createdPolicy.json
+          echo --------------------------------------------------------------------------------
+          echo Running The Policy Difference Checker ⚙️
+          echo --------------------------------------------------------------------------------
+          python policyDiffChecker.py comparePolicies
+          echo --------------------------------------------------------------------------------
 
 
   job_5:
