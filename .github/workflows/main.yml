@@ -38,8 +38,8 @@ jobs:
     name: Scanning For Python Files 🔎 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3 ⚙️
-      - uses: actions/setup-python@v2 ⚙️
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
 
       - name: Scanning 🔎
         run: |
