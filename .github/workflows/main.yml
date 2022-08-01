@@ -228,7 +228,7 @@ jobs:
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
-          while IFS= read -r line || [[ -n $line ]]; do
+          while IFS=$'\t' read -r line || [[ -n $line ]]; do
               echo $line >> masterAnalysis.txt
           done < modifiedPolicy.json
           echo  >> masterAnalysis.txt
