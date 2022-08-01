@@ -12,7 +12,7 @@ import parliament
 
 
 def main(argv):
-    directory = argv[1]
+    directory = argv[1].strip(".\\")
 
     json_files = []
 
@@ -22,11 +22,12 @@ def main(argv):
     response = {'Policies': []}
 
     # include reasoning why this is here
-    shellresponse = subprocess.getoutput('parliament --directory {}'.format(shlex.quote(directory))).split('\n')
 
+    shellresponse = subprocess.getoutput('parliament --directory {}'.format(shlex.quote(directory))).split('\n')
+    
     response = directInit(response, json_files)
 
-    response = diffcheck(shellresponse,response,json_files)
+    response = diffcheck(shellresponse, response, json_files)
 
     print(json.dumps(response, sort_keys=False, indent=4))
 
@@ -35,10 +36,9 @@ def folderWalker(directory: str, jsonList: list) -> list:
     # r=root, d=directories, f = files
     for r, d, f in os.walk(directory):
         for file in f:
-            if file.endswith(".json"):
-                abspath = os.path.join(r, file)
-                jsonList.append(str(os.path.relpath(abspath).replace(os.path.sep, '/')))
-    
+                if file.endswith(".json"):
+                    abspath = os.path.join(r, file)
+                    jsonList.append(str(os.path.relpath(abspath).replace(os.path.sep, '/')))
     return jsonList
     
 def directInit(response: dict, json_files: list) -> dict:
@@ -78,5 +78,3 @@ def diffcheck(shellresponse: list, response: dict, json_files: list) -> dict:
 
 if __name__ == "__main__":
     main(sys.argv)
-
-

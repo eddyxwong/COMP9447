@@ -140,3 +140,22 @@ jobs:
         shell: bash
         run: |
           python policyDiffChecker.py TestIAMpolicies
+
+
+job_5:
+    name: Master Check
+    needs: [job_3]
+    # First grab files that have been modified/added
+    # Take the files added and put it inside a virtual directory. 
+    # Grab all json files and run it with parliament. If parliament using cat
+    # If parliament doesnt contain that weird ass parsing or unknown or wtv bs then put the file inside the same virtual directory
+    # if it does just output the parliament thing
+    - id: files
+      uses: jitterbit/get-changed-files@v1
+      with:
+        format: 'csv'
+    - run: |
+        mapfile -d ',' -t added_modified_files < <(printf '%s,' '${{ steps.files.outputs.added_modified }}')
+        for added_modified_file in "${added_modified_files[@]}"; do
+          echo "Do something with this ${added_modified_file}."
+        done
