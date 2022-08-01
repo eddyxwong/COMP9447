@@ -101,9 +101,12 @@ jobs:
             ls
             pythonFileNames=`cat pythonfiles.txt`
             echo The result is $pythonFileNames
-            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > newPolicy.json
+            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > ./TestIAMpolicies/newPolicy.json
             policyResult=`cat newPolicy.json`
-            echo The generated policies are $policyResult
+            echo The generated policy is $policyResult
+            while IFS= read -r line; do
+            echo "Text read from file: $line"
+            done < newPolicy.json
 
         - name: Upload generated policy output as an artifact
           uses: actions/upload-artifact@v3
