@@ -103,7 +103,7 @@ jobs:
             echo The result is $pythonFileNames
             python ./astStaticAnalysis/astBoto3.py $pythonFileNames > newPolicy.json
             while IFS= read -r line; do
-            echo $line >> ./TestIAMpolicies/modifiedPolicy.json
+            echo $line >> modifiedPolicy.json
             done < newPolicy.json
 
         - name: Upload generated policy output as an artifact
@@ -128,7 +128,7 @@ jobs:
           name: modifiedPolicy
       - shell: bash
         run: |
-          value=`cat ./TestIAMpolicies/modifiedPolicy.json`
+          value=`cat modifiedPolicy.json`
           echo The result is $value
 
       - name: Installing All Dependancies
