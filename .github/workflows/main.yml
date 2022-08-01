@@ -137,7 +137,7 @@ jobs:
       - shell: bash
         name: Testing ideas
         run: |
-          find . -name \*.json -exec (cat {} | parliament) || true \;
+          find . -name \*.json -exec cat {} | parliament || true \;
           done
 
 
