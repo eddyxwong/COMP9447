@@ -73,7 +73,9 @@ def diffcheck(shellresponse: list, response: dict, json_files: list) -> dict:
                 else:
                     dict['Differences'].update({"Contents found in "+filename1+" but not in "+filename2: []})
                     for diffLine in file1contents - file2contents:
-                        dict['Differences']["Contents found in "+filename1+" but not in "+filename2].append(" ".join(str(diffLine).split()))
+                        diffLine = (diffLine).replace(" ", "").replace('\n','').replace(',','').replace('}', '').replace('"', '')
+                        if diffLine != '':
+                            dict['Differences']["Contents found in "+filename1+" but not in "+filename2].append(str(diffLine))
     return response
 
 

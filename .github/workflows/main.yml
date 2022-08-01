@@ -130,7 +130,7 @@ jobs:
 
       - shell: bash
         run: |
-          echo Uploading Each Line For Formatting Purposes... ⚙️
+          echo Uploading Policy To Temp Folder... ⚙️
           cat modifiedPolicy.json > ./comparePolicies/createdPolicy.json
           echo Visual Check Of Temporary File 👁️👄👁️
           echo --------------------------------------------------------------------------------
