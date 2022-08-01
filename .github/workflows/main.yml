@@ -228,11 +228,9 @@ jobs:
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
-          jesus=`cat modifiedPolicy.json`
-          $jesus > modifiedPolicy.txt
           while IFS= read -r line; do
               echo $line >> masterAnalysis.txt
-          done < modifiedPolicy.txt
+          done < modifiedPolicy.json
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
