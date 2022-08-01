@@ -87,22 +87,15 @@ jobs:
           path: parliament.txt
       
       - name: Fetch action
-        id: pl
-        uses: Rishabh510/Path-lister-action@master
+      - uses: jannekem/run-python-script-action@v1
         with:
-          path: "/github/workspace/"
-          type: ".json"
-
-      - name: Output results
-        run: |
-          echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
-          for i in ${{ steps.pl.outputs.paths }}; do
-          gg=`echo $1 | tr --delete /github/workspace/`
-          echo $gg
-          value=`(cat $gg | parliament) || true`
-          echo $value
-          done
-
+        script: |
+          import os
+          for r, d, f in os.walk("."):
+            for file in f:
+                if file.endswith(".json"):
+                    abspath = os.path.join(r, file)
+                    print(abspath)
 
   job_4:
       name: Grabbing Python Files To Analyse 🪝
