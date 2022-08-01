@@ -35,16 +35,16 @@ jobs:
           python-version: 3.8 #install the python needed
 
   job_2:
-    name: Scanning For Python Files 🔎 
+    name: Scanning For Python Files 🔎📂
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
 
-      - name: Scanning 🔎
+      - name: Scanning 🔎📂
         run: |
           file=`find . -type f -name '*.py'`
-          echo Displaying python files found 👀
+          echo Displaying python files found 👁️👄👁️
           echo --------------------------------------------------------------------------------
           echo $file
           echo --------------------------------------------------------------------------------
@@ -71,33 +71,26 @@ jobs:
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             pip install e .
 
-        - name: Run A Simple Test 🐧
+        - name: Run A Simple Test 🤡
           run: python ./tests/test_GenerateIAMPolicy.py
         
-        - name: Create a Policy Using The Analyser 🐧
+        - name: Create a Policy Using The Analyser 👷‍♂️🪛
           uses: actions/download-artifact@v3
           with:
             name: pythonfiles
         - shell: bash
-          name: Listing the python filenames 📂
+          name: Analysing 🔎📂
           run: |
-            echo The names of all python files found are:
-            echo --------------------------------------------------------------------------------
-            while IFS= read -r line; do
-            echo Filename: $line
-            done < pythonfiles.txt
-            echo --------------------------------------------------------------------------------
-            echo Running the analyser and saving the output 🎁
+            echo Grabbing the python files 🪝
             pythonFileNames=`cat pythonfiles.txt`
+            echo Running the boto3 analyser ⚙️
             python ./astStaticAnalysis/astBoto3.py $pythonFileNames > modifiedPolicy.json
-            echo Displaying the output 👀
+            echo Displaying the output 👁️👄👁️
             echo --------------------------------------------------------------------------------
-            while IFS= read -r line; do
-            echo $line
-            done < modifiedPolicy.json
+            cat modifiedPolicy.json
             echo --------------------------------------------------------------------------------
 
-        - name: Upload generated policy output as an artifact
+        - name: Uploading modifiedPolicy.json as an Artifact 🎁
           uses: actions/upload-artifact@v3
           with:
             name: modifiedPolicy
