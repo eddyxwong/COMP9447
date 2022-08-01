@@ -55,52 +55,6 @@ jobs:
         with:
           name: pythonfiles
           path: pythonfiles.txt
-
-  job_3:
-    name: Scanning For Json Files And Running Parliament 🔎📂
-    needs: [job_1]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v2
-
-      - name: Installing All Dependancies 🖥️
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install e .
-
-      - name: Python Script To Run Parliament
-        uses: jannekem/run-python-script-action@v1
-        with:
-          script: |
-            import os
-            import subprocess
-            open("tempJsonFile.txt", "x")
-            for r, d, f in os.walk("."):
-              for file in f:
-                  if file.endswith(".json"):
-                      abspath = os.path.join(r, file)
-                      opener = open("tempJsonFile.txt", "a")
-                      opener.write('\n')
-                      opener.write("Findings for " + str(abspath)+":\n")
-                      shellresponse = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
-                      print(shellresponse)
-                      opener.write(shellresponse)
-                      opener.write('\n')
-                      opener.write('----------------------------------------------')
-                      opener.close
-
-      - shell: bash
-        name: Grab Parliament Findings For All Json Files 🪝
-        run: |
-            echo `cat tempJsonFile.txt` > parliament.txt
-
-      - name: Uploading files as an Artifact 🎁
-        uses: actions/upload-artifact@v3
-        with:
-          name: parliament
-          path: parliament.txt
       
 
   job_4:
@@ -190,8 +144,8 @@ jobs:
           name: policyDifference
           path: policyDifference.txt
 
-  job_6:
-        name: Master Check
+  job_3:
+        name: Modification Check 🤔
         runs-on: ubuntu-latest
         steps:
           - uses: actions/checkout@v2.1.0
@@ -199,20 +153,37 @@ jobs:
             id: abc
             with:
               format: space-delimited
-          - name: Printing
+          - name: Adding To Modifications.txt ⚙️
             run: |
-              echo "All:"
-              echo "${{ steps.abc.outputs.all }}"
-              echo "Added:"
-              echo "${{ steps.abc.outputs.added }}"
-              echo "Removed:"
-              echo "${{ steps.abc.outputs.removed }}"
-              echo "Renamed:"
-              echo "${{ steps.abc.outputs.renamed }}"
-              echo "Modified:"
-              echo "${{ steps.abc.outputs.modified }}"
-              echo "Added+Modified:"
-              echo "${{ steps.abc.outputs.added_modified }}"
+              echo "All:" >> modifications.txt
+              echo  >> modifications.txt
+              echo "${{ steps.abc.outputs.all }}" >> modifications.txt
+              echo  >> modifications.txt
+              echo "Added:" >> modifications.txt
+              echo  >> modifications.txt
+              echo "${{ steps.abc.outputs.added }}" >> modifications.txt
+              echo  >> modifications.txt
+              echo "Removed:" >> modifications.txt
+              echo  >> modifications.txt
+              echo "${{ steps.abc.outputs.removed }}" >> modifications.txt
+              echo  >> modifications.txt
+              echo "Renamed:" >> modifications.txt
+              echo  >> modifications.txt
+              echo "${{ steps.abc.outputs.renamed }}" >> modifications.txt
+              echo  >> modifications.txt
+              echo "Modified:" >> modifications.txt
+              echo  >> modifications.txt
+              echo "${{ steps.abc.outputs.modified }}" >> modifications.txt
+              echo  >> modifications.txt
+              echo "Added+Modified:" >> modifications.txt
+              echo  >> modifications.txt
+              echo "${{ steps.abc.outputs.added_modified }}" >> modifications.txt
+
+        - name: Uploading modifications.txt as an Artifact 🎁
+          uses: actions/upload-artifact@v3
+          with:
+            name: modifications
+            path: modifications.txt
 
 
   job_7:
@@ -264,24 +235,37 @@ jobs:
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
 
-      - name: Grabbing The Parliament Findings 🪝
-        uses: actions/download-artifact@v3
-        with:
-          name: parliament
-      - shell: bash
-        name: Adding To Master Analysis ⚙️
+      - name: Installing All Dependancies 🖥️
         run: |
-          echo Parliament Findings For All .json Files: >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
-          echo ------------------------------------- >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
-          cat parliament.txt
-          while IFS='' read -r line; do
-              echo $line >> masterAnalysis.txt
-          done < parliament.txt
-          echo  >> masterAnalysis.txt
-          echo ------------------------------------- >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install e .
+
+      - name: Python Script To Run Parliament ⚙️
+        uses: jannekem/run-python-script-action@v1
+        with:
+          script: |
+            import os
+            import subprocess
+            open("tempJsonFile.txt", "x")
+            for r, d, f in os.walk("."):
+              for file in f:
+                  if file.endswith(".json"):
+                      abspath = os.path.join(r, file)
+                      opener = open("masterAnalysis.txt", "a")
+                      opener.write('\n')
+                      opener.write("Findings for " + str(abspath)+":\n")
+                      shellresponse = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
+                      print(shellresponse)
+                      opener.write(shellresponse)
+                      opener.write('\n')
+                      opener.write('----------------------------------------------\m')
+                      opener.close
+      
+      - shell: bash
+        name: Visual Check Of Master File 👁️👄👁️
+        run: |
+            cat masterAnalysis.txt
 
       - name: Grabbing Policy Difference List 🪝
         uses: actions/download-artifact@v3
@@ -301,38 +285,23 @@ jobs:
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
 
-
-      - name: Installing All Dependancies 🖥️
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install e .
-
-      - name: Python Script To Run Parliament
-        uses: jannekem/run-python-script-action@v1
+      - name: Grabbing Modifications Made 🪝
+        uses: actions/download-artifact@v3
         with:
-          script: |
-            import os
-            import subprocess
-            open("tempJsonFile.txt", "x")
-            for r, d, f in os.walk("."):
-              for file in f:
-                  if file.endswith(".json"):
-                      abspath = os.path.join(r, file)
-                      opener = open("masterAnalysis.txt", "a")
-                      opener.write('\n')
-                      opener.write("Findings for " + str(abspath)+":\n")
-                      shellresponse = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
-                      print(shellresponse)
-                      opener.write(shellresponse)
-                      opener.write('\n')
-                      opener.write('----------------------------------------------')
-                      opener.close
-      
+          name: modifications
       - shell: bash
-        name: Grab Parliament Findings For All Json Files 🪝
+        name: Adding To Master Analysis ⚙️
         run: |
-            cat masterAnalysis.txt
+          echo Modifications Made To Repository From Last Push/Pull: >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          while IFS='' read -r line; do
+            echo $line >> masterAnalysis.txt
+          done < modifications.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
 
       - name: Uploading masterAnalysis.txt as an Artifact 🎁
         uses: actions/upload-artifact@v3
