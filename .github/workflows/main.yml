@@ -190,23 +190,6 @@ jobs:
           name: policyDifference
           path: policyDifference.txt
 
-
-  job_7:
-    name: Master Analysis
-    needs: [job_2, job_3, job_4, job_5]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Grabbing The Created Policy 🪝
-        uses: actions/download-artifact@v3
-        with:
-          name: modifiedPolicy
-          name: pythonfiles
-          name: parliament
-          name: policyDifference
-
-
   job_6:
       name: Master Check
       runs-on: ubuntu-latest
@@ -218,8 +201,77 @@ jobs:
         - run: |
             mapfile -d ',' -t added_modified_files < <(printf '%s,' '${{ steps.files.outputs.added_modified }}')
             for added_modified_file in "${added_modified_files[@]}"; do
-              echo "Do something with this ${added_modified_file}."
+              echo "Do something with this ${steps.files.outputs}."
             done
+
+
+  job_7:
+    name: Create The Master Analysis File
+    needs: [job_2, job_3, job_4, job_5]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Initialise Master Analysis 🖥️
+        run: |
+          echo "Master Analysis:\nPython Files Found And Analysed By astboto3.py:\n-------------------------------------\n" >> masterAnalysis.txt
+
+      - name: Grabbing The Python Files 🪝
+        uses: actions/download-artifact@v3
+        with:
+          name: pythonfiles
+      - shell: bash
+        name: Adding To Master Analysis 👁️👄👁️
+        run: |
+          pythonfiles=`cat pythonfiles.txt`
+          echo $pythonfiles >> masterAnalysis.txt
+          echo \n-------------------------------------\n >> masterAnalysis.txt
+
+      - name: Grabbing The Created Policy 🪝
+        uses: actions/download-artifact@v3
+        with:
+          name: modifiedPolicy
+      - shell: bash
+        name: Adding To Master Analysis 👁️👄👁️
+        run: |
+          echo Policy Created Through Analysis Of Python Files:\n >> masterAnalysis.txt
+          echo \n-------------------------------------\n >> masterAnalysis.txt
+          modifiedpolicy=`cat modifiedPolicy.json`
+          echo $modifiedpolicy >> masterAnalysis.txt
+          echo \n-------------------------------------\n >> masterAnalysis.txt
+
+      - name: Grabbing The Parliament Findings 🪝
+        uses: actions/download-artifact@v3
+        with:
+          name: parliament
+      - shell: bash
+        name: Adding To Master Analysis 👁️👄👁️
+        run: |
+          echo Parliament Findings For All .json Files:\n >> masterAnalysis.txt
+          echo \n-------------------------------------\n >> masterAnalysis.txt
+          parliamentFindings=`cat parliament.txt`
+          echo $parliamentFindings >> masterAnalysis.txt
+          echo \n-------------------------------------\n >> masterAnalysis.txt
+
+      - name: Grabbing Policy Difference List 🪝
+        uses: actions/download-artifact@v3
+        with:
+          name: policyDifference
+      - shell: bash
+        name: Adding To Master Analysis 👁️👄👁️
+        run: |
+          echo Policy Comparison For All Valid .json Policies In comparePolicies Folder:\n >> masterAnalysis.txt
+          echo \n-------------------------------------\n >> masterAnalysis.txt
+          compare=`cat policyDifference.txt`
+          echo $compare >> masterAnalysis.txt
+          echo \n-------------------------------------\n >> masterAnalysis.txt
+
+      - name: Uploading masterAnalysis.txt as an Artifact 🎁
+        uses: actions/upload-artifact@v3
+        with:
+          name: masterAnalysis
+          path: masterAnalysis.txt
+
 
  # First grab files that have been modified/added
 # Take the files added and put it inside a virtual directory. 
