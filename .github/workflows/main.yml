@@ -53,8 +53,8 @@ jobs:
         run: |
           echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
           for i in ${{ steps.pl.outputs.paths }}; do
-          i=$i | tr -d '/github/workspace/'
-          echo -n $i " ">> pythonfiles.txt
+          value=`$i | tr -d '/github/workspace/'`
+          echo -n $value " ">> pythonfiles.txt
           done
 
       - name: Upload python filenames as a artifact
