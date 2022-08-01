@@ -51,10 +51,9 @@ jobs:
 
       - name: Output results
         run: |
-          echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
-          for i in ${{ steps.pl.outputs.paths }}; do
-          echo -n $i " ">> pythonfiles.txt
-          done
+          file=`find . -type f -name '*.py'`
+          echo filepath is $file
+          echo -n $file >> pythonfiles.txt
 
       - name: Upload python filenames as a artifact
         uses: actions/upload-artifact@v3
@@ -88,12 +87,21 @@ jobs:
 
         - name: Run Simple Test
           run: python ./tests/test_GenerateIAMPolicy.py
-        
+        # astStaticAnalysis\astBoto3.py
         # python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt is the correct command
         - name: Run All Python Files
+          uses: actions/download-artifact@v3
+          with:
+            name: pythonfiles
+        - shell: bash
           run: |
-            testVal=./astStaticAnalysis/astTest.py
-            python ./astStaticAnalysis/astBoto3.py $testVal > policy.txt
+            echo my directory is 
+            pwd
+            echo my files are
+            ls
+            pythonFileNames=`cat pythonfiles.txt`
+            echo The result is $pythonFileNames
+            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt
             policyResult=`cat policy.txt`
             echo The generated policies are $policyResult
 
