@@ -139,7 +139,7 @@ jobs:
         run: |
           find . -type f -name "*.json" -print0 | while read -d $'\0' file
           do
-            (cat $file | parliament) || True
+            (cat $file | parliament) || true
           done
 
 
