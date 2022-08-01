@@ -137,9 +137,10 @@ jobs:
       - shell: bash
         name: Testing ideas
         run: |
-          for i in `find . -name "*.json" -type f`; do
-            value=`(cat $file | parliament) || true`
-            echo this is my $file findings: $value
+          find . -name '*.json' -print0 |
+            while IFS= read -r -d '' line; do 
+              value=`(cat $file | parliament) || true`
+              echo this is my $file findings: $value
           done
 
 
@@ -163,6 +164,7 @@ jobs:
 # Grab all json files and run it with parliament. If parliament using cat
 # If parliament doesnt contain that weird ass parsing or unknown or wtv bs then put the file inside the same virtual directory
 # if it does just output the parliament thing
+
 # grab all json and run with parliemant and output to the master txt file
 # After that you git diff wtv bullshit and output to the master txt file also
 # use the master check and output to the master txt file as well
