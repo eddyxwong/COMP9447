@@ -79,9 +79,11 @@ jobs:
                   if file.endswith(".json"):
                       abspath = os.path.join(r, file)
                       opener = open("tempJsonFile.txt", "a")
+                      opener.write('\n')
                       opener.write("Findings for " + str(abspath)+":\n")
                       shellresponse = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
                       opener.write(shellresponse)
+                      opener.write('\n')
                       opener.write('----------------------------------------------')
                       opener.close
 
