@@ -106,7 +106,7 @@ jobs:
             echo The generated policy is $policyResult
             while IFS= read -r line; do
             echo "Text read from file: $line"
-            done < newPolicy.json
+            done < ./TestIAMpolicies/newPolicy.json
 
         - name: Upload generated policy output as an artifact
           uses: actions/upload-artifact@v3
