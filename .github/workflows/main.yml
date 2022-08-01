@@ -138,7 +138,7 @@ jobs:
         name: Testing ideas
         run: |
           find . -name "*.json"|while read file; do
-            value=`(cat $file | parliament) || true`
+            value=`(cat $file | parliament) || hey`
             echo this is my $file findings: $value
           done
 
