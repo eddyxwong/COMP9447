@@ -214,7 +214,12 @@ jobs:
 
       - name: Initialise Master Analysis 🖥️
         run: |
-          echo "Master Analysis:\nPython Files Found And Analysed By astboto3.py:\n-------------------------------------\n" >> masterAnalysis.txt
+          echo Master Analysis: >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo Python Files Found And Analysed By astboto3.py: >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------ >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
 
       - name: Grabbing The Python Files 🪝
         uses: actions/download-artifact@v3
@@ -225,7 +230,9 @@ jobs:
         run: |
           pythonfiles=`cat pythonfiles.txt`
           echo $pythonfiles >> masterAnalysis.txt
-          echo \n-------------------------------------\n >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
 
       - name: Grabbing The Created Policy 🪝
         uses: actions/download-artifact@v3
@@ -234,11 +241,15 @@ jobs:
       - shell: bash
         name: Adding To Master Analysis 👁️👄👁️
         run: |
-          echo Policy Created Through Analysis Of Python Files:\n >> masterAnalysis.txt
-          echo \n-------------------------------------\n >> masterAnalysis.txt
+          echo Policy Created Through Analysis Of Python Files: >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
           modifiedpolicy=`cat modifiedPolicy.json`
           echo $modifiedpolicy >> masterAnalysis.txt
-          echo \n-------------------------------------\n >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
 
       - name: Grabbing The Parliament Findings 🪝
         uses: actions/download-artifact@v3
@@ -247,11 +258,15 @@ jobs:
       - shell: bash
         name: Adding To Master Analysis 👁️👄👁️
         run: |
-          echo Parliament Findings For All .json Files:\n >> masterAnalysis.txt
-          echo \n-------------------------------------\n >> masterAnalysis.txt
+          echo Parliament Findings For All .json Files: >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
           parliamentFindings=`cat parliament.txt`
           echo $parliamentFindings >> masterAnalysis.txt
-          echo \n-------------------------------------\n >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
 
       - name: Grabbing Policy Difference List 🪝
         uses: actions/download-artifact@v3
@@ -260,11 +275,15 @@ jobs:
       - shell: bash
         name: Adding To Master Analysis 👁️👄👁️
         run: |
-          echo Policy Comparison For All Valid .json Policies In comparePolicies Folder:\n >> masterAnalysis.txt
-          echo \n-------------------------------------\n >> masterAnalysis.txt
+          echo Policy Comparison For All Valid .json Policies In comparePolicies Folder: >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
           compare=`cat policyDifference.txt`
           echo $compare >> masterAnalysis.txt
-          echo \n-------------------------------------\n >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
 
       - name: Uploading masterAnalysis.txt as an Artifact 🎁
         uses: actions/upload-artifact@v3
