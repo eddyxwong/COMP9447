@@ -259,7 +259,7 @@ jobs:
                       print(shellresponse)
                       opener.write(shellresponse)
                       opener.write('\n')
-                      opener.write('----------------------------------------------\m')
+                      opener.write('----------------------------------------------\n')
                       opener.close
       
       - shell: bash
@@ -274,6 +274,7 @@ jobs:
       - shell: bash
         name: Adding To Master Analysis ⚙️
         run: |
+          echo  >> masterAnalysis.txt
           echo Policy Comparison For All Valid .json Policies In comparePolicies Folder: >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
