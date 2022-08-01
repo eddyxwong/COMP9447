@@ -83,12 +83,11 @@ jobs:
             cat pythonfiles.txt
             echo --------------------------------------------------------------------------------
             echo Running the analyser and saving the output ⚙️
-            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > modifiedPolicy.json
+            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > newPolicy.json
             echo Displaying the output 👀
-            echo --------------------------------------------------------------------------------
             while IFS= read -r line; do
-            echo $line 
-            done < modifiedPolicy.json
+            echo $line >> modifiedPolicy.json
+            done < newPolicy.json
 
         - name: Upload generated policy output as an artifact
           uses: actions/upload-artifact@v3
