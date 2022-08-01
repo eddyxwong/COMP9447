@@ -127,7 +127,7 @@ jobs:
 
   job_5:
     name: Comparing Existing Policies 🤔
-    needs: [job_3]
+    needs: [job_4]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -167,7 +167,7 @@ jobs:
 
   job_6:
       name: Master Check
-      needs: [job_3]
+      needs: [job_4]
       runs-on: ubuntu-latest
       steps:
         - id: files
