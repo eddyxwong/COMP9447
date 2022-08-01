@@ -277,6 +277,7 @@ jobs:
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
+          cat parliament.txt
           while IFS='' read -r line; do
               echo $line >> masterAnalysis.txt
           done < parliament.txt
