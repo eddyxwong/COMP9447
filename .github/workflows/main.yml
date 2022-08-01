@@ -97,7 +97,7 @@ jobs:
 
 
   job_4:
-    name: Comparing The Created Policy With Any Existing Policies 🤔
+    name: Comparing Existing Policies 🤔
     needs: [job_3]
     runs-on: ubuntu-latest
     steps:
@@ -129,12 +129,10 @@ jobs:
           name: modifiedPolicy
 
       - shell: bash
-        name: Save The Policy In A Temp Directory
+        name:  Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder
         run: |
           echo Uploading Each Line For Formatting Purposes... ⚙️
-          while IFS= read -r line; do
-          echo $line >> ./comparePolicies/createdPolicy.json
-          done < modifiedPolicy.json
+          modifiedPolicy.json > ./comparePolicies/createdPolicy.json
           echo Visual Check Of Temporary File 👁️👄👁️
           echo --------------------------------------------------------------------------------
           cat ./comparePolicies/createdPolicy.json
