@@ -85,6 +85,7 @@ jobs:
                       opener.write('\n')
                       opener.write("Findings for " + str(abspath)+":\n")
                       shellresponse = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
+                      print(shellresponse)
                       opener.write(shellresponse)
                       opener.write('\n')
                       opener.write('----------------------------------------------')
