@@ -104,7 +104,7 @@ jobs:
 
   job_4:
       name: Grabbing Python Files To Analyse 🪝
-      needs: [job_1, job_2]
+      needs: [job_2]
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v3
@@ -183,16 +183,28 @@ jobs:
           cat policyDifference.txt
           echo --------------------------------------------------------------------------------
       
-      - name: Uploading modifiedPolicy.json as an Artifact 🎁
+      - name: Uploading policyDifference.txt as an Artifact 🎁
         uses: actions/upload-artifact@v3
         with:
           name: policyDifference
           path: policyDifference.txt
 
 
+  job_7:
+    name: Master Analysis
+    needs: [job_2, job_3, job_4, job_5]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Grabbing The Created Policy 🪝
+        uses: actions/download-artifact@v3
+        with:
+          name: modifiedPolicy
+
+
   job_6:
       name: Master Check
-      needs: [job_4]
       runs-on: ubuntu-latest
       steps:
         - id: files
