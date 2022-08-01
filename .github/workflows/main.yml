@@ -228,8 +228,9 @@ jobs:
       - shell: bash
         name: Adding To Master Analysis ⚙️
         run: |
-          pythonfiles=`cat pythonfiles.txt`
-          echo $pythonfiles >> masterAnalysis.txt
+          while IFS='' read -r line; do
+              echo $line >> masterAnalysis.txt
+          done < pythonfiles.txt
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
@@ -245,8 +246,9 @@ jobs:
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
-          modifiedpolicy=`cat modifiedPolicy.json`
-          echo $modifiedpolicy >> masterAnalysis.txt
+          while IFS='' read -r line; do
+              echo $line >> masterAnalysis.txt
+          done < modifiedpolicy.json
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
@@ -262,8 +264,9 @@ jobs:
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
-          parliamentFindings=`cat parliament.txt`
-          echo $parliamentFindings >> masterAnalysis.txt
+          while IFS='' read -r line; do
+              echo $line >> masterAnalysis.txt
+          done < parliament.txt
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
@@ -279,8 +282,9 @@ jobs:
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
-          compare=`cat policyDifference.txt`
-          echo $compare >> masterAnalysis.txt
+          while IFS='' read -r line; do
+              echo $line >> masterAnalysis.txt
+          done < policyDifference.txt
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
