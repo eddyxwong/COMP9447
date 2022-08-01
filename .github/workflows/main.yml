@@ -48,7 +48,7 @@ jobs:
           echo --------------------------------------------------------------------------------
           echo $file
           echo --------------------------------------------------------------------------------
-          echo -n $file >> pythonfiles.txt
+          echo $file >> pythonfiles.txt
 
       - name: Uploading files as an Artifact 🎁
         uses: actions/upload-artifact@v3
@@ -93,8 +93,9 @@ jobs:
       - shell: bash
         name: Grab Parliament Findings For All Json Files 🪝
         run: |
-          tempfile=`cat tempJsonFile.txt`
-          echo $tempfile >> parliament.txt
+          while IFS='' read -r line; do
+              echo $line >> parliament.txt
+          done < tempJsonFile.txt
 
       - name: Uploading files as an Artifact 🎁
         uses: actions/upload-artifact@v3
@@ -248,7 +249,7 @@ jobs:
           echo  >> masterAnalysis.txt
           while IFS='' read -r line; do
               echo $line >> masterAnalysis.txt
-          done < modifiedpolicy.json
+          done < modifiedPolicy.json
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
