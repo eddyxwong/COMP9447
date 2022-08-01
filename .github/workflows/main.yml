@@ -32,6 +32,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8 #install the python needed
+      
 
   job_2:
     name: Scanning For Python Files 🔎📂
@@ -68,7 +69,8 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install e .
 
-      - uses: jannekem/run-python-script-action@v1
+      - name: Python Script To Run Parliament
+        uses: jannekem/run-python-script-action@v1
         with:
           script: |
             import os
@@ -88,10 +90,10 @@ jobs:
                       opener.close
 
       - shell: bash
-        name: Testing ideas
+        name: Grab Parliament Findings For All Json Files 🪝
         run: |
-          cat tempJsonFile.txt
-          echo 5 >> parliament.txt
+          tempfile=cat tempJsonFile.txt
+          echo $tempfile >> parliament.txt
 
       - name: Uploading files as an Artifact 🎁
         uses: actions/upload-artifact@v3
@@ -175,9 +177,17 @@ jobs:
           cat ./comparePolicies/createdPolicy.json
           echo --------------------------------------------------------------------------------
           echo Running The Policy Difference Checker ⚙️
+          python policyDiffChecker.py comparePolicies > policyDifference.txt
+          echo The Differences Are: 👁️👄👁️
           echo --------------------------------------------------------------------------------
-          python policyDiffChecker.py comparePolicies
+          cat policyDifference.json
           echo --------------------------------------------------------------------------------
+      
+      - name: Uploading modifiedPolicy.json as an Artifact 🎁
+        uses: actions/upload-artifact@v3
+        with:
+          name: policyDifference
+          path: policyDifference.txt
 
 
   job_6:
