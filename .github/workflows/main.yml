@@ -92,6 +92,7 @@ jobs:
         # python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt is the correct command
         - name: Run All Python Files
           run: |
+            chmod +x ./astStaticAnalysis/astBoto3.py
             ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt
             policyResult=`cat policy.txt`
             echo The generated policies are $policyResult
