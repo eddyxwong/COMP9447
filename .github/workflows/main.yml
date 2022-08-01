@@ -84,6 +84,21 @@ jobs:
         with:
           name: parliament
           path: parliament.txt
+      
+      - name: Fetch action
+        id: pl
+        uses: Rishabh510/Path-lister-action@master
+        with:
+          path: "'/home/runner/work/COMP9447/COMP9447'"
+          type: ".json"
+
+      - name: Output results
+        run: |
+          echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
+          for i in ${{ steps.pl.outputs.paths }}; do
+          value=`(cat $i | parliament) || true`
+          echo $value
+          done
 
 
   job_4:
