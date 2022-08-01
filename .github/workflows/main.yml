@@ -94,7 +94,7 @@ jobs:
           run: |
             python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt
             result=`python ./astStaticAnalysis/astBoto3.py $pythonFileNames`
-            cat $result
+            echo $result
             policyResult=`cat policy.txt`
             echo The generated policies are $policyResult
 
