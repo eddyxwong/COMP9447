@@ -212,7 +212,7 @@ jobs:
         name: Adding To Master Analysis ⚙️
         run: |
           pythonfilenames=`cat pythonfiles.txt`
-          $pythonfilenames >> masterAnalysis.txt
+          echo $pythonfilenames >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
