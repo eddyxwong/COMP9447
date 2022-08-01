@@ -73,6 +73,7 @@ jobs:
         run: |
           cat policy.json | parliament || true
           find . -name "*.json"|while read file; do
+            echo $file
             value=`(cat $file | parliament) || true`
             echo $value
             echo -n $file findings: >> parliament.txt
@@ -89,7 +90,7 @@ jobs:
         id: pl
         uses: Rishabh510/Path-lister-action@master
         with:
-          path: "/home/runner/work/COMP9447/COMP9447/github/workspace/"
+          path: "/github/workspace/"
           type: ".json"
 
       - name: Output results
