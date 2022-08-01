@@ -79,10 +79,10 @@ jobs:
           done
 
       - name: Uploading files as an Artifact 🎁
-          uses: actions/upload-artifact@v3
-          with:
-            name: parliament
-            path: parliament.txt
+        uses: actions/upload-artifact@v3
+        with:
+          name: parliament
+          path: parliament.txt
 
 
   job_4:
