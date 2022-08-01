@@ -96,6 +96,10 @@ jobs:
             name: pythonfiles
         - shell: bash
           run: |
+            echo my directory is 
+            pwd
+            echo my files are
+            ls
             pythonFileNames=`cat pythonfiles.txt`
             echo The result is $pythonFileNames
             python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt
