@@ -180,7 +180,7 @@ jobs:
           python policyDiffChecker.py comparePolicies > policyDifference.txt
           echo The Differences Are: 👁️👄👁️
           echo --------------------------------------------------------------------------------
-          cat policyDifference.json
+          cat policyDifference.txt
           echo --------------------------------------------------------------------------------
       
       - name: Uploading modifiedPolicy.json as an Artifact 🎁
