@@ -96,7 +96,8 @@ jobs:
         run: |
           echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
           for i in ${{ steps.pl.outputs.paths }}; do
-          value=`(cat ${i///github/workspace// } | parliament) || true`
+          i=`echo "$i" | tr /github/ `
+          value=`(cat ${i///workspace// } | parliament) || true`
           echo $value
           done
 
