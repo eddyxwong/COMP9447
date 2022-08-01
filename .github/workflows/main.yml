@@ -93,7 +93,7 @@ jobs:
         - name: Run All Python Files
           run: |
             testVal=./astStaticAnalysis/astTest.py
-            python ./astStaticAnalysis/astBoto3.py $testVal > policy.txt
+            ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt
             policyResult=`cat policy.txt`
             echo The generated policies are $policyResult
 
