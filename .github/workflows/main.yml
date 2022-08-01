@@ -69,7 +69,8 @@ jobs:
               for file in f:
                   if file.endswith(".json"):
                       abspath = os.path.join(r, file)
-                      abspath >> jsonFIles.txt
+                      shellresponse = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
+                      print(shellresponse)
 
 
       - name: Installing All Dependancies 🖥️
