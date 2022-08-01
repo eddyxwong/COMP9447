@@ -101,15 +101,15 @@ jobs:
             ls
             pythonFileNames=`cat pythonfiles.txt`
             echo The result is $pythonFileNames
-            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt
-            policyResult=`cat policy.txt`
+            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > newPolicy.json
+            policyResult=`cat newPolicy.json`
             echo The generated policies are $policyResult
 
         - name: Upload generated policy output as an artifact
           uses: actions/upload-artifact@v3
           with:
-            name: policy
-            path: policy.txt # Does this need to be in txt? if this is the final output then how will i cmpare it as this is not a IAM policy format
+            name: newPolicy
+            path: newPolicy.json # Does this need to be in txt? if this is the final output then how will i cmpare it as this is not a IAM policy format
 
 
 # take in both job 3 (policy.txt/json) and job 5 to take in the json files and run parliament with it 
@@ -124,12 +124,12 @@ jobs:
       - name: Download policy generated from job 1
         uses: actions/download-artifact@v3
         with:
-          name: policy
+          name: newPolicy
       - shell: bash
         run: |
-          value=`cat policy.txt`
+          value=`cat newPolicy.json`
           echo The result is $value
-          echo $value > policy.txt
+          echo $value > newPolicy.json
 
       - name: Installing All Dependancies
         run: |
