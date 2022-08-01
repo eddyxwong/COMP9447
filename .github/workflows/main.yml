@@ -174,8 +174,8 @@ jobs:
           echo "Added+Modified:" >> modifications.txt
           echo "${{ steps.abc.outputs.added_modified }}" >> modifications.txt
         
-        - name: Displaying Modifications Made 👁️👄👁️
-          run: cat modifications.txt
+      - name: Displaying Modifications Made 👁️👄👁️
+        run: cat modifications.txt
 
       - name: Uploading modifications.txt as an Artifact 🎁
         uses: actions/upload-artifact@v3
