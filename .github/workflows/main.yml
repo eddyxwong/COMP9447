@@ -106,6 +106,12 @@ jobs:
             echo $line >> ./TestIAMpolicies/modifiedPolicy.json
             done < newPolicy.json
 
+        - name: Upload generated policy output as an artifact
+          uses: actions/upload-artifact@v3
+          with:
+            name: modifiedPolicy
+            path: ./TestIAMpolicies/modifiedPolicy.json
+
 
 # take in both job 3 (policy.txt/json) and job 5 to take in the json files and run parliament with it 
   job_4:
@@ -115,6 +121,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
+
+      - name: Download policy generated from job 1
+        uses: actions/download-artifact@v3
+        with:
+          name: modifiedPolicy
+      - shell: bash
+        run: |
+          value=`cat ./TestIAMpolicies/modifiedPolicy.json`
+          echo The result is $value
 
       - name: Installing All Dependancies
         run: |
