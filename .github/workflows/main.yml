@@ -145,6 +145,7 @@ jobs:
           while IFS= read -r line; do
           echo $line >> ./TestIAMpolicies/createdPolicy.json
           done < modifiedPolicy.json
+          cat ./TestIAMpolicies/createdPolicy.json
           python policyDiffChecker.py TestIAMpolicies
 
 
