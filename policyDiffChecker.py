@@ -1,9 +1,9 @@
 import json
-from parliament import analyze_policy_string
 import os
 import sys
 import subprocess
 import shlex
+import parliament
 
 # Grab a txt file of json files found
 # Take json files and run parliament in github actions
@@ -13,7 +13,6 @@ import shlex
 
 def main(argv):
     directory = argv[1]
-    print(directory)
 
     json_files = []
 
@@ -25,19 +24,10 @@ def main(argv):
     # include reasoning why this is here
     shellresponse = subprocess.getoutput('parliament --directory {}'.format(shlex.quote(directory))).split('\n')
 
+
     response = directInit(response, json_files)
 
     response = diffcheck(shellresponse,response,json_files)
-
-    policy = analyze_policy_string(
-            """{
-    "Version": "2012-10-17",
-    "Statement": {
-        "Effect": "Allow",
-        "Action": "s3:GetObject",
-        "Resource": "arn:aws:s3:::secretbucket/*"}}""",
-        )
-    print(policy.findings)
 
     print(json.dumps(response, sort_keys=False, indent=4))
 
