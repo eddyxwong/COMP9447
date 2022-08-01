@@ -132,7 +132,7 @@ jobs:
         name:  Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder
         run: |
           echo Uploading Each Line For Formatting Purposes... ⚙️
-          modifiedPolicy.json > ./comparePolicies/createdPolicy.json
+          cat modifiedPolicy.json > ./comparePolicies/createdPolicy.json
           echo Visual Check Of Temporary File 👁️👄👁️
           echo --------------------------------------------------------------------------------
           cat ./comparePolicies/createdPolicy.json
