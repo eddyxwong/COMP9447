@@ -63,13 +63,13 @@ jobs:
       - uses: actions/setup-python@v2
       - uses: jannekem/run-python-script-action@v1
         with:
-        script: |
-          import os
-          for r, d, f in os.walk("."):
-            for file in f:
-                if file.endswith(".json"):
-                    abspath = os.path.join(r, file)
-                    print(abspath)
+          script: |
+            import os
+            for r, d, f in os.walk("."):
+              for file in f:
+                  if file.endswith(".json"):
+                      abspath = os.path.join(r, file)
+                      print(abspath)
 
 
       - name: Installing All Dependancies 🖥️
