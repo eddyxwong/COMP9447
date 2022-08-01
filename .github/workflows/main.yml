@@ -71,7 +71,7 @@ jobs:
       - shell: bash
         name: Testing ideas
         run: |
-          cat policy.json | parliament
+          cat policy.json | parliament || true
           find . -name "*.json"|while read file; do
             value=`(cat $file | parliament) || true`
             echo $value
