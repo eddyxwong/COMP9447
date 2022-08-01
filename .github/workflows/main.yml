@@ -102,7 +102,7 @@ jobs:
             ls
             pythonFileNames=`cat pythonfiles.txt`
             echo The result is $pythonFileNames
-            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt
+            python ./astStaticAnalysis/astBoto3.py ./home/runner/work/COMP9447/COMP9447/setup.py > policy.txt
             policyResult=`cat policy.txt`
             echo The generated policies are $policyResult
 
