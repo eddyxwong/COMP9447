@@ -206,7 +206,7 @@ jobs:
 
 
   job_7:
-    name: Create The Master Analysis File
+    name: Create The Master Analysis File 👑
     needs: [job_2, job_3, job_4, job_5]
     runs-on: ubuntu-latest
     steps:
@@ -226,7 +226,7 @@ jobs:
         with:
           name: pythonfiles
       - shell: bash
-        name: Adding To Master Analysis 👁️👄👁️
+        name: Adding To Master Analysis ⚙️
         run: |
           pythonfiles=`cat pythonfiles.txt`
           echo $pythonfiles >> masterAnalysis.txt
@@ -239,7 +239,7 @@ jobs:
         with:
           name: modifiedPolicy
       - shell: bash
-        name: Adding To Master Analysis 👁️👄👁️
+        name: Adding To Master Analysis ⚙️
         run: |
           echo Policy Created Through Analysis Of Python Files: >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
@@ -256,7 +256,7 @@ jobs:
         with:
           name: parliament
       - shell: bash
-        name: Adding To Master Analysis 👁️👄👁️
+        name: Adding To Master Analysis ⚙️
         run: |
           echo Parliament Findings For All .json Files: >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
@@ -273,7 +273,7 @@ jobs:
         with:
           name: policyDifference
       - shell: bash
-        name: Adding To Master Analysis 👁️👄👁️
+        name: Adding To Master Analysis ⚙️
         run: |
           echo Policy Comparison For All Valid .json Policies In comparePolicies Folder: >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
