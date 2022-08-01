@@ -195,6 +195,13 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
 
+      - name: Installing All Dependancies 🖥️
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install e .
+          pip install jq
+
       - name: Initialise Master Analysis 🖥️
         run: |
           echo Master Analysis: >> masterAnalysis.txt
@@ -228,17 +235,11 @@ jobs:
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
-          python -m json.tool modifiedPolicy.json >> masterAnalysis.txt
+          echo (cat modifiedPolicy.json | jq .) >> masterAnalysis.txt
           done < modifiedPolicy.json
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
-
-      - name: Installing All Dependancies 🖥️
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install e .
 
       - name: Python Script To Run Parliament ⚙️
         uses: jannekem/run-python-script-action@v1
