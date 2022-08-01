@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   job_1:
-    name: Infrastructure Set-up
+    name: 🖥️ Infrastructure Set-up
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -35,19 +35,19 @@ jobs:
           python-version: 3.8 #install the python needed
 
   job_2:
-    name: 🔎 Scan Repository For All Python Files
+    name: Scanning For Python Files 🔎 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3 ⚙️
+      - uses: actions/setup-python@v2 ⚙️
 
-      - name: 🔎 Scanning...
+      - name: Scanning 🔎
         run: |
           file=`find . -type f -name '*.py'`
           echo filepath is $file
           echo -n $file >> pythonfiles.txt
 
-      - name: 💡 Upload python filenames as an artifact to pythonfiles.txt
+      - name: Upload files to pythonfiles.txt 💡
         uses: actions/upload-artifact@v3
         with:
           name: pythonfiles
