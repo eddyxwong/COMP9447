@@ -91,9 +91,13 @@ jobs:
         # astStaticAnalysis\astBoto3.py
         # python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt is the correct command
         - name: Run All Python Files
+          uses: actions/download-artifact@v3
+          with:
+            name: pythonfiles
           run: |
-            python ./astStaticAnalysis/astBoto3.py ./astStaticAnalysis/testDir/astTest1.py > policy.txt
-            echo $pythonFileNames
+            pythonFileNames=`cat pythonfiles.txt`
+            echo The result is $pythonFileNames
+            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt
             policyResult=`cat policy.txt`
             echo The generated policies are $policyResult
 
