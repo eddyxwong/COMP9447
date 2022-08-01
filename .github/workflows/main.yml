@@ -288,20 +288,11 @@ jobs:
           cat ./comparePolicies/createdPolicy.json
           echo --------------------------------------------------------------------------------
           echo Running The Policy Difference Checker ⚙️
-          python policyDiffChecker.py comparePolicies > policyDifference.txt
-          echo The Differences Are: 👁️👄👁️
-          echo --------------------------------------------------------------------------------
-          cat policyDifference.txt
-          echo --------------------------------------------------------------------------------
           echo  >> masterAnalysis.txt
           echo Policy Comparison For All Valid .json Policies In comparePolicies Folder: >> masterAnalysis.txt
+          echo --------------------------------------------------------------------------------
           echo  >> masterAnalysis.txt
-          echo ------------------------------------- >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
-          while read -r line; do
-            echo $line >> masterAnalysis.txt
-          done < policyDifference.txt
-          echo  >> masterAnalysis.txt
+          python policyDiffChecker.py comparePolicies >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
 
