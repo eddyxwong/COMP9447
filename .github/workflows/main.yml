@@ -19,7 +19,7 @@ jobs:
     name: Infrastructure Set-up 🖥️ 
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    allow-failure: true
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -140,10 +140,7 @@ jobs:
         run: |
           find . -type f -name "*.json" -print0 | while read -d $'\0' file
           do
-            if cat $file | parliament; then
-              echo $file | parliament
-            else
-              echo "failkure"
+            cat $file | parliament
           done
 
 
