@@ -36,6 +36,7 @@ jobs:
 
   job_2:
     name: Scanning For Python Files 🔎📂
+    needs: [job_1]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -56,7 +57,7 @@ jobs:
           path: pythonfiles.txt
 
   job_3:
-    name: Scanning For Json Files And Running Parliament
+    name: Scanning For Json Files And Running Parliament 🔎📂
     needs: [job_1]
     runs-on: ubuntu-latest
     steps:
