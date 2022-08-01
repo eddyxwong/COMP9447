@@ -112,7 +112,7 @@ jobs:
           uses: actions/upload-artifact@v3
           with:
             name: newPolicy
-            path: /TestIAMpolicies/newPolicy.json
+            path: newPolicy.json
 
 
 # take in both job 3 (policy.txt/json) and job 5 to take in the json files and run parliament with it 
