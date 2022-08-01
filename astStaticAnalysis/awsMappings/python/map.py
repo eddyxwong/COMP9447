@@ -1,5 +1,6 @@
 import json
 
+# s3.uploadfile is missing from official documentation, hence we had to manually put it in.
 
 with open('test.json') as data_file:    
     data = json.load(data_file)

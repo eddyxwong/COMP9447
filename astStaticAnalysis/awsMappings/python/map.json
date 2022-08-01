@@ -9375,6 +9375,7 @@
     "s3.restoreobject": "s3:RestoreObject",
     "s3.selectobjectcontent": "s3:GetObject",
     "s3.uploadpart": "s3:PutObject",
+    "s3.uploadfile": "s3:PutObject",
     "s3.uploadpartcopy": "s3:PutObject",
     "s3.writegetobjectresponse": "s3-object-lambda:WriteGetObjectResponse",
     "s3control.createaccesspoint": "s3-outposts:CreateAccessPoint",

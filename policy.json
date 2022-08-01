@@ -1,13 +1,4 @@
 {
     "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "Statement1",
-            "Effect": "Allow",
-            "Action": [
-                "lambda:GetFunction"
-            ],
-            "Resource": "arn:aws:lambda:us-east-1:221094580673:function:testFunction"
-        }
-    ]
+    "Statement": []
 }
