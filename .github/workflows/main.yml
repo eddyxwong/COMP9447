@@ -82,18 +82,20 @@ jobs:
           run: |
             echo Listing the python filenames 📂
             echo The names of all python files found are:
-            echo
             echo --------------------------------------------------------------------------------
-            cat pythonfiles.txt
-            echo
+            while IFS= read -r line; do
+            echo Filename: $line
+            done < pythonfiles.txt
             echo --------------------------------------------------------------------------------
             echo Running the analyser and saving the output 🎁
             pythonFileNames=`cat pythonfiles.txt`
             python ./astStaticAnalysis/astBoto3.py $pythonFileNames > modifiedPolicy.json
             echo Displaying the output 👀
+            echo --------------------------------------------------------------------------------
             while IFS= read -r line; do
             echo $line
             done < modifiedPolicy.json
+            echo --------------------------------------------------------------------------------
 
         - name: Upload generated policy output as an artifact
           uses: actions/upload-artifact@v3
