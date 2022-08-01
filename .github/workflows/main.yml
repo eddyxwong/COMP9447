@@ -53,7 +53,7 @@ jobs:
         run: |
           echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
           for i in ${{ steps.pl.outputs.paths }}; do
-          echo -n $i " ">> pythonfiles.txt
+          echo -n .$i " ">> pythonfiles.txt
           done
 
       - name: Upload python filenames as a artifact
