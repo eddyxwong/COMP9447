@@ -94,7 +94,7 @@ jobs:
           run: |
             cd ./astStaticAnalysis
             ls
-            python astBoto3.py $pythonFileNames=$testValue
+            testValue = python astBoto3.py $pythonFileNames
             python astBoto3.py $pythonFileNames > policy.txt
             cat $testValue
             policyResult=`cat policy.txt`
