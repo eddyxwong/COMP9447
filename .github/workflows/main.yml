@@ -16,7 +16,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   job_1:
-    name: 🖥️ Infrastructure Set-up
+    name: Infrastructure Set-up 🖥️ 
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -26,10 +26,10 @@ jobs:
       - uses: actions/checkout@v3
 
       # Runs a single command using the runners shell
-      - name: 🖥️ Run a one-line script
+      - name: Run a one-line script 🖥️
         run: echo Hello, world!
 
-      - name: setup python
+      - name: setup python 🖥️
         uses: actions/setup-python@v2
         with:
           python-version: 3.8 #install the python needed
@@ -47,7 +47,7 @@ jobs:
           echo filepath is $file
           echo -n $file >> pythonfiles.txt
 
-      - name: Upload files to pythonfiles.txt 💡
+      - name: Uploading files as an Artifact ⚙️
         uses: actions/upload-artifact@v3
         with:
           name: pythonfiles
@@ -55,48 +55,40 @@ jobs:
       
 
   job_3:
-      name: Display Python Files and Run Analyser
+      name: Grabbing Python Files To Analyse 🪝
       needs: [job_1, job_2]
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v3
         - uses: actions/setup-python@v2
 
-        - name: Download python txt file generated from job 2
-          uses: actions/download-artifact@v3
-          with:
-            name: pythonfiles
-        - shell: bash
-          run: |
-            pythonFileNames=`cat pythonfiles.txt`
-            echo The result is $pythonFileNames
-
-        - name: Installing All Dependancies
+        - name: Installing All Dependancies 🖥️
           run: |
             python -m pip install --upgrade pip
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             pip install e .
 
-        - name: Run Simple Test
+        - name: Run A Simple Test 🤔
           run: python ./tests/test_GenerateIAMPolicy.py
-        # astStaticAnalysis\astBoto3.py
-        # python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt is the correct command
-        - name: Run All Python Files
+        
+        - name: Create a Policy Using The Analyser 🐧
           uses: actions/download-artifact@v3
           with:
             name: pythonfiles
         - shell: bash
           run: |
-            echo my directory is 
-            pwd
-            echo my files are
-            ls
-            pythonFileNames=`cat pythonfiles.txt`
-            echo The result is $pythonFileNames
-            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > newPolicy.json
+            echo Listing the python filenames 📂
+            echo The names of all python files found are:
+            echo --------------------------------------------------------------------------------
+            cat pythonfiles.txt
+            echo --------------------------------------------------------------------------------
+            echo Running the analyser and saving the output ⚙️
+            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > modifiedPolicy.json
+            echo Displaying the output 👀
+            echo --------------------------------------------------------------------------------
             while IFS= read -r line; do
-            echo $line >> modifiedPolicy.json
-            done < newPolicy.json
+            echo $line 
+            done < modifiedPolicy.json
 
         - name: Upload generated policy output as an artifact
           uses: actions/upload-artifact@v3
