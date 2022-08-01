@@ -102,7 +102,7 @@ jobs:
             pythonFileNames=`cat pythonfiles.txt`
             echo The result is $pythonFileNames
             python ./astStaticAnalysis/astBoto3.py $pythonFileNames > ./TestIAMpolicies/newPolicy.json
-            policyResult=`cat newPolicy.json`
+            policyResult=`cat ./TestIAMpolicies/newPolicy.json`
             echo The generated policy is $policyResult
             while IFS= read -r line; do
             echo "Text read from file: $line"
