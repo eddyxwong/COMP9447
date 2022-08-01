@@ -276,7 +276,7 @@ jobs:
           echo  >> masterAnalysis.txt
           cat parliament.txt
           while IFS='' read -r line; do
-              echo $line >> masterAnalysis.txt
+            echo $line >> masterAnalysis.txt
           done < parliament.txt
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
@@ -294,11 +294,44 @@ jobs:
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
           while IFS='' read -r line; do
-              echo $line >> masterAnalysis.txt
+            echo $line >> masterAnalysis.txt
           done < policyDifference.txt
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
+
+
+      - name: Installing All Dependancies 🖥️
+        uses: actions/setup-python@v2
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install e .
+
+      - name: Python Script To Run Parliament
+        uses: jannekem/run-python-script-action@v1
+        with:
+          script: |
+            import os
+            import subprocess
+            open("tempJsonFile.txt", "x")
+            for r, d, f in os.walk("."):
+              for file in f:
+                  if file.endswith(".json"):
+                      abspath = os.path.join(r, file)
+                      opener = open("masterAnalysis.txt", "a")
+                      opener.write('\n')
+                      opener.write("Findings for " + str(abspath)+":\n")
+                      shellresponse = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
+                      print(shellresponse)
+                      opener.write(shellresponse)
+                      opener.write('\n')
+                      opener.write('----------------------------------------------')
+                      opener.close
+      - shell: bash
+        name: Grab Parliament Findings For All Json Files 🪝
+        run: |
+            cat masterAnalysis.txt
 
       - name: Uploading masterAnalysis.txt as an Artifact 🎁
         uses: actions/upload-artifact@v3
