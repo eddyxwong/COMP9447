@@ -136,10 +136,8 @@ jobs:
 
       - shell: bash
         name: Testing ideas
-        id: fuckme
         run: |
-          find . -type f -name "*.json" -print0 | while read -d $'\0' file
-          do
+          for i in `find . -name "*.java" -type f`; do
             value=`(cat $file | parliament) || true`
             echo this is my $file findings: $value
           done
