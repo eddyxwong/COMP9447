@@ -61,6 +61,18 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
+      - uses: jannekem/run-python-script-action@v1
+
+      - name: Fetch action
+        with:
+        script: |
+          import os
+          for r, d, f in os.walk("."):
+            for file in f:
+                if file.endswith(".json"):
+                    abspath = os.path.join(r, file)
+                    print(abspath)
+
 
       - name: Installing All Dependancies 🖥️
         run: |
@@ -86,16 +98,6 @@ jobs:
           name: parliament
           path: parliament.txt
       
-      - name: Fetch action
-        uses: jannekem/run-python-script-action@v1
-        with:
-        script: |
-          import os
-          for r, d, f in os.walk("."):
-            for file in f:
-                if file.endswith(".json"):
-                    abspath = os.path.join(r, file)
-                    print(abspath)
 
   job_4:
       name: Grabbing Python Files To Analyse 🪝
