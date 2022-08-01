@@ -92,7 +92,7 @@ jobs:
       - shell: bash
         name: Grab Parliament Findings For All Json Files 🪝
         run: |
-          tempfile=cat tempJsonFile.txt
+          tempfile=`cat tempJsonFile.txt`
           echo $tempfile >> parliament.txt
 
       - name: Uploading files as an Artifact 🎁
