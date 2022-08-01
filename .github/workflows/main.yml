@@ -132,7 +132,7 @@ jobs:
           cat ./comparePolicies/createdPolicy.json
           echo --------------------------------------------------------------------------------
           echo Running The Policy Difference Checker ⚙️
-          echo python policyDiffChecker.py comparePolicies > policyDifference.txt
+          python policyDiffChecker.py comparePolicies > policyDifference.txt
           echo The Differences Are: 👁️👄👁️
           echo --------------------------------------------------------------------------------
           cat policyDifference.txt
