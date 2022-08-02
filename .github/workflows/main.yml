@@ -218,7 +218,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: modifiedPolicy
-          
+
       - name: Python Script To Json Dump File ⚙️
         uses: jannekem/run-python-script-action@v1
         with:
@@ -255,6 +255,7 @@ jobs:
                       opener = open("masterAnalysis.txt", "a")
                       opener.write('\n')
                       opener.write("Findings for " + str(abspath)+":\n")
+                      opener.write('----------------------------------------------\n')
                       shelly = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
                       print(shelly)
                       opener.write(shelly)
