@@ -231,6 +231,21 @@ jobs:
           echo  >> masterAnalysis.txt
           echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
+        
+      - name: Python Script To Run Parliament ⚙️
+        uses: jannekem/run-python-script-action@v1
+        with:
+          script: |
+            import json
+            file = open('modifiedPolicy.json', 'r')
+            string = file.read()
+            dict = json.loads(string)
+            resp = json.dumps(dict, sort_keys=False, indent=4)
+            master = open("masterAnalysis.txt", "a")
+            master.write(resp)
+            master.write('\n')
+            master.write('----------------------------------------------\n')
+            master.close()
 
       - name: Installing All Dependancies 🖥️
         run: |
@@ -256,7 +271,7 @@ jobs:
                       opener.write(shelly)
                       opener.write('\n')
                       opener.write('----------------------------------------------\n')
-                      opener.close
+                      opener.close()
       
       - shell: bash
         name: Visual Check Of Master File 👁️👄👁️
