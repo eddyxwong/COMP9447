@@ -218,21 +218,8 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: modifiedPolicy
-      - shell: bash
-        name: Adding To Master Analysis ⚙️
-        run: |
-          echo Policy Created Through Analysis Of Python Files: >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
-          echo ------------------------------------- >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
-          while IFS= read -r line; do
-              echo $line >> masterAnalysis.txt
-          done < modifiedPolicy.json
-          echo  >> masterAnalysis.txt
-          echo ------------------------------------- >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
-        
-      - name: Python Script To Run Parliament ⚙️
+          
+      - name: Python Script To Json Dump File ⚙️
         uses: jannekem/run-python-script-action@v1
         with:
           script: |
@@ -242,6 +229,8 @@ jobs:
             dict = json.loads(string)
             resp = json.dumps(dict, sort_keys=False, indent=4)
             master = open("masterAnalysis.txt", "a")
+            master.write('Policy Created Through Analysis Of Python Files:\n')
+            master.write('----------------------------------------------\n')
             master.write(resp)
             master.write('\n')
             master.write('----------------------------------------------\n')
