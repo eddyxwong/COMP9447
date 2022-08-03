@@ -49,8 +49,10 @@ def main():
 
 def runPolicyDiffChecker(diffarg):
     if(diffarg):
-        resp = policyDiffChecker.main("./iamPolicy")
-        with open('./policyDiff/diff.json', 'w') as f:
+        stream= os.popen('git rev-parse --show-toplevel')
+        dir = stream.read().strip()
+        resp = policyDiffChecker.main(dir+ "/astStaticAnalysis/iamPolicy")
+        with open(dir+'/astStaticAnalysis/policyDiff/diff.json', 'w') as f:
             f.write(resp)
     return
 
@@ -73,14 +75,19 @@ def dirAstConvert(dirargs):
 
 def createCFNTemplate(cfnArg:bool, iamPolicy:json):
     if(cfnArg):
-        with open('./iacTemplates/cfnSample.json') as json_file:
+        
+        stream= os.popen('git rev-parse --show-toplevel')
+        dir = stream.read().strip()
+
+
+        with open(dir+'/astStaticAnalysis/iacTemplates/cfnSample.json') as json_file:
             cfnTemplate = json.load(json_file)
             iamPolicy = json.loads(iamPolicy)
 
             cfnTemplate["Resources"]["MyIAMPolicy"]["Properties"]["PolicyDocument"] = iamPolicy
 
 
-        with open('./iacTemplates/cfnTemplate.json', 'w') as f:
+        with open(dir+'/astStaticAnalysis/iacTemplates/cfnTemplate.json', 'w') as f:
             f.write(json.dumps(cfnTemplate, sort_keys=False, indent=4))
     
     return
@@ -90,7 +97,11 @@ def createCFNTemplate(cfnArg:bool, iamPolicy:json):
 
 def createTerraformTemplate(tfArg: bool, policyFile:json):
     if(tfArg):
-        p = subprocess.Popen(["iam-policy-json-to-terraform < "+ policyFile+" > ./iacTemplates/tfTemplate.tf"], stdout=subprocess.PIPE,shell=True)
+        stream= os.popen('git rev-parse --show-toplevel')
+        dir = stream.read().strip()
+
+
+        p = subprocess.Popen(["iam-policy-json-to-terraform < "+ policyFile+" >" +dir+ "/astStaticAnalysis/iacTemplates/tfTemplate.tf"], stdout=subprocess.PIPE,shell=True)
     
     return 
 
@@ -113,9 +124,8 @@ def createPolicyFile(iamPolicy:json, astList)->str:
         with open(dir+'/astStaticAnalysis/iamPolicy/policy.json', 'w') as f:
             f.write(iamPolicy)
 
-    return "./iamPolicy/policy.json"
-
-    # return "policy.json"
+        return dir+'/astStaticAnalysis/iamPolicy/policy.json' 
+    return "policy.json"
 
 
 
