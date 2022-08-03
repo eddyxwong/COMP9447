@@ -83,6 +83,7 @@ jobs:
           run: |
             echo Grabbing the python files 🪝
             pythonFileNames=`cat pythonfiles.txt`
+            echo pythonFileNames
             echo Running the boto3 analyser ⚙️
             python ./astStaticAnalysis/astBoto3.py $pythonFileNames > modifiedPolicy.json
             echo The created policy is: 👁️👄👁️
