@@ -106,7 +106,11 @@ def createPolicyFile(iamPolicy:json, astList)->str:
     """
 
     if(astList):
-        with open('./iamPolicy/policy.json', 'w') as f:
+
+        stream= os.popen('git rev-parse --show-toplevel')
+        dir = stream.read().strip()
+
+        with open(dir+'/astStaticAnalysis/iamPolicy/policy.json', 'w') as f:
             f.write(iamPolicy)
 
     return "./iamPolicy/policy.json"
