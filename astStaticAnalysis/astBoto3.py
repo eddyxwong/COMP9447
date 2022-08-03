@@ -8,6 +8,7 @@ import argparse
 from typing import List
 import astpretty
 import subprocess
+import policyDiffChecker
 '''
 general style refactoring, pylint
 arg parse (add details, !directory argument!)
@@ -33,14 +34,26 @@ def main():
 
     iamPolicy = json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
 
-    policyFile = createPolicyFile(iamPolicy)
+    policyFile = createPolicyFile(iamPolicy, astList)
 
     createTerraformTemplate(args.tf, policyFile)
 
     createCFNTemplate(args.cfn, iamPolicy)
 
+    runPolicyDiffChecker(args.diff)
+
+
     print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
     return json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
+
+
+def runPolicyDiffChecker(diffarg):
+    if(diffarg):
+        resp = policyDiffChecker.main("./iamPolicy")
+        with open('./policyDiff/diff.json', 'w') as f:
+            f.write(resp)
+    return
+
 
 def dirAstConvert(dirargs):
 
@@ -60,14 +73,14 @@ def dirAstConvert(dirargs):
 
 def createCFNTemplate(cfnArg:bool, iamPolicy:json):
     if(cfnArg):
-        with open('./templates/cfnSample.json') as json_file:
+        with open('./iacTemplates/cfnSample.json') as json_file:
             cfnTemplate = json.load(json_file)
             iamPolicy = json.loads(iamPolicy)
 
             cfnTemplate["Resources"]["MyIAMPolicy"]["Properties"]["PolicyDocument"] = iamPolicy
 
 
-        with open('cfnTemplate.json', 'w') as f:
+        with open('./iacTemplates/cfnTemplate.json', 'w') as f:
             f.write(json.dumps(cfnTemplate, sort_keys=False, indent=4))
     
     return
@@ -77,12 +90,12 @@ def createCFNTemplate(cfnArg:bool, iamPolicy:json):
 
 def createTerraformTemplate(tfArg: bool, policyFile:json):
     if(tfArg):
-        p = subprocess.Popen(["iam-policy-json-to-terraform < "+ policyFile+" > tfTemplate.tf"], stdout=subprocess.PIPE,shell=True)
+        p = subprocess.Popen(["iam-policy-json-to-terraform < "+ policyFile+" > ./iacTemplates/tfTemplate.tf"], stdout=subprocess.PIPE,shell=True)
     
     return 
 
 
-def createPolicyFile(iamPolicy:json)->str:
+def createPolicyFile(iamPolicy:json, astList)->str:
     """Writes a given IAM policy is json format to a file titled policy.json in the same directory
 
     Args:
@@ -91,10 +104,14 @@ def createPolicyFile(iamPolicy:json)->str:
     Returns:
         str : name of the created IAM policy file
     """
-    with open('policy.json', 'w') as f:
-        f.write(iamPolicy)
 
-    return "policy.json"
+    if(astList):
+        with open('./iamPolicy/policy.json', 'w') as f:
+            f.write(iamPolicy)
+
+    return "./iamPolicy/policy.json"
+
+    # return "policy.json"
 
 
 
@@ -153,6 +170,7 @@ def parseArgs():
     parser.add_argument('--dir' ,nargs='+', help="a directory of files")
     parser.add_argument('--tf' ,action='store_true', help="a flag for if you also want a terraform template")
     parser.add_argument('--cfn', action='store_true', help="a flag for if you also want a cloudformation template" )
+    parser.add_argument('--diff', action='store_true', help="a flag to compare the json IAM policies within the iamPolicy dict")
 
     return parser.parse_args()
 

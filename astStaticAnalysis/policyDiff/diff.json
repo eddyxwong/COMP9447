@@ -1,0 +1,51 @@
+{
+    "Policies": [
+        {
+            "Policy Name": "iamPolicy/policy1.json",
+            "Findings": [
+                "LOW - Unnecessary use of Resource * -  - ['logs:CreateLogStream', 'logs:PutLogEvents'] - {'line': 24, 'column': 9, 'filepath': './iamPolicy/policy1.json'}",
+                "LOW - Unnecessary use of Resource * -  - ['logs:CreateLogGroup'] - {'line': 33, 'column': 9, 'filepath': './iamPolicy/policy1.json'}"
+            ],
+            "Differences": {
+                "Contents found in iamPolicy/policy1.json but not in iamPolicy/policy.json": [
+                    "\"Resource\": \"arn:aws:dynamodb:*:*:table/SampleTable\"",
+                    "\"Sid\": \"GetStreamRecords\",",
+                    "\"Sid\": \"ReadWriteTable\",",
+                    "\"dynamodb:GetItem\",",
+                    "\"dynamodb:BatchWriteItem\",",
+                    "\"logs:PutLogEvents\"",
+                    "\"Action\": \"dynamodb:GetRecords\",",
+                    "\"Resource\": \"arn:aws:dynamodb:*:*:table/SampleTable/stream/* \"",
+                    "\"dynamodb:Query\",",
+                    "\"Sid\": \"CreateLogGroup\",",
+                    "\"dynamodb:UpdateItem\"",
+                    "\"Action\": \"logs:CreateLogGroup\",",
+                    "\"dynamodb:Scan\",",
+                    "\"Sid\": \"WriteLogStreamsAndGroups\",",
+                    "\"logs:CreateLogStream\",",
+                    "\"dynamodb:BatchGetItem\",",
+                    "\"dynamodb:PutItem\","
+                ]
+            }
+        },
+        {
+            "Policy Name": "iamPolicy/policy.json",
+            "Findings": [
+                "LOW - Unnecessary use of Resource * -  - ['s3:CreateBucket', 's3:DeleteBucket'] - {'line': 4, 'column': 9, 'filepath': './iamPolicy/policy.json'}"
+            ],
+            "Differences": {
+                "Contents found in iamPolicy/policy.json but not in iamPolicy/policy1.json": [
+                    "\"Sid\": \"Statement1\",",
+                    "\"s3:ListAllMyBuckets\",",
+                    "\"Sid\": \"Statement2\",",
+                    "\"lambda:ListFunctions\"",
+                    "\"lambda:GetFunction\"",
+                    "\"s3:CreateBucket\",",
+                    "\"s3:DeleteBucket\"",
+                    "\"Resource\": \"arn:aws:lambda:us-east-1:221094580673:function:testFunction\"",
+                    "\"Sid\": \"Statement3\","
+                ]
+            }
+        }
+    ]
+}
