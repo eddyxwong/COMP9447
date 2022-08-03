@@ -10,7 +10,7 @@
                 "dynamodb:Query",
                 "dynamodb:Scan",
                 "dynamodb:BatchWriteItem",
-                "dynamodb:PutItemfuygefjrf",
+                "dynamodb:PutItem",
                 "dynamodb:UpdateItem"
             ],
             "Resource": "arn:aws:dynamodb:*:*:table/SampleTable"
@@ -20,6 +20,15 @@
             "Effect": "Allow",
             "Action": "dynamodb:GetRecords",
             "Resource": "arn:aws:dynamodb:*:*:table/SampleTable/stream/* "
+        },
+        {
+            "Sid": "WriteLogStreamsAndGroups",
+            "Effect": "Allow",
+            "Action": [
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+            ],
+            "Resource": "*"
         },
         {
             "Sid": "CreateLogGroup",

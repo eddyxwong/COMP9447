@@ -1,12 +1,14 @@
 import ast
 import json
+from operator import contains
 import os
+from pickle import NONE
 from pprint import pprint
 import argparse
 from typing import List
 import astpretty
-import sys
 import subprocess
+import policyDiffChecker
 '''
 general style refactoring, pylint
 arg parse (add details, !directory argument!)
@@ -32,14 +34,28 @@ def main():
 
     iamPolicy = json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
 
-    policyFile = createPolicyFile(iamPolicy)
+    policyFile = createPolicyFile(iamPolicy, astList)
 
     createTerraformTemplate(args.tf, policyFile)
 
     createCFNTemplate(args.cfn, iamPolicy)
 
-    # print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
+    runPolicyDiffChecker(args.diff)
+
+
+    print(json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4))
     return json.dumps(generateIAMPolicy(resp), sort_keys=False, indent=4)
+
+
+def runPolicyDiffChecker(diffarg):
+    if(diffarg):
+        stream= os.popen('git rev-parse --show-toplevel')
+        dir = stream.read().strip()
+        resp = policyDiffChecker.main(dir+ "/astStaticAnalysis/iamPolicy")
+        with open(dir+'/astStaticAnalysis/policyDiff/diff.json', 'w') as f:
+            f.write(resp)
+    return
+
 
 def dirAstConvert(dirargs):
 
@@ -59,14 +75,19 @@ def dirAstConvert(dirargs):
 
 def createCFNTemplate(cfnArg:bool, iamPolicy:json):
     if(cfnArg):
-        with open('./templates/cfnSample.json') as json_file:
+        
+        stream= os.popen('git rev-parse --show-toplevel')
+        dir = stream.read().strip()
+
+
+        with open(dir+'/astStaticAnalysis/iacTemplates/cfnSample.json') as json_file:
             cfnTemplate = json.load(json_file)
             iamPolicy = json.loads(iamPolicy)
 
             cfnTemplate["Resources"]["MyIAMPolicy"]["Properties"]["PolicyDocument"] = iamPolicy
 
 
-        with open('cfnTemplate.json', 'w') as f:
+        with open(dir+'/astStaticAnalysis/iacTemplates/cfnTemplate.json', 'w') as f:
             f.write(json.dumps(cfnTemplate, sort_keys=False, indent=4))
     
     return
@@ -76,12 +97,16 @@ def createCFNTemplate(cfnArg:bool, iamPolicy:json):
 
 def createTerraformTemplate(tfArg: bool, policyFile:json):
     if(tfArg):
-        p = subprocess.Popen(["iam-policy-json-to-terraform < "+ policyFile+" > tfTemplate.tf"], stdout=subprocess.PIPE,shell=True)
+        stream= os.popen('git rev-parse --show-toplevel')
+        dir = stream.read().strip()
+
+
+        p = subprocess.Popen(["iam-policy-json-to-terraform < "+ policyFile+" >" +dir+ "/astStaticAnalysis/iacTemplates/tfTemplate.tf"], stdout=subprocess.PIPE,shell=True)
     
     return 
 
 
-def createPolicyFile(iamPolicy:json)->str:
+def createPolicyFile(iamPolicy:json, astList)->str:
     """Writes a given IAM policy is json format to a file titled policy.json in the same directory
 
     Args:
@@ -90,9 +115,16 @@ def createPolicyFile(iamPolicy:json)->str:
     Returns:
         str : name of the created IAM policy file
     """
-    with open('policy.json', 'w') as f:
-        f.write(iamPolicy)
 
+    if(astList):
+
+        stream= os.popen('git rev-parse --show-toplevel')
+        dir = stream.read().strip()
+
+        with open(dir+'/astStaticAnalysis/iamPolicy/policy.json', 'w') as f:
+            f.write(iamPolicy)
+
+        return dir+'/astStaticAnalysis/iamPolicy/policy.json' 
     return "policy.json"
 
 
@@ -152,6 +184,7 @@ def parseArgs():
     parser.add_argument('--dir' ,nargs='+', help="a directory of files")
     parser.add_argument('--tf' ,action='store_true', help="a flag for if you also want a terraform template")
     parser.add_argument('--cfn', action='store_true', help="a flag for if you also want a cloudformation template" )
+    parser.add_argument('--diff', action='store_true', help="a flag to compare the json IAM policies within the iamPolicy dict")
 
     return parser.parse_args()
 
@@ -164,9 +197,16 @@ def generateIAMPolicy(respDict):
     Returns:
         str: IAM policy
     """
-    with open('./awsMappings/python/map.json') as json_file:
-        mapping = json.load(json_file)
-
+    #with open('./awsMappings/python/map.json') as json_file:
+     #   mapping = json.load(json_file)
+    
+    # If you change anything our fragile code will break
+    for r, d, f in os.walk("."):
+        if 'astStaticAnalysis' and 'awsMappings' and 'python' in r:
+            for file in f:
+                if file.endswith("map.json"):
+                    abspath = os.path.join(r, file)
+                    mapping = json.load(open(abspath))
 
     statementNum = 1
 
@@ -329,8 +369,8 @@ class Analyzer(ast.NodeVisitor):
 
     def report(self):
         # pprint(self.stats)
-        pprint(self.userObjDict)
-        pprint(self.extractDict)
+        # pprint(self.userObjDict)
+        # pprint(self.extractDict)
         # print()
 
         return self.extractDict
