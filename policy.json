@@ -1,4 +1,31 @@
 {
     "Version": "2012-10-17",
-    "Statement": []
+    "Statement": [
+        {
+            "Sid": "Statement1",
+            "Effect": "Allow",
+            "Action": [
+                "lambda:GetFunction"
+            ],
+            "Resource": "arn:aws:lambda:us-east-1:221094580673:function:testFunction"
+        },
+        {
+            "Sid": "Statement2",
+            "Effect": "Allow",
+            "Action": [
+                "lambda:ListFunctions"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "Statement3",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListAllMyBuckets",
+                "s3:CreateBucket",
+                "s3:DeleteBucket"
+            ],
+            "Resource": "*"
+        }
+    ]
 }

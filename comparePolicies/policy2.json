@@ -10,7 +10,7 @@
                 "dynamodb:Query",
                 "dynamodb:Scan",
                 "dynamodb:BatchWriteItem",
-                "dynamodb:PutItemfuygefjrf",
+                "dynamodb:PutItem",
                 "dynamodb:UpdateItem"
             ],
             "Resource": "arn:aws:dynamodb:*:*:table/SampleTable"

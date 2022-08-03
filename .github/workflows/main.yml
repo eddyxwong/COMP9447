@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Automated Analysis
 
 # Controls when the workflow will run
 on:
@@ -16,127 +16,324 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   job_1:
-    name: Set-up Github Actions
+    name: Infrastructure Set-up 🖥️ 
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
+      - name: Run a one-line script 🖥️
         run: echo Hello, world!
 
-      - name: setup python
+      - name: setup python 🖥️
         uses: actions/setup-python@v2
         with:
           python-version: 3.8 #install the python needed
+      
 
   job_2:
-    name: Scan Repository For Python Files
+    name: Scanning For Python Files 🔎📂
+    needs: [job_1]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v2
-      - uses: jannekem/run-python-script-action@v1
-      
-      - name: Fetch Python action
-        id: pl
-        uses: Rishabh510/Path-lister-action@master
-        with:
-          path: "/home/runner/work/COMP9447/COMP9447"
-          type: ".py"
 
-      - name: Output results
+      - name: Scanning 🔎📂
         run: |
           file=`find . -type f -name '*.py'`
-          echo filepath is $file
-          echo -n $file >> pythonfiles.txt
+          echo Displaying python files found 👁️👄👁️
+          echo --------------------------------------------------------------------------------
+          echo $file
+          echo --------------------------------------------------------------------------------
+          echo $file >> pythonfiles.txt
 
-      - name: Upload python filenames as a artifact
+      - name: Uploading files as an Artifact 🎁
         uses: actions/upload-artifact@v3
         with:
           name: pythonfiles
           path: pythonfiles.txt
       
 
-  job_3:
-      name: Display Python Files and Run Analyser
-      needs: [job_1, job_2]
+  job_4:
+      name: Grabbing Python Files To Analyse 🪝
+      needs: [job_2]
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v3
         - uses: actions/setup-python@v2
 
-        - name: Download python txt file generated from job 2
-          uses: actions/download-artifact@v3
-          with:
-            name: pythonfiles
-        - shell: bash
-          run: |
-            pythonFileNames=`cat pythonfiles.txt`
-            echo The result is $pythonFileNames
-
-        - name: Installing All Dependancies
+        - name: Installing All Dependancies 🖥️
           run: |
             python -m pip install --upgrade pip
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             pip install e .
 
-        - name: Run Simple Test
+        - name: Run A Simple Test 🤡
           run: python ./tests/test_GenerateIAMPolicy.py
-        # astStaticAnalysis\astBoto3.py
-        # python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt is the correct command
-        - name: Run All Python Files
+        
+        - name: Create a Policy Using The Analyser 👷‍♂️🪛
           uses: actions/download-artifact@v3
           with:
             name: pythonfiles
         - shell: bash
+          name: Analysing 🔎📂
           run: |
-            echo my directory is 
-            pwd
-            echo my files are
-            ls
+            echo Grabbing the python files 🪝
             pythonFileNames=`cat pythonfiles.txt`
-            echo The result is $pythonFileNames
-            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > policy.txt
-            policyResult=`cat policy.txt`
-            echo The generated policies are $policyResult
+            echo Running the boto3 analyser ⚙️
+            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > modifiedPolicy.json
+            echo The created policy is: 👁️👄👁️
+            echo --------------------------------------------------------------------------------
+            cat modifiedPolicy.json
+            echo --------------------------------------------------------------------------------
 
-        - name: Upload generated policy output as an artifact
+        - name: Uploading modifiedPolicy.json as an Artifact 🎁
           uses: actions/upload-artifact@v3
           with:
-            name: policy
-            path: policy.txt # Does this need to be in txt? if this is the final output then how will i cmpare it as this is not a IAM policy format
+            name: modifiedPolicy
+            path: modifiedPolicy.json
 
 
-# take in both job 3 (policy.txt/json) and job 5 to take in the json files and run parliament with it 
-  job_4:
-    name: Display Policy Differences
-    needs: [job_3]
+  job_5:
+    name: Comparing Existing Policies 🤔
+    needs: [job_4]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
 
-      - name: Download policy generated from job 1
+      - name: Grabbing The Created Policy 🪝
         uses: actions/download-artifact@v3
         with:
-          name: policy
-      - shell: bash
-        run: |
-          value=`cat policy.txt`
-          echo The result is $value
-          echo $value > policy.txt
+          name: modifiedPolicy
 
-      - name: Installing All Dependancies
+      - shell: bash
+        name: Displaying The Policy Found 👁️👄👁️
+        run: |
+          echo The created policy is: 👁️👄👁️
+          echo --------------------------------------------------------------------------------
+          cat modifiedPolicy.json
+          echo --------------------------------------------------------------------------------
+
+      - name: Installing All Dependancies 🖥️
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install e .
-      - name: Compare with Supplied Policy
-        shell: bash
+
+      - name: Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder 🤔
         run: |
-          python policyDiffChecker.py TestIAMpolicies
+          cat modifiedPolicy.json > ./comparePolicies/createdPolicy.json
+          echo Visual Check Of Temporary File 👁️👄👁️
+          echo --------------------------------------------------------------------------------
+          cat ./comparePolicies/createdPolicy.json
+          echo --------------------------------------------------------------------------------
+          echo Running The Policy Difference Checker ⚙️
+          python policyDiffChecker.py comparePolicies > policyDifference.txt
+          echo The Differences Are: 👁️👄👁️
+          echo --------------------------------------------------------------------------------
+          cat policyDifference.txt
+          echo --------------------------------------------------------------------------------
+      
+      - name: Uploading policyDifference.txt as an Artifact 🎁
+        uses: actions/upload-artifact@v3
+        with:
+          name: policyDifference
+          path: policyDifference.txt
+
+  job_3:
+    name: Modification Check 🤔
+    needs: [job_1]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.1.0
+      - uses: jitterbit/get-changed-files@v1
+        id: abc
+        with:
+          format: space-delimited
+      - name: Adding To Modifications.txt ⚙️
+        run: |
+          echo "All:" >> modifications.txt
+          echo "${{ steps.abc.outputs.all }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Added:" >> modifications.txt
+          echo "${{ steps.abc.outputs.added }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Removed:" >> modifications.txt
+          echo "${{ steps.abc.outputs.removed }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Renamed:" >> modifications.txt
+          echo "${{ steps.abc.outputs.renamed }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Modified:" >> modifications.txt
+          echo "${{ steps.abc.outputs.modified }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Added+Modified:" >> modifications.txt
+          echo "${{ steps.abc.outputs.added_modified }}" >> modifications.txt
+        
+      - name: Displaying Modifications Made 👁️👄👁️
+        run: cat modifications.txt
+
+      - name: Uploading modifications.txt as an Artifact 🎁
+        uses: actions/upload-artifact@v3
+        with:
+          name: modifications
+          path: modifications.txt
+
+
+  job_7:
+    name: Create The Master Analysis File 👑
+    needs: [job_2, job_3, job_4, job_5]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v2
+
+      - name: Initialise Master Analysis 🖥️
+        run: |
+          echo Master Analysis: >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo Python Files Found And Analysed By astboto3.py: >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------ >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+
+      - name: Grabbing The Python Files 🪝
+        uses: actions/download-artifact@v3
+        with:
+          name: pythonfiles
+      - shell: bash
+        name: Adding To Master Analysis ⚙️
+        run: |
+          pythonfilenames=`cat pythonfiles.txt`
+          echo $pythonfilenames >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+
+      - name: Grabbing The Created Policy 🪝
+        uses: actions/download-artifact@v3
+        with:
+          name: modifiedPolicy
+
+      - name: Python Script To Json Dump File ⚙️
+        uses: jannekem/run-python-script-action@v1
+        with:
+          script: |
+            import json
+            file = open('modifiedPolicy.json', 'r')
+            string = file.read()
+            dict = json.loads(string)
+            resp = json.dumps(dict, sort_keys=False, indent=4)
+            master = open("masterAnalysis.txt", "a")
+            master.write('Policy Created Through Analysis Of Python Files:\n')
+            master.write('----------------------------------------------\n')
+            master.write(resp)
+            master.write('\n')
+            master.write('----------------------------------------------\n')
+            master.close()
+
+      - name: Installing All Dependancies 🖥️
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install e .
+
+      - name: Python Script To Run Parliament ⚙️
+        uses: jannekem/run-python-script-action@v1
+        with:
+          script: |
+            import os
+            import subprocess
+            for r, d, f in os.walk("."):
+              for file in f:
+                  if file.endswith(".json"):
+                      abspath = os.path.join(r, file)
+                      opener = open("masterAnalysis.txt", "a")
+                      opener.write('\n')
+                      opener.write("Findings for " + str(abspath)+":\n")
+                      opener.write('----------------------------------------------\n')
+                      shelly = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
+                      print(shelly)
+                      opener.write(shelly)
+                      opener.write('\n')
+                      opener.write('----------------------------------------------\n')
+                      opener.close()
+      
+      - shell: bash
+        name: Visual Check Of Master File 👁️👄👁️
+        run: |
+            cat masterAnalysis.txt
+
+###########################################
+      - name: Grabbing The Created Policy 🪝
+        uses: actions/download-artifact@v3
+        with:
+          name: modifiedPolicy
+
+      - shell: bash
+        name: Displaying The Policy Found 👁️👄👁️
+        run: |
+          echo The created policy is: 👁️👄👁️
+          echo --------------------------------------------------------------------------------
+          cat modifiedPolicy.json
+          echo --------------------------------------------------------------------------------
+
+      - name: Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder 🤔
+        run: |
+          cat modifiedPolicy.json > ./comparePolicies/createdPolicy.json
+          echo Visual Check Of Temporary File 👁️👄👁️
+          echo --------------------------------------------------------------------------------
+          cat ./comparePolicies/createdPolicy.json
+          echo --------------------------------------------------------------------------------
+          echo Running The Policy Difference Checker ⚙️
+          echo  >> masterAnalysis.txt
+          echo Policy Comparison For All Valid .json Policies In comparePolicies Folder: >> masterAnalysis.txt
+          echo --------------------------------------------------------------------------------
+          echo  >> masterAnalysis.txt
+          python policyDiffChecker.py comparePolicies >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+
+
+###########################################
+
+      - name: Grabbing Modifications Made 🪝
+        uses: actions/download-artifact@v3
+        with:
+          name: modifications
+      - shell: bash
+        name: Adding To Master Analysis ⚙️
+        run: |
+          echo Modifications Made To Repository From Last Push/Pull: >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          while read -r line; do
+            echo $line >> masterAnalysis.txt
+          done < modifications.txt
+          echo  >> masterAnalysis.txt
+          echo ------------------------------------- >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
+          cat masterAnalysis.txt
+
+      - name: Uploading masterAnalysis.txt as an Artifact 🎁
+        uses: actions/upload-artifact@v3
+        with:
+          name: masterAnalysis
+          path: masterAnalysis.txt
+
+
+ # First grab files that have been modified/added
+# Take the files added and put it inside a virtual directory. 
+# Grab all json files and run it with parliament. If parliament using cat
+# If parliament doesnt contain that weird ass parsing or unknown or wtv bs then put the file inside the same virtual directory
+# if it does just output the parliament thing
+
+# grab all json and run with parliemant and output to the master txt file
+# After that you git diff wtv bullshit and output to the master txt file also
+# use the master check and output to the master txt file as well
+# Dont forget to add a perfect summary of python files, json diff using ur program and shit liek taght
