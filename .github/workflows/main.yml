@@ -199,7 +199,7 @@ jobs:
           echo  >> masterAnalysis.txt
           echo Python Files Found And Analysed By astboto3.py: >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
-          echo ------------------------------------ >> masterAnalysis.txt
+          echo ---------------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
 
       - name: Grabbing The Python Files 🪝
@@ -212,7 +212,6 @@ jobs:
           pythonfilenames=`cat pythonfiles.txt`
           echo $pythonfilenames >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
-          echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
 
       - name: Grabbing The Created Policy 🪝
@@ -235,6 +234,7 @@ jobs:
             master.write(resp)
             master.write('\n')
             master.write('----------------------------------------------\n')
+            opener.write('Inital Findings For All Json Files In Repository:\n')
             master.close()
 
       - name: Installing All Dependancies 🖥️
@@ -257,9 +257,12 @@ jobs:
                       opener.write('\n')
                       opener.write('----------------------------------------------\n')
                       opener.write("Findings for " + str(abspath)+":\n")
-                      shelly = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
-                      print(shelly)
-                      opener.write(shelly)
+                      findings = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
+                      if len(findings) == 0:
+                        findings = "No findings found"
+                      print(findings)
+                      reformed = findings.replace('<stdin>', str(abspath))
+                      opener.write(findings)
                       opener.write('\n')
                       opener.write('----------------------------------------------\n')
                       opener.close()
@@ -293,10 +296,10 @@ jobs:
           echo Running The Policy Difference Checker ⚙️
           echo  >> masterAnalysis.txt
           echo Policy Comparison For All Valid .json Policies In comparePolicies Folder: >> masterAnalysis.txt
-          echo --------------------------------------------------------------------------------
+          echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
           python policyDiffChecker.py comparePolicies >> masterAnalysis.txt
-          echo ------------------------------------- >> masterAnalysis.txt
+          echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
 
 
@@ -309,15 +312,14 @@ jobs:
       - shell: bash
         name: Adding To Master Analysis ⚙️
         run: |
+          echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo Modifications Made To Repository From Last Push/Pull: >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
-          echo ------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
           while read -r line; do
             echo $line >> masterAnalysis.txt
           done < modifications.txt
           echo  >> masterAnalysis.txt
-          echo ------------------------------------- >> masterAnalysis.txt
+          echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
           cat masterAnalysis.txt
 
