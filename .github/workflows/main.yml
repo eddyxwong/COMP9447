@@ -85,17 +85,17 @@ jobs:
             pythonFileNames=`cat pythonfiles.txt`
             echo $pythonFileNames
             echo Running the boto3 analyser ⚙️
-            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > comparePolicies/githubActionsPolicy.json
+            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > githubActionsPolicy.json
             echo The created policy is: 👁️👄👁️
             echo --------------------------------------------------------------------------------
-            cat comparePolicies/githubActionsPolicy.json
+            cat githubActionsPolicy.json
             echo --------------------------------------------------------------------------------
 
         - name: Uploading githubActionsPolicy.json as an Artifact 🎁
           uses: actions/upload-artifact@v3
           with:
             name: githubActionsPolicy
-            path: comparePolicies/githubActionsPolicy.json
+            path: githubActionsPolicy.json
 
 
   job_5:
@@ -116,7 +116,7 @@ jobs:
         run: |
           echo The created policy is: 👁️👄👁️
           echo --------------------------------------------------------------------------------
-          cat comparePolicies/githubActionsPolicy.json
+          cat githubActionsPolicy.json
           echo --------------------------------------------------------------------------------
 
       - name: Installing All Dependancies 🖥️
@@ -127,9 +127,10 @@ jobs:
 
       - name: Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder 🤔
         run: |
+          cat githubActionsPolicy.json > ./comparePolicies/githubActionsPolicy.json
           echo Visual Check Of Temporary File 👁️👄👁️
           echo --------------------------------------------------------------------------------
-          cat comparePolicies/githubActionsPolicy.json
+          cat ./comparePolicies/githubActionsPolicy.json
           echo --------------------------------------------------------------------------------
           echo Running The Policy Difference Checker ⚙️
           python policyDiffChecker.py comparePolicies > policyDifference.txt
@@ -223,7 +224,7 @@ jobs:
         with:
           script: |
             import json
-            file = open('comparePolicies/githubActionsPolicy.json', 'r')
+            file = open('githubActionsPolicy.json', 'r')
             string = file.read()
             dict = json.loads(string)
             resp = json.dumps(dict, sort_keys=False, indent=4)
@@ -252,6 +253,7 @@ jobs:
               for file in f:
                   if file.endswith(".json"):
                       abspath = os.path.join(r, file)
+                      abspath = os.path.relpath(abspath)
                       opener = open("masterAnalysis.txt", "a")
                       opener.write('\n')
                       opener.write('----------------------------------------------\n')
@@ -287,10 +289,10 @@ jobs:
 
       - name: Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder 🤔
         run: |
-          cat comparePolicies/githubActionsPolicy.json > ./comparePolicies/githubActionsPolicy.json
+          cat githubActionsPolicy.json > ./comparePolicies/githubActionsPolicy.json
           echo Visual Check Of Temporary File 👁️👄👁️
           echo --------------------------------------------------------------------------------
-          cat comparePolicies/githubActionsPolicy.json
+          cat ./comparePolicies/githubActionsPolicy.json
           echo --------------------------------------------------------------------------------
           echo Running The Policy Difference Checker ⚙️
           echo  >> masterAnalysis.txt
