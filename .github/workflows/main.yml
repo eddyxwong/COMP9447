@@ -234,7 +234,7 @@ jobs:
             master.write(resp)
             master.write('\n')
             master.write('----------------------------------------------\n')
-            master.write('Inital Findings For All Json Files In Repository:\n')
+            master.write('Inital Findings For All Json Files In Repository:')
             master.close()
 
       - name: Installing All Dependancies 🖥️
@@ -249,6 +249,7 @@ jobs:
           script: |
             import os
             import subprocess
+            num = 1
             for r, d, f in os.walk("."):
               for file in f:
                   if file.endswith(".json"):
@@ -257,15 +258,15 @@ jobs:
                       opener = open("masterAnalysis.txt", "a")
                       opener.write('\n')
                       opener.write('----------------------------------------------\n')
-                      opener.write("Findings for " + str(abspath)+":\n")
+                      opener.write('Finding Number 'str(num)+'.')
+                      opener.write('----------------------------------------------\n')
                       findings = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
                       if len(findings) == 0:
                         findings = "No findings found"
                       print(findings)
-                      reformed = findings.replace('<stdin>', str(abspath)).replace('None', 'str(abspath)')
+                      reformed = findings.replace('<stdin>', str(abspath)).replace('None', str(abspath))
                       opener.write(reformed)
                       opener.write('\n')
-                      opener.write('----------------------------------------------\n')
                       opener.close()
       
       - shell: bash
