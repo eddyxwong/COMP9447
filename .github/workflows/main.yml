@@ -196,7 +196,7 @@ jobs:
       - name: Initialise Master Analysis 🖥️
         run: |
           echo Master Analysis >> masterAnalysis.txt
-          echo /////////////////////////////////////////////// >> masterAnalysis.txt
+          echo  >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
           echo ---------------------------------------------- >> masterAnalysis.txt
           echo Python Files Found And Analysed By astboto3.py: >> masterAnalysis.txt
@@ -211,7 +211,6 @@ jobs:
         run: |
           pythonfilenames=`cat pythonfiles.txt`
           echo $pythonfilenames >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
 
       - name: Grabbing The Created Policy 🪝
@@ -234,7 +233,7 @@ jobs:
             master.write(resp)
             master.write('\n')
             master.write('----------------------------------------------\n')
-            master.write('Inital Findings For All Json Files In Repository:')
+            master.write('Inital Findings For All Json Files In Repository:\n')
             master.close()
 
       - name: Installing All Dependancies 🖥️
@@ -258,8 +257,9 @@ jobs:
                       opener = open("masterAnalysis.txt", "a")
                       opener.write('\n')
                       opener.write('----------------------------------------------\n')
-                      opener.write('Finding Number '+str(num)+'.\n')
+                      opener.write('Finding Number '+str(num)+'. for '+str(abspath)+'\n')
                       opener.write('----------------------------------------------\n')
+                      num += 1
                       findings = subprocess.getoutput('(cat {} | parliament) || true'.format(abspath))
                       if len(findings) == 0:
                         findings = "No findings found"
