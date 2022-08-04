@@ -195,10 +195,10 @@ jobs:
 
       - name: Initialise Master Analysis 🖥️
         run: |
-          echo Master Analysis: >> masterAnalysis.txt
+          echo Master Analysis >> masterAnalysis.txt
+          echo ---------------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
           echo Python Files Found And Analysed By astboto3.py: >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
           echo ---------------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
 
@@ -262,7 +262,7 @@ jobs:
                         findings = "No findings found"
                       print(findings)
                       reformed = findings.replace('<stdin>', str(abspath))
-                      opener.write(findings)
+                      opener.write(reformed)
                       opener.write('\n')
                       opener.write('----------------------------------------------\n')
                       opener.close()
@@ -288,10 +288,10 @@ jobs:
 
       - name: Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder 🤔
         run: |
-          cat githubActionsPolicy.json > ./comparePolicies/createdPolicy.json
+          cat githubActionsPolicy.json > ./comparePolicies/githubActionsPolicy.json
           echo Visual Check Of Temporary File 👁️👄👁️
           echo --------------------------------------------------------------------------------
-          cat ./comparePolicies/createdPolicy.json
+          cat ./comparePolicies/githubActionsPolicy.json
           echo --------------------------------------------------------------------------------
           echo Running The Policy Difference Checker ⚙️
           echo  >> masterAnalysis.txt
@@ -312,7 +312,6 @@ jobs:
       - shell: bash
         name: Adding To Master Analysis ⚙️
         run: |
-          echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo Modifications Made To Repository From Last Push/Pull: >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
           while read -r line; do
@@ -320,7 +319,7 @@ jobs:
           done < modifications.txt
           echo  >> masterAnalysis.txt
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
+          echo End Of Analysis >> masterAnalysis.txt
           cat masterAnalysis.txt
 
       - name: Uploading masterAnalysis.txt as an Artifact 🎁
