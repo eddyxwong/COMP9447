@@ -70,15 +70,6 @@
                 "cloudtrail:DeleteTrail"
             ],
             "Resource": "*"
-        },
-        {
-            "Sid": "WriteLogStreamsAndGroups",
-            "Effect": "Allow",
-            "Action": [
-                "logs:CreateLogStream",
-                "logs:PutLogEvents"
-            ],
-            "Resource": "*"
         }
     ]
 }
