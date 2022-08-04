@@ -235,7 +235,7 @@ jobs:
             master.write('\n')
             master.write('\n----------------------------------------------\n')
             master.write('Inital Findings For All Json Files In Repository:\n')
-            master.write('----------------------------------------------')
+            master.write('----------------------------------------------\n')
             master.close()
 
       - name: Installing All Dependancies 🖥️
