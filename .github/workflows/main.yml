@@ -196,10 +196,10 @@ jobs:
       - name: Initialise Master Analysis 🖥️
         run: |
           echo Master Analysis >> masterAnalysis.txt
-          echo ---------------------------------------------- >> masterAnalysis.txt
+          echo /////////////////////////////////////////////// >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
-          echo Python Files Found And Analysed By astboto3.py: >> masterAnalysis.txt
           echo ---------------------------------------------- >> masterAnalysis.txt
+          echo Python Files Found And Analysed By astboto3.py: >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
 
       - name: Grabbing The Python Files 🪝
@@ -262,7 +262,7 @@ jobs:
                       if len(findings) == 0:
                         findings = "No findings found"
                       print(findings)
-                      reformed = findings.replace('<stdin>', str(abspath))
+                      reformed = findings.replace('<stdin>', str(abspath)).replace('None', 'str(abspath)')
                       opener.write(reformed)
                       opener.write('\n')
                       opener.write('----------------------------------------------\n')
@@ -296,8 +296,8 @@ jobs:
           echo --------------------------------------------------------------------------------
           echo Running The Policy Difference Checker ⚙️
           echo  >> masterAnalysis.txt
-          echo Policy Comparison For All Valid .json Policies In comparePolicies Folder: >> masterAnalysis.txt
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
+          echo Policy Comparison For All Valid .json Policies In comparePolicies Folder: >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
           python policyDiffChecker.py comparePolicies >> masterAnalysis.txt
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
