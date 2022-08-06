@@ -57,6 +57,46 @@ jobs:
           path: pythonfiles.txt
       
 
+  job_3:
+    name: Modification Check 🤔
+    needs: [job_1]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.1.0
+      - uses: jitterbit/get-changed-files@v1
+        id: mods
+        with:
+          format: space-delimited
+      - name: Adding To Modifications.txt ⚙️
+        run: |
+          echo "All:" >> modifications.txt
+          echo "${{ steps.mods.outputs.all }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Added:" >> modifications.txt
+          echo "${{ steps.mods.outputs.added }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Removed:" >> modifications.txt
+          echo "${{ steps.mods.outputs.removed }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Renamed:" >> modifications.txt
+          echo "${{ steps.mods.outputs.renamed }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Modified:" >> modifications.txt
+          echo "${{ steps.mods.outputs.modified }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Added+Modified:" >> modifications.txt
+          echo "${{ steps.mods.outputs.added_modified }}" >> modifications.txt
+        
+      - name: Displaying Modifications Made 👁️👄👁️
+        run: cat modifications.txt
+
+      - name: Uploading modifications.txt as an Artifact 🎁
+        uses: actions/upload-artifact@v3
+        with:
+          name: modifications
+          path: modifications.txt
+
+
   job_4:
       name: Grabbing Python Files To Analyse 🪝
       needs: [job_2]
@@ -147,47 +187,8 @@ jobs:
           name: policyDifference
           path: policyDifference.txt
 
-  job_3:
-    name: Modification Check 🤔
-    needs: [job_1]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2.1.0
-      - uses: jitterbit/get-changed-files@v1
-        id: mods
-        with:
-          format: space-delimited
-      - name: Adding To Modifications.txt ⚙️
-        run: |
-          echo "All:" >> modifications.txt
-          echo "${{ steps.mods.outputs.all }}" >> modifications.txt
-          echo  >> modifications.txt
-          echo "Added:" >> modifications.txt
-          echo "${{ steps.mods.outputs.added }}" >> modifications.txt
-          echo  >> modifications.txt
-          echo "Removed:" >> modifications.txt
-          echo "${{ steps.mods.outputs.removed }}" >> modifications.txt
-          echo  >> modifications.txt
-          echo "Renamed:" >> modifications.txt
-          echo "${{ steps.mods.outputs.renamed }}" >> modifications.txt
-          echo  >> modifications.txt
-          echo "Modified:" >> modifications.txt
-          echo "${{ steps.mods.outputs.modified }}" >> modifications.txt
-          echo  >> modifications.txt
-          echo "Added+Modified:" >> modifications.txt
-          echo "${{ steps.mods.outputs.added_modified }}" >> modifications.txt
-        
-      - name: Displaying Modifications Made 👁️👄👁️
-        run: cat modifications.txt
 
-      - name: Uploading modifications.txt as an Artifact 🎁
-        uses: actions/upload-artifact@v3
-        with:
-          name: modifications
-          path: modifications.txt
-
-
-  job_7:
+  job_6:
     name: Create The Master Analysis File 👑
     needs: [job_2, job_3, job_4, job_5]
     runs-on: ubuntu-latest
