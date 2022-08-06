@@ -8,3 +8,4 @@ setup(
    author_email='foomail@foo.example',
    packages=['astStaticAnalysis', 'AWSPlayground', 'tests'],  #Define user modules to be installed
 )
+
