@@ -274,39 +274,20 @@ jobs:
                       opener.write('\n')
                       opener.close()
       
-      - shell: bash
-        name: Visual Check Of Master File 👁️👄👁️
-        run: |
-            cat masterAnalysis.txt
 
 ###########################################
       - name: Grabbing The Created Policy 🪝
         uses: actions/download-artifact@v3
         with:
-          name: githubActionsPolicy
+          name: policyDifference
 
       - shell: bash
         name: Displaying The Policy Found 👁️👄👁️
         run: |
           echo The created policy is: 👁️👄👁️
           echo --------------------------------------------------------------------------------
-          cat githubActionsPolicy.json
+          echo cat policyDifference.txt >> masterAnalysis.txt
           echo --------------------------------------------------------------------------------
-
-      - name: Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder 🤔
-        run: |
-          cat githubActionsPolicy.json > ./comparePolicies/githubActionsPolicy.json
-          echo Visual Check Of Temporary File 👁️👄👁️
-          echo --------------------------------------------------------------------------------
-          cat ./comparePolicies/githubActionsPolicy.json
-          echo --------------------------------------------------------------------------------
-          echo Running The Policy Difference Checker ⚙️
-          echo  >> masterAnalysis.txt
-          echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
-          echo Policy Comparison For All Valid .json Policies In comparePolicies Folder: >> masterAnalysis.txt
-          echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
-          python policyDiffChecker.py comparePolicies >> masterAnalysis.txt
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
 
