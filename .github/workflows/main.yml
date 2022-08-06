@@ -286,7 +286,7 @@ jobs:
         run: |
           echo The created policy is: 👁️👄👁️
           echo --------------------------------------------------------------------------------
-          echo cat policyDifference.txt >> masterAnalysis.txt
+          cat policyDifference.txt >> masterAnalysis.txt
           echo --------------------------------------------------------------------------------
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
