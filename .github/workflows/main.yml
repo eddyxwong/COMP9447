@@ -74,6 +74,8 @@ jobs:
         - name: Run A Simple Test 🤡
           run: python ./tests/test_GenerateIAMPolicy.py
         
+        # Attempting to save the created policy in a different directory (comparePolicies) resulted in an error
+        # code 1 where github actions was no longer able to find the artifact in future jobs
         - name: Create a Policy Using The Analyser 👷‍♂️🪛
           uses: actions/download-artifact@v3
           with:
@@ -152,28 +154,28 @@ jobs:
     steps:
       - uses: actions/checkout@v2.1.0
       - uses: jitterbit/get-changed-files@v1
-        id: abc
+        id: mods
         with:
           format: space-delimited
       - name: Adding To Modifications.txt ⚙️
         run: |
           echo "All:" >> modifications.txt
-          echo "${{ steps.abc.outputs.all }}" >> modifications.txt
+          echo "${{ steps.mods.outputs.all }}" >> modifications.txt
           echo  >> modifications.txt
           echo "Added:" >> modifications.txt
-          echo "${{ steps.abc.outputs.added }}" >> modifications.txt
+          echo "${{ steps.mods.outputs.added }}" >> modifications.txt
           echo  >> modifications.txt
           echo "Removed:" >> modifications.txt
-          echo "${{ steps.abc.outputs.removed }}" >> modifications.txt
+          echo "${{ steps.mods.outputs.removed }}" >> modifications.txt
           echo  >> modifications.txt
           echo "Renamed:" >> modifications.txt
-          echo "${{ steps.abc.outputs.renamed }}" >> modifications.txt
+          echo "${{ steps.mods.outputs.renamed }}" >> modifications.txt
           echo  >> modifications.txt
           echo "Modified:" >> modifications.txt
-          echo "${{ steps.abc.outputs.modified }}" >> modifications.txt
+          echo "${{ steps.mods.outputs.modified }}" >> modifications.txt
           echo  >> modifications.txt
           echo "Added+Modified:" >> modifications.txt
-          echo "${{ steps.abc.outputs.added_modified }}" >> modifications.txt
+          echo "${{ steps.mods.outputs.added_modified }}" >> modifications.txt
         
       - name: Displaying Modifications Made 👁️👄👁️
         run: cat modifications.txt
