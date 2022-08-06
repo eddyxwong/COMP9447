@@ -294,7 +294,7 @@ jobs:
         with:
           name: modifications
       - shell: bash
-        name: Adding To Master Analysis ⚙️
+        name: Adding Modifications To Master Analysis ⚙️
         run: |
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo Modifications Made To Repository From Last Push/Pull: >> masterAnalysis.txt
@@ -304,6 +304,9 @@ jobs:
           done < modifications.txt
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo End Of Analysis >> masterAnalysis.txt
+
+      - name: Displaying The Master Analysis 👁️👄👁️
+        run: |
           cat masterAnalysis.txt
 
       - name: Uploading masterAnalysis.txt as an Artifact 🎁
