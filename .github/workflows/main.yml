@@ -274,8 +274,6 @@ jobs:
                       opener.write('\n')
                       opener.close()
       
-
-###########################################
       - name: Grabbing The Created Policy 🪝
         uses: actions/download-artifact@v3
         with:
@@ -290,9 +288,6 @@ jobs:
           cat policyDifference.txt >> masterAnalysis.txt
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
-
-
-###########################################
 
       - name: Grabbing Modifications Made 🪝
         uses: actions/download-artifact@v3
