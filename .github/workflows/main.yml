@@ -89,7 +89,6 @@ jobs:
             echo The created policy is: 👁️👄👁️
             echo --------------------------------------------------------------------------------
             cat githubActionsPolicy.json
-            cat githubActionsPolicy.json > ./comparePolicies/githubActionsPolicy.json
             echo --------------------------------------------------------------------------------
 
         - name: Uploading githubActionsPolicy.json as an Artifact 🎁
@@ -128,6 +127,7 @@ jobs:
 
       - name: Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder 🤔
         run: |
+          cat githubActionsPolicy.json > ./comparePolicies/githubActionsPolicy.json
           echo Visual Check Of Temporary File 👁️👄👁️
           echo --------------------------------------------------------------------------------
           cat ./comparePolicies/githubActionsPolicy.json
