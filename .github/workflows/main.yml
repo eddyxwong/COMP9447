@@ -282,12 +282,12 @@ jobs:
           name: policyDifference
 
       - shell: bash
-        name: Displaying The Policy Found 👁️👄👁️
+        name: Adding The Policy comparisons Found 👁️👄👁️
         run: |
-          echo The created policy is: 👁️👄👁️
-          echo --------------------------------------------------------------------------------
+          echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
+          echo Policy Comparison For All Valid .json Policies In comparePolicies Folder: >> masterAnalysis.txt
+          echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           cat policyDifference.txt >> masterAnalysis.txt
-          echo --------------------------------------------------------------------------------
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
 
