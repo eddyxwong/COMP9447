@@ -127,7 +127,7 @@ jobs:
 
       - name: Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder 🤔
         run: |
-          mv githubActionsPolicy.json > ./comparePolicies/githubActionsPolicy.json
+          cat githubActionsPolicy.json > ./comparePolicies/githubActionsPolicy.json
           echo Visual Check Of Temporary File 👁️👄👁️
           echo --------------------------------------------------------------------------------
           cat ./comparePolicies/githubActionsPolicy.json
