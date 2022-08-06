@@ -137,7 +137,9 @@ jobs:
           uses: actions/upload-artifact@v3
           with:
             name: githubActionsPolicy
-            path: githubActionsPolicy.json
+            path: |
+              githubActionsPolicy.json
+              ./comparePolicies/githubActionsPolicy.json
 
 
   job_5:
@@ -169,7 +171,6 @@ jobs:
 
       - name: Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder 🤔
         run: |
-          cat githubActionsPolicy.json > ./comparePolicies/githubActionsPolicy.json
           echo Visual Check Of Temporary File 👁️👄👁️
           echo --------------------------------------------------------------------------------
           cat ./comparePolicies/githubActionsPolicy.json
