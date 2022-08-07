@@ -184,7 +184,7 @@ def parseArgs():
     parser.add_argument('--dir' ,nargs='+', help="a directory of files")
     parser.add_argument('--tf' ,action='store_true', help="a flag for if you also want a terraform template")
     parser.add_argument('--cfn', action='store_true', help="a flag for if you also want a cloudformation template" )
-    parser.add_argument('--diff', action='store_true', help="a flag to compare the json IAM policies within the iamPolicy dict")
+    parser.add_argument('--diff', action='store_true', help="a flag to compare the json IAM policies within the iamPolicy dir")
 
     return parser.parse_args()
 
