@@ -4,7 +4,7 @@ name: Automated Analysis
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # Triggers the workflow on push or pull request events
   push:
     branches: [ "main", "readme" ]
   pull_request:
@@ -40,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
+      # Scans for python files in the repository
       - name: Scanning 🔎📂
         run: |
           file=`find . -type f -name '*.py'`
@@ -49,13 +49,53 @@ jobs:
           echo $file
           echo --------------------------------------------------------------------------------
           echo $file >> pythonfiles.txt
-
+      # Uploads txt file as a artifact
       - name: Uploading files as an Artifact 🎁
         uses: actions/upload-artifact@v3
         with:
           name: pythonfiles
           path: pythonfiles.txt
       
+
+  job_3:
+    name: Modification Check 🤔
+    needs: [job_1]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.1.0
+      - uses: jitterbit/get-changed-files@v1
+        id: mods
+        with:
+          format: space-delimited
+      - name: Adding To Modifications.txt ⚙️
+        run: |
+          echo "All:" >> modifications.txt
+          echo "${{ steps.mods.outputs.all }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Added:" >> modifications.txt
+          echo "${{ steps.mods.outputs.added }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Removed:" >> modifications.txt
+          echo "${{ steps.mods.outputs.removed }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Renamed:" >> modifications.txt
+          echo "${{ steps.mods.outputs.renamed }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Modified:" >> modifications.txt
+          echo "${{ steps.mods.outputs.modified }}" >> modifications.txt
+          echo  >> modifications.txt
+          echo "Added+Modified:" >> modifications.txt
+          echo "${{ steps.mods.outputs.added_modified }}" >> modifications.txt
+        
+      - name: Displaying Modifications Made 👁️👄👁️
+        run: cat modifications.txt
+
+      - name: Uploading modifications.txt as an Artifact 🎁
+        uses: actions/upload-artifact@v3
+        with:
+          name: modifications
+          path: modifications.txt
+
 
   job_4:
       name: Grabbing Python Files To Analyse 🪝
@@ -74,6 +114,8 @@ jobs:
         - name: Run A Simple Test 🤡
           run: python ./tests/test_GenerateIAMPolicy.py
         
+        # Attempting to save the created policy in a different directory (comparePolicies) resulted in an error
+        # code 1 where github actions was no longer able to find the artifact in future jobs
         - name: Create a Policy Using The Analyser 👷‍♂️🪛
           uses: actions/download-artifact@v3
           with:
@@ -145,47 +187,8 @@ jobs:
           name: policyDifference
           path: policyDifference.txt
 
-  job_3:
-    name: Modification Check 🤔
-    needs: [job_1]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2.1.0
-      - uses: jitterbit/get-changed-files@v1
-        id: abc
-        with:
-          format: space-delimited
-      - name: Adding To Modifications.txt ⚙️
-        run: |
-          echo "All:" >> modifications.txt
-          echo "${{ steps.abc.outputs.all }}" >> modifications.txt
-          echo  >> modifications.txt
-          echo "Added:" >> modifications.txt
-          echo "${{ steps.abc.outputs.added }}" >> modifications.txt
-          echo  >> modifications.txt
-          echo "Removed:" >> modifications.txt
-          echo "${{ steps.abc.outputs.removed }}" >> modifications.txt
-          echo  >> modifications.txt
-          echo "Renamed:" >> modifications.txt
-          echo "${{ steps.abc.outputs.renamed }}" >> modifications.txt
-          echo  >> modifications.txt
-          echo "Modified:" >> modifications.txt
-          echo "${{ steps.abc.outputs.modified }}" >> modifications.txt
-          echo  >> modifications.txt
-          echo "Added+Modified:" >> modifications.txt
-          echo "${{ steps.abc.outputs.added_modified }}" >> modifications.txt
-        
-      - name: Displaying Modifications Made 👁️👄👁️
-        run: cat modifications.txt
 
-      - name: Uploading modifications.txt as an Artifact 🎁
-        uses: actions/upload-artifact@v3
-        with:
-          name: modifications
-          path: modifications.txt
-
-
-  job_7:
+  job_6:
     name: Create The Master Analysis File 👑
     needs: [job_2, job_3, job_4, job_5]
     runs-on: ubuntu-latest
@@ -271,51 +274,27 @@ jobs:
                       opener.write('\n')
                       opener.close()
       
-      - shell: bash
-        name: Visual Check Of Master File 👁️👄👁️
-        run: |
-            cat masterAnalysis.txt
-
-###########################################
       - name: Grabbing The Created Policy 🪝
         uses: actions/download-artifact@v3
         with:
-          name: githubActionsPolicy
+          name: policyDifference
 
       - shell: bash
-        name: Displaying The Policy Found 👁️👄👁️
+        name: Adding The Policy comparisons Found 👁️👄👁️
         run: |
-          echo The created policy is: 👁️👄👁️
-          echo --------------------------------------------------------------------------------
-          cat githubActionsPolicy.json
-          echo --------------------------------------------------------------------------------
-
-      - name: Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder 🤔
-        run: |
-          cat githubActionsPolicy.json > ./comparePolicies/githubActionsPolicy.json
-          echo Visual Check Of Temporary File 👁️👄👁️
-          echo --------------------------------------------------------------------------------
-          cat ./comparePolicies/githubActionsPolicy.json
-          echo --------------------------------------------------------------------------------
-          echo Running The Policy Difference Checker ⚙️
-          echo  >> masterAnalysis.txt
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo Policy Comparison For All Valid .json Policies In comparePolicies Folder: >> masterAnalysis.txt
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
-          echo  >> masterAnalysis.txt
-          python policyDiffChecker.py comparePolicies >> masterAnalysis.txt
+          cat policyDifference.txt >> masterAnalysis.txt
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo  >> masterAnalysis.txt
-
-
-###########################################
 
       - name: Grabbing Modifications Made 🪝
         uses: actions/download-artifact@v3
         with:
           name: modifications
       - shell: bash
-        name: Adding To Master Analysis ⚙️
+        name: Adding Modifications To Master Analysis ⚙️
         run: |
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo Modifications Made To Repository From Last Push/Pull: >> masterAnalysis.txt
@@ -325,6 +304,9 @@ jobs:
           done < modifications.txt
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           echo End Of Analysis >> masterAnalysis.txt
+
+      - name: Displaying The Master Analysis 👁️👄👁️
+        run: |
           cat masterAnalysis.txt
 
       - name: Uploading masterAnalysis.txt as an Artifact 🎁
