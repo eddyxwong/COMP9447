@@ -109,9 +109,9 @@ project.
    ```sh
    $ cd astStaticAnalysis
    ```
-2. Run program by parsing Python script as command-line argument into [astBoto3.py](./astStaticAnalysis/astBoto3.py). Currently only limited functionality with the [astTest.py](./astStaticAnalysis/astTest.py) script guaranteed to work.
+2. Run program by adding -h flag to print a help message[astBoto3.py](./astStaticAnalysis/astBoto3.py).
     ```sh
-   $ python3 astBoto3.py astTest.py
+   $ python3 astBoto3.py -h
    ```
 
 ## Tests
