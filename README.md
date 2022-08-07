@@ -130,11 +130,10 @@ project.
 
 <!-- ROADMAP -->
 ## Roadmap
-- [ ] Decide on project name
-- [ ] IAM policy generator
-- [ ] Github Action integration
-- [ ] Policy 'git diff' checker
-- [ ] Policy toxic combination checker
+- [X] Decide on project name
+- [X] IAM policy generator
+- [X] Github Action integration
+- [X] Policy 'git diff' checker
 - [ ] Rules engine to account for policies granting permissions not used in codebase
 See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
