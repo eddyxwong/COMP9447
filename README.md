@@ -113,6 +113,15 @@ project.
     ```sh
    $ python3 astBoto3.py astTest.py
    ```
+## Comparing Policies With Each Other
+1. cd into the astStaticAnalysis directory
+   ```sh
+   $ cd astStaticAnalysis
+   ```
+2. Run the program by moving the policies to be compared into the comparePolicies directory and parse the python scipt as command-line argumnet into [policyDiffChecker.py](./astStaticAnalysis/policyDiffChecker.py) and subsequently the name of the directory, comparePolicies.
+   ```sh
+   $ python3 policyDiffChecker.py comparePolicies
+   ```
 
 ## Tests
 1. cd into tests directory
