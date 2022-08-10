@@ -175,7 +175,7 @@ jobs:
           cat ./comparePolicies/githubActionsPolicy.json
           echo --------------------------------------------------------------------------------
           echo Running The Policy Difference Checker ⚙️
-          python policyDiffChecker.py comparePolicies > policyDifference.txt
+          python ./astStaticAnalysis/policyDiffChecker.py comparePolicies > policyDifference.txt
           echo The Differences Are: 👁️👄👁️
           echo --------------------------------------------------------------------------------
           cat policyDifference.txt

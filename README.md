@@ -113,7 +113,7 @@ project.
     ```sh
    $ python3 astBoto3.py astTest.py
    ```
-## Comparing Policies With Each Other
+## Comparing Policies
 1. cd into the astStaticAnalysis directory
    ```sh
    $ cd astStaticAnalysis
