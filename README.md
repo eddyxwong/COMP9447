@@ -156,11 +156,11 @@ Either navigate to the
    ```sh
    "Create The Master Analysis"
    ```
-job and locate the log
+   job and locate the log
    ```sh
    "Displaying The Master Analysis" 
    ```
-or simply download the artifact "masterAnalysis" in the summary page for github actions 
+   or simply download the artifact "masterAnalysis" in the summary page for github actions 
 
 ## Tests
 1. cd into tests directory
