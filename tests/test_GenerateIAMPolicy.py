@@ -8,6 +8,7 @@ def test_basecase():
                 's3': {'*': ['list_buckets', 'create_bucket', 'delete_bucket']}}
     response = generateIAMPolicy(respDict)
 
+
     assert response == {
     "Version": "2012-10-17",
     "Statement": [
