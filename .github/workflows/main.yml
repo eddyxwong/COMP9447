@@ -108,7 +108,7 @@ jobs:
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             pip install e .
 
-        - name: Simple test
+        - name: Simple Test
           run: |
             python tests/test_GenerateIAMPolicy.py
 

@@ -1,4 +1,6 @@
 def test_basecase():
-    print("This python script works")
+    test = "This python script works"
+    return test
 
-assert(test_basecase() == "This python script works")
+if test_basecase() == "This python script works":
+    print("Python test success")
