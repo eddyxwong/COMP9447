@@ -21,7 +21,7 @@ def main(dir):
 
     directory = dir[1].strip(".\\")
 
-    directory = dir
+    # directory = dir
     json_files = folderWalker(dir)
 
     shellresponse = subprocess.getoutput('parliament --directory {}'.format(shlex.quote(directory))).split('\n')
