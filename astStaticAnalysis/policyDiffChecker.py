@@ -19,7 +19,7 @@ def main(dir):
 
     # inputCheck(argv)
 
-    # directory = argv[1].strip(".\\")
+    directory = dir[1].strip(".\\")
 
     directory = dir
     json_files = folderWalker(dir)
