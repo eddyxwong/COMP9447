@@ -1,10 +1,8 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Automated Analysis
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events
+  # Triggers the workflow on push or pull request events on the following branches
   push:
     branches: [ "main", "readme", "gitactions" ]
   pull_request:
@@ -13,15 +11,13 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# A basic test is run to check for functionality and setting up the VM
 jobs:
   job_1:
     name: Infrastructure Set-up 🖥️ 
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Checks-out your repository under $GITHUB_WORKSPACE, so our job can access it
       - uses: actions/checkout@v3
 
       # Runs a single command using the runners shell
@@ -33,14 +29,14 @@ jobs:
         with:
           python-version: 3.8 #install the python needed
       
-
+  # The in-built Ubuntu command “find” is used to scan for and generate a string of all .py files found in the repository\
+  # and subsequently upload the result as an artifact
   job_2:
     name: Scanning For Python Files 🔎📂
     needs: [job_1]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      # Scans for python files in the repository
       - name: Scanning 🔎📂
         run: |
           file=`find . -type f -name '*.py'`
@@ -49,14 +45,14 @@ jobs:
           echo $file
           echo --------------------------------------------------------------------------------
           echo $file >> pythonfiles.txt
-      # Uploads txt file as a artifact
       - name: Uploading files as an Artifact 🎁
         uses: actions/upload-artifact@v3
         with:
           name: pythonfiles
           path: pythonfiles.txt
       
-
+  # Using currently available tools from the github actions marketplace, checks for all files modified by the user as compared to the previous push/pull.
+  # The modifications made are added to a txt file labeled as modifications.txt and saved as an artifact for future use.
   job_3:
     name: Modification Check 🤔
     needs: [job_1]
@@ -96,7 +92,8 @@ jobs:
           name: modifications
           path: modifications.txt
 
-
+  # The artifact containing the string of python files saved in job_2 grabbed grabbed and the contents are displayed in github actions for visual confirmation. 
+  # The IAM policy generation tool is run against the string of python files and the contents is saved as an artifact, githubActionsPolicy.json
   job_4:
       name: Grabbing Python Files To Analyse 🪝
       needs: [job_2]
@@ -110,8 +107,6 @@ jobs:
             python -m pip install --upgrade pip
             if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
             pip install e .
-
-        # Add in a test here
 
         # Attempting to save the created policy in a different directory (comparePolicies) resulted in an error
         # code 1 where github actions was no longer able to find the artifact in future jobs
@@ -138,7 +133,8 @@ jobs:
             name: githubActionsPolicy
             path: githubActionsPolicy.json
 
-
+  # Runs the comparison of the policy created by job_4 (githubActionsPolicy.json) and any other policies 
+  # located inside the comparePolicy folder.
   job_5:
     name: Comparing Existing Policies 🤔
     needs: [job_4]
@@ -186,7 +182,8 @@ jobs:
           name: policyDifference
           path: policyDifference.txt
 
-
+  # The final job downloads the previously created artifacts and compiles all findings in a summary report for a user to download for increased convenience. 
+  # This report is labeled as masterAnalysis.txt.
   job_6:
     name: Create The Master Analysis File 👑
     needs: [job_2, job_3, job_4, job_5]
@@ -220,6 +217,8 @@ jobs:
         with:
           name: githubActionsPolicy
 
+      # Despite using the method to acknowledge whitespaces and tabs within the json file, while IFS=’ ‘ read -r line; The output of the file 
+      # when read through the above resulted in a badly formatted output of the policy. Hence a python script was used to output the required format.
       - name: Python Script To Json Dump File ⚙️
         uses: jannekem/run-python-script-action@v1
         with:
@@ -246,6 +245,10 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install e .
 
+      # Parliament's ability to pipe a file into it results in the “filepath” portion of the findings to be “<stdin>” regardless of it being run within 
+      # a shell or within python’s subprocess function.
+      # Attempts to implement the shell equivalent of .replace() which is “sed” were unsuccessful and hence a python script was used 
+      # within github actions to easily obtain the required information.
       - name: Python Script To Run Parliament ⚙️
         uses: jannekem/run-python-script-action@v1
         with:
@@ -313,15 +316,3 @@ jobs:
         with:
           name: masterAnalysis
           path: masterAnalysis.txt
-
-
- # First grab files that have been modified/added
-# Take the files added and put it inside a virtual directory. 
-# Grab all json files and run it with parliament. If parliament using cat
-# If parliament doesnt contain that weird ass parsing or unknown or wtv bs then put the file inside the same virtual directory
-# if it does just output the parliament thing
-
-# grab all json and run with parliemant and output to the master txt file
-# After that you git diff wtv bullshit and output to the master txt file also
-# use the master check and output to the master txt file as well
-# Dont forget to add a perfect summary of python files, json diff using ur program and shit liek taght

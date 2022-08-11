@@ -1,22 +1,4 @@
 {
     "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "Statement1",
-            "Effect": "Allow",
-            "Action": [
-                "lambda:ListFunctions"
-            ],
-            "Resource": "*"
-        },
-        {
-            "Sid": "Statement2",
-            "Effect": "Allow",
-            "Action": [
-                "s3:CreateBucket",
-                "s3:DeleteBucket"
-            ],
-            "Resource": "*"
-        }
-    ]
+    "Statement": []
 }
