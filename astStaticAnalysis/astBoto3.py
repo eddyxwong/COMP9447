@@ -8,7 +8,7 @@ import argparse
 from typing import List
 import astpretty
 import subprocess
-from astStaticAnalysis import policyDiffChecker
+import policyDiffChecker
 '''
 general style refactoring, pylint
 arg parse (add details, !directory argument!)
@@ -51,7 +51,7 @@ def runPolicyDiffChecker(diffarg):
     if(diffarg):
         stream= os.popen('git rev-parse --show-toplevel')
         dir = stream.read().strip()
-        resp = policyDiffChecker.main(dir+ "/astStaticAnalysis/iamPolicy")
+        resp = policyDiffChecker.main(dir+"/astStaticAnalysis/iamPolicy")
         with open(dir+'/astStaticAnalysis/policyDiff/diff.json', 'w') as f:
             f.write(resp)
     return

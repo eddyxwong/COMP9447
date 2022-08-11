@@ -15,13 +15,14 @@ Args:
         response (dict): Dictionary of findings and differences in content for policys
 
 '''
-def main(argv):
+def main(dir):
 
-    inputCheck(argv)
+    # inputCheck(argv)
 
-    directory = argv[1].strip(".\\")
+    # directory = argv[1].strip(".\\")
 
-    json_files = folderWalker(directory)
+    directory = dir
+    json_files = folderWalker(dir)
 
     shellresponse = subprocess.getoutput('parliament --directory {}'.format(shlex.quote(directory))).split('\n')
 
