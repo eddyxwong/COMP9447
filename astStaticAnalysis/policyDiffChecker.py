@@ -18,8 +18,8 @@ Args:
 
 
 def main(argv):
-    if len(argv) > 2:
-        print("Too many arguments, please input only one directory name")
+    if len(argv) > 2 or len(argv) < 2:
+        print("Incorrect input, please follow the format:\nPython policyDiffchecker.py directoryName")
         exit()  
     directory = argv[1].strip(".\\")
 
