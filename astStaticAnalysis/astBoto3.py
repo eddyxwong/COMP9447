@@ -1,14 +1,14 @@
 import ast
 import json
-from operator import contains
 import os
-from pickle import NONE
-from pprint import pprint
 import argparse
 from typing import List
-import astpretty
 import subprocess
-import policyDiffChecker
+
+try:
+    import policyDiffChecker
+except:
+    from astStaticAnalysis import policyDiffChecker
 '''
 general style refactoring, pylint
 arg parse (add details, !directory argument!)
@@ -51,7 +51,9 @@ def runPolicyDiffChecker(diffarg):
     if(diffarg):
         stream= os.popen('git rev-parse --show-toplevel')
         dir = stream.read().strip()
-        resp = policyDiffChecker.main(dir+ "/astStaticAnalysis/iamPolicy")
+        resp = policyDiffChecker.main(dir+"/astStaticAnalysis/iamPolicy")
+
+
         with open(dir+'/astStaticAnalysis/policyDiff/diff.json', 'w') as f:
             f.write(resp)
     return
@@ -74,6 +76,12 @@ def dirAstConvert(dirargs):
 
 
 def createCFNTemplate(cfnArg:bool, iamPolicy:json):
+    """generates a cloudformation template from an IAM policy
+
+    Args:
+        cfnArg (bool): cfn command line flag
+        iamPolicy (json): AWS IAM policy
+    """
     if(cfnArg):
         
         stream= os.popen('git rev-parse --show-toplevel')
@@ -96,6 +104,12 @@ def createCFNTemplate(cfnArg:bool, iamPolicy:json):
 
 
 def createTerraformTemplate(tfArg: bool, policyFile:json):
+    """generates a terraform template from IAM policy
+
+    Args:
+        tfArg (bool): tf cli flag
+        policyFile (json): IAM policy file
+    """
     if(tfArg):
         stream= os.popen('git rev-parse --show-toplevel')
         dir = stream.read().strip()
@@ -179,6 +193,11 @@ def fileASTConvert(fileargs):
 
 
 def parseArgs():
+    """function to handle argument parsing
+
+    Returns:
+        _type_: returns parsed CLI args
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('files', nargs='*', help="list of files")
     parser.add_argument('--dir' ,nargs='+', help="a directory of files")
@@ -197,8 +216,11 @@ def generateIAMPolicy(respDict):
     Returns:
         str: IAM policy
     """
-    #with open('./awsMappings/python/map.json') as json_file:
-     #   mapping = json.load(json_file)
+
+    stream= os.popen('git rev-parse --show-toplevel')
+    dir = stream.read().strip()
+    with open(dir+'/astStaticAnalysis/awsMappings/python/map.json') as json_file:
+       mapping = json.load(json_file)
     
     # If you change anything our fragile code will break
     for r, d, f in os.walk("."):
@@ -210,6 +232,7 @@ def generateIAMPolicy(respDict):
 
     statementNum = 1
 
+    
 
     newPolicy = {"Version": "2012-10-17",
                 "Statement": [] }

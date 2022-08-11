@@ -1,5 +1,5 @@
 import pytest
-from astStaticAnalysis.astBoto3OLD import createAction
+from astStaticAnalysis.astBoto3 import createAction
 
 def test_basecase():
     response = createAction("lambda", "get_function")
