@@ -153,15 +153,19 @@ Follow the steps below to specify a different branch for github actions to run o
 [Scan for all .py Files] -> [Run policy generation tool on them] -> [Compare policy created with existing policies in the astStaticAnalysis\comparePolicies folder]
 
 4. A summary of all automated actions is available in the "actions" tab in the repository under the corresponding worflow run. 
-Either navigate to the 
+Either navigate to the job named:
    ```sh
    "Create The Master Analysis"
    ```
-   job and locate the log
+   locate the log named:
    ```sh
    "Displaying The Master Analysis" 
    ```
-   or simply download the artifact "masterAnalysis" in the summary page for github actions 
+   or simply download the artifact named:
+   ```sh
+   "masterAnalysis"
+   ```
+   in the summary page for github actions 
 
 ## Tests
 1. cd into tests directory
