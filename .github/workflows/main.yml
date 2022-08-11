@@ -169,13 +169,13 @@ jobs:
 
       - name: Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder 🤔
         run: |
-          cat githubActionsPolicy.json > ./astStaticAnalysis/comparePolicies/githubActionsPolicy.json
+          cat githubActionsPolicy.json > astStaticAnalysis/comparePolicies/githubActionsPolicy.json
           echo Visual Check Of Temporary File 👁️👄👁️
           echo --------------------------------------------------------------------------------
-          cat ./astStaticAnalysis/comparePolicies/githubActionsPolicy.json
+          cat astStaticAnalysis/comparePolicies/githubActionsPolicy.json
           echo --------------------------------------------------------------------------------
           echo Running The Policy Difference Checker ⚙️
-          python ./astStaticAnalysis/policyDiffChecker.py ./astStaticAnalysis/comparePolicies > policyDifference.txt
+          python ./astStaticAnalysis/policyDiffChecker.py astStaticAnalysis/comparePolicies > policyDifference.txt
           echo The Differences Are: 👁️👄👁️
           echo --------------------------------------------------------------------------------
           cat policyDifference.txt
