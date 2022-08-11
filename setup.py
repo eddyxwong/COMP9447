@@ -3,9 +3,8 @@ from setuptools import setup, find_packages
 setup(
    name='COMP9447',
    version='1.0',
-   description='A useful module',
-   author='Man Foo',
-   author_email='foomail@foo.example',
-   packages=['astStaticAnalysis', 'AWSPlayground', 'tests'],  #Define user modules to be installed
+   description='A set-up file for github actions to run for automated least priviledge enforcement',
+   author='Zachary Ngooi',
+   packages=['astStaticAnalysis', 'AWSPlayground', 'tests'],  #Defines user modules to be installed
 )
 
