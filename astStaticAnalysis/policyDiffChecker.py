@@ -25,25 +25,25 @@ def main(argv):
 
     json_files = folderWalker(directory)
 
-    # include reasoning why this is here
-
-    shellresponse = subprocess.getoutput('parliament --directory {}'.format(shlex.quote(directory))).split('\n')
-    
     response = {'Policies': []}
     response = directInit(response, json_files)
+
+    shellresponse = subprocess.getoutput('parliament --directory {}'.format(shlex.quote(directory))).split('\n')
 
     response = diffcheck(shellresponse, response, json_files)
 
     print(json.dumps(response, sort_keys=False, indent=4))
 
+    return json.dumps(response, sort_keys=False, indent=4)
+
 def folderWalker(directory: str) -> list:
     """Given a directory, traverses it and finds the relative path to all .json files before appending to a list
 
     Args:
-        directory (str): a string of directory name
+        directory(str): a string of directory name
 
     Returns:
-        List(json_files): list of .json files inside said directory
+        json_files(list): list of .json files inside said directory
     """
     json_files = []
     # r=root, d=directories, f = files
@@ -54,23 +54,25 @@ def folderWalker(directory: str) -> list:
                     json_files.append(str(os.path.relpath(abspath).replace(os.path.sep, '/')))
     return json_files
     
-def directInit(response: dict, json_files: list) -> dict:
-    """Given a dictionary, traverses it and finds the relative path to all .json files before appending to a list
+def directInit(dictionary: dict, json_files: list) -> dict:
+    """Given a empty dictionary and list of json_files found, create the template for 
+    findings to be added.
 
     Args:
-        directory (str): a string of directory name
+        dictionary (dict): An empty dictionary containing a empty list,
+        json_files (list): List of json files found inside the directory
 
     Returns:
-        List(ast): list of .json files inside said directory
+        dictionary(dict): list of .json files inside said directory
     """
     for jsonfile_name in json_files:
-        response['Policies'].append({
+        dictionary['Policies'].append({
             'Policy Name': jsonfile_name,
             'Findings': [],
             'Differences': {}
         })
     
-    return response
+    return dictionary
 
 def diffcheck(shellresponse: list, response: dict, json_files: list) -> dict:
     for dict in response['Policies']:
