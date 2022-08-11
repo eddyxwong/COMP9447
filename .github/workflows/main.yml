@@ -127,7 +127,7 @@ jobs:
             pythonFileNames=`cat pythonfiles.txt`
             echo $pythonFileNames
             echo Running the boto3 analyser ⚙️
-            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > githubActionsPolicy.json
+            python astStaticAnalysis/astBoto3.py $pythonFileNames > githubActionsPolicy.json
             echo The created policy is: 👁️👄👁️
             echo --------------------------------------------------------------------------------
             cat githubActionsPolicy.json
@@ -175,7 +175,7 @@ jobs:
           cat astStaticAnalysis/comparePolicies/githubActionsPolicy.json
           echo --------------------------------------------------------------------------------
           echo Running The Policy Difference Checker ⚙️
-          python ./astStaticAnalysis/policyDiffChecker.py astStaticAnalysis/comparePolicies > policyDifference.txt
+          python astStaticAnalysis/policyDiffChecker.py astStaticAnalysis/comparePolicies > policyDifference.txt
           echo The Differences Are: 👁️👄👁️
           echo --------------------------------------------------------------------------------
           cat policyDifference.txt
