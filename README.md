@@ -151,6 +151,7 @@ Follow the steps below to specify a different branch for github actions to run o
    ```
 3. The current workflow for github actions is 
 [Scan for all .py Files] -> [Run policy generation tool on them] -> [Compare policy created with existing policies in the astStaticAnalysis\comparePolicies folder]
+
 4. A summary of all automated actions is available in the "actions" tab in the repository under the corresponding worflow run. 
 Either navigate to the 
    ```sh
