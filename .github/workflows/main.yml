@@ -2,11 +2,12 @@ name: Automated Analysis
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events on the following branches
+  # Triggers the workflow on push or pull request events on the following branches, change the names below to the branches that you would like
+  # github actions to run on
   push:
-    branches: [ "main", "readme", "gitactions" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main", "readme", "gitactions" ]
+    branches: ["main"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

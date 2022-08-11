@@ -139,6 +139,17 @@ project.
    $ python3 policyDiffChecker.py comparePolicies
    ```
 
+## Github Actions
+1. Github Actions has been set-up to automate your policy generation workflow. The default branch that it runs on is when a push/pull is made on "main".
+Follow the steps below to specify a different branch for github actions to run on
+   ```sh
+   $ cd .github/workflows/
+   ```
+2. open the main.yml in an editing program. Change "main" in "branches: ["main"]" to the name of the branch you would like github actions to run on
+   ```sh
+   branches: ["Name Of Branch Here"]
+   ```
+
 ## Tests
 1. cd into tests directory
   ```sh
