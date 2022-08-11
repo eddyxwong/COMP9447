@@ -8,44 +8,44 @@
             ],
             "Differences": {
                 "Contents found in iamPolicy/goodPolicy.json but not in iamPolicy/badPolicy.json": [
-                    "dynamodb:PutItem",
-                    "Action:logs:CreateLogGroup",
-                    "Sid:CreateLogGroup",
-                    "Resource:arn:aws:dynamodb:*:*:table/SampleTable",
-                    "Sid:WriteLogStreamsAndGroups",
-                    "dynamodb:GetItem",
-                    "dynamodb:Query",
-                    "logs:CreateLogStream",
-                    "dynamodb:UpdateItem",
-                    "logs:PutLogEvents",
-                    "Action:dynamodb:GetRecords",
-                    "Action:[",
                     "Sid:GetStreamRecords",
-                    "Sid:ReadWriteTable",
-                    "dynamodb:BatchGetItem",
-                    "Resource:arn:aws:dynamodb:*:*:table/SampleTable/stream/*",
+                    "Resource:arn:aws:dynamodb:*:*:table/SampleTable",
+                    "dynamodb:Query",
                     "dynamodb:BatchWriteItem",
                     "dynamodb:Scan",
-                    "]"
+                    "Sid:ReadWriteTable",
+                    "Action:dynamodb:GetRecords",
+                    "Action:logs:CreateLogGroup",
+                    "Sid:CreateLogGroup",
+                    "logs:PutLogEvents",
+                    "dynamodb:BatchGetItem",
+                    "dynamodb:PutItem",
+                    "Sid:WriteLogStreamsAndGroups",
+                    "logs:CreateLogStream",
+                    "dynamodb:UpdateItem",
+                    "]",
+                    "Resource:arn:aws:dynamodb:*:*:table/SampleTable/stream/*",
+                    "dynamodb:GetItem",
+                    "Action:["
                 ],
                 "Contents found in iamPolicy/goodPolicy.json but not in iamPolicy/policy.json": [
-                    "dynamodb:Query",
-                    "logs:CreateLogStream",
-                    "Action:logs:CreateLogGroup",
-                    "Sid:CreateLogGroup",
-                    "Sid:GetStreamRecords",
-                    "Resource:arn:aws:dynamodb:*:*:table/SampleTable",
-                    "dynamodb:PutItem",
                     "Sid:ReadWriteTable",
-                    "dynamodb:BatchGetItem",
-                    "Resource:arn:aws:dynamodb:*:*:table/SampleTable/stream/*",
                     "Sid:WriteLogStreamsAndGroups",
-                    "dynamodb:BatchWriteItem",
-                    "dynamodb:GetItem",
-                    "dynamodb:Scan",
+                    "Action:dynamodb:GetRecords",
+                    "Sid:GetStreamRecords",
+                    "Action:logs:CreateLogGroup",
+                    "logs:CreateLogStream",
+                    "Sid:CreateLogGroup",
                     "dynamodb:UpdateItem",
+                    "Resource:arn:aws:dynamodb:*:*:table/SampleTable/stream/*",
+                    "Resource:arn:aws:dynamodb:*:*:table/SampleTable",
+                    "dynamodb:Query",
                     "logs:PutLogEvents",
-                    "Action:dynamodb:GetRecords"
+                    "dynamodb:GetItem",
+                    "dynamodb:BatchWriteItem",
+                    "dynamodb:BatchGetItem",
+                    "dynamodb:PutItem",
+                    "dynamodb:Scan"
                 ]
             }
         },
@@ -70,20 +70,20 @@
             ],
             "Differences": {
                 "Contents found in iamPolicy/policy.json but not in iamPolicy/goodPolicy.json": [
-                    "Sid:Statement2",
-                    "s3:DeleteBucket",
-                    "s3:CreateBucket",
                     "lambda:ListFunctions",
-                    "Sid:Statement1"
+                    "s3:CreateBucket",
+                    "Sid:Statement1",
+                    "Sid:Statement2",
+                    "s3:DeleteBucket"
                 ],
                 "Contents found in iamPolicy/policy.json but not in iamPolicy/badPolicy.json": [
-                    "Action:[",
+                    "lambda:ListFunctions",
+                    "s3:CreateBucket",
+                    "Sid:Statement1",
+                    "]",
                     "Sid:Statement2",
                     "s3:DeleteBucket",
-                    "]",
-                    "s3:CreateBucket",
-                    "lambda:ListFunctions",
-                    "Sid:Statement1"
+                    "Action:["
                 ]
             }
         }
