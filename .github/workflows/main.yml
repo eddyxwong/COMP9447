@@ -127,7 +127,7 @@ jobs:
             pythonFileNames=`cat pythonfiles.txt`
             echo $pythonFileNames
             echo Running the boto3 analyser ⚙️
-            python ./astStaticAnalysis/astBoto3.py $pythonFileNames > githubActionsPolicy.json
+            python astStaticAnalysis/astBoto3.py $pythonFileNames > githubActionsPolicy.json
             echo The created policy is: 👁️👄👁️
             echo --------------------------------------------------------------------------------
             cat githubActionsPolicy.json
@@ -169,13 +169,13 @@ jobs:
 
       - name: Comparing The Created Policy With Any Existing Policies In The comparePolicies Folder 🤔
         run: |
-          cat githubActionsPolicy.json > ./comparePolicies/githubActionsPolicy.json
+          cat githubActionsPolicy.json > astStaticAnalysis/comparePolicies/githubActionsPolicy.json
           echo Visual Check Of Temporary File 👁️👄👁️
           echo --------------------------------------------------------------------------------
-          cat ./comparePolicies/githubActionsPolicy.json
+          cat astStaticAnalysis/comparePolicies/githubActionsPolicy.json
           echo --------------------------------------------------------------------------------
           echo Running The Policy Difference Checker ⚙️
-          python policyDiffChecker.py comparePolicies > policyDifference.txt
+          python astStaticAnalysis/policyDiffChecker.py astStaticAnalysis/comparePolicies > policyDifference.txt
           echo The Differences Are: 👁️👄👁️
           echo --------------------------------------------------------------------------------
           cat policyDifference.txt
@@ -283,7 +283,7 @@ jobs:
         name: Adding The Policy comparisons Found 👁️👄👁️
         run: |
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
-          echo Policy Comparison For All Valid .json Policies In comparePolicies Folder: >> masterAnalysis.txt
+          echo Policy Comparison For All Valid .json Policies In astStaticAnalysis/comparePolicies Folder: >> masterAnalysis.txt
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
           cat policyDifference.txt >> masterAnalysis.txt
           echo -------------------------------------------------------------------------------- >> masterAnalysis.txt
