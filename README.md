@@ -145,10 +145,15 @@ Follow the steps below to specify a different branch for github actions to run o
    ```sh
    $ cd .github/workflows/
    ```
-2. open the main.yml in an editing program. Change "main" in "branches: ["main"]" to the name of the branch you would like github actions to run on
+2. Open the main.yml in an editing program. Change "main" in "branches: ["main"]" to the name of the branch you would like github actions to run on
    ```sh
    branches: ["Name Of Branch Here"]
    ```
+3. The current workflow for github actions is 
+[Scan for all .py Files] -> [Run policy generation tool on them] -> [Compare policy created with existing policies in the astStaticAnalysis\comparePolicies folder]
+4. A summary of all automated actions is available in the "actions" tab in the repository under the corresponding worflow run. 
+Either navigate to the "Create The Master Analysis" job and locate the log "Displaying The Master Analysis" or 
+simply download the artifact "masterAnalysis" in the summary page for github actions 
 
 ## Tests
 1. cd into tests directory
