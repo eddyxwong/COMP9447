@@ -1,12 +1,8 @@
 import ast
 import json
-from operator import contains
 import os
-from pickle import NONE
-from pprint import pprint
 import argparse
 from typing import List
-import astpretty
 import subprocess
 
 try:
