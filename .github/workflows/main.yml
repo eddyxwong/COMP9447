@@ -58,6 +58,7 @@ jobs:
     name: Modification Check 🤔
     needs: [job_1]
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v2.1.0
       - uses: jitterbit/get-changed-files@v1
