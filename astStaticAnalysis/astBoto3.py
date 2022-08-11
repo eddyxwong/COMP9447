@@ -8,7 +8,7 @@ import argparse
 from typing import List
 import astpretty
 import subprocess
-import policyDiffChecker
+from astStaticAnalysis import policyDiffChecker
 '''
 general style refactoring, pylint
 arg parse (add details, !directory argument!)
@@ -197,8 +197,11 @@ def generateIAMPolicy(respDict):
     Returns:
         str: IAM policy
     """
-    #with open('./awsMappings/python/map.json') as json_file:
-     #   mapping = json.load(json_file)
+
+    stream= os.popen('git rev-parse --show-toplevel')
+    dir = stream.read().strip()
+    with open(dir+'/astStaticAnalysis/awsMappings/python/map.json') as json_file:
+       mapping = json.load(json_file)
     
     # If you change anything our fragile code will break
     for r, d, f in os.walk("."):
@@ -210,6 +213,7 @@ def generateIAMPolicy(respDict):
 
     statementNum = 1
 
+    
 
     newPolicy = {"Version": "2012-10-17",
                 "Statement": [] }

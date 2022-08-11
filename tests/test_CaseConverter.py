@@ -1,5 +1,5 @@
 import pytest
-from astStaticAnalysis.astBoto3OLD import convertSnakeCasetoPascalCase
+from astStaticAnalysis.astBoto3 import convertSnakeCasetoPascalCase
 
 def test_basecase():
     testString = "hello_world"

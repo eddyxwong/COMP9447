@@ -6,9 +6,9 @@ name: Automated Analysis
 on:
   # Triggers the workflow on push or pull request events
   push:
-    branches: [ "main", "readme" ]
+    branches: [ "main", "readme", "temp" ]
   pull_request:
-    branches: [ "main", "readme" ]
+    branches: [ "main", "readme", "temp" ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:

@@ -1,5 +1,5 @@
 import pytest
-from astStaticAnalysis.astBoto3OLD import generateIAMPolicy
+from astStaticAnalysis.astBoto3 import generateIAMPolicy
 
 
 def test_basecase():
@@ -7,6 +7,7 @@ def test_basecase():
                 '*': ['list_functions']}, 
                 's3': {'*': ['list_buckets', 'create_bucket', 'delete_bucket']}}
     response = generateIAMPolicy(respDict)
+
 
     assert response == {
     "Version": "2012-10-17",
