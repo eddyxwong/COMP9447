@@ -1,5 +1,5 @@
 import pytest
-from astStaticAnalysis.astBoto3OLD import generateIAMPolicy
+from astStaticAnalysis.astBoto3 import generateIAMPolicy
 
 
 def test_basecase():
