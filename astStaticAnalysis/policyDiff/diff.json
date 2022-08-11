@@ -8,45 +8,45 @@
             ],
             "Differences": {
                 "Contents found in iamPolicy/goodPolicy.json but not in iamPolicy/badPolicy.json": [
-                    "],",
-                    "\"Resource\": \"arn:aws:dynamodb:*:*:table/SampleTable/stream/* \"",
-                    "\"dynamodb:BatchWriteItem\",",
-                    "\"Action\": \"logs:CreateLogGroup\",",
-                    "\"dynamodb:Query\",",
-                    "\"dynamodb:Scan\",",
-                    "\"Action\": [",
-                    "\"Sid\": \"ReadWriteTable\",",
-                    "\"dynamodb:PutItem\",",
-                    "\"dynamodb:GetItem\",",
-                    "\"dynamodb:BatchGetItem\",",
+                    "\"Sid\": \"WriteLogStreamsAndGroups\",",
                     "\"Action\": \"dynamodb:GetRecords\",",
-                    "\"logs:PutLogEvents\"",
-                    "\"Sid\": \"CreateLogGroup\",",
-                    "\"Sid\": \"GetStreamRecords\",",
-                    "\"logs:CreateLogStream\",",
+                    "\"Action\": \"logs:CreateLogGroup\",",
+                    "],",
+                    "\"dynamodb:PutItem\",",
                     "\"Resource\": \"arn:aws:dynamodb:*:*:table/SampleTable\"",
-                    "\"dynamodb:UpdateItem\"",
+                    "\"Sid\": \"GetStreamRecords\",",
+                    "\"Resource\": \"arn:aws:dynamodb:*:*:table/SampleTable/stream/* \"",
+                    "\"Sid\": \"CreateLogGroup\",",
+                    "\"dynamodb:BatchWriteItem\",",
+                    "\"Sid\": \"ReadWriteTable\",",
+                    "\"Action\": [",
+                    "\"dynamodb:GetItem\",",
+                    "\"logs:PutLogEvents\"",
+                    "\"dynamodb:Query\",",
+                    "\"dynamodb:BatchGetItem\",",
                     "},",
-                    "\"Sid\": \"WriteLogStreamsAndGroups\","
+                    "\"logs:CreateLogStream\",",
+                    "\"dynamodb:Scan\",",
+                    "\"dynamodb:UpdateItem\""
                 ],
                 "Contents found in iamPolicy/goodPolicy.json but not in iamPolicy/policy.json": [
-                    "\"dynamodb:BatchGetItem\",",
-                    "\"Action\": \"dynamodb:GetRecords\",",
-                    "\"logs:PutLogEvents\"",
+                    "\"Sid\": \"GetStreamRecords\",",
+                    "\"dynamodb:Scan\",",
                     "\"Resource\": \"arn:aws:dynamodb:*:*:table/SampleTable/stream/* \"",
                     "\"Sid\": \"CreateLogGroup\",",
-                    "\"Sid\": \"GetStreamRecords\",",
-                    "\"logs:CreateLogStream\",",
-                    "\"Sid\": \"ReadWriteTable\",",
-                    "\"Resource\": \"arn:aws:dynamodb:*:*:table/SampleTable\"",
-                    "\"dynamodb:BatchWriteItem\",",
-                    "\"dynamodb:PutItem\",",
-                    "\"dynamodb:UpdateItem\"",
-                    "\"Action\": \"logs:CreateLogGroup\",",
-                    "\"dynamodb:GetItem\",",
                     "\"dynamodb:Query\",",
-                    "\"dynamodb:Scan\",",
-                    "\"Sid\": \"WriteLogStreamsAndGroups\","
+                    "\"dynamodb:BatchWriteItem\",",
+                    "\"dynamodb:BatchGetItem\",",
+                    "\"Sid\": \"ReadWriteTable\",",
+                    "\"logs:CreateLogStream\",",
+                    "\"Action\": \"dynamodb:GetRecords\",",
+                    "\"Action\": \"logs:CreateLogGroup\",",
+                    "\"Sid\": \"WriteLogStreamsAndGroups\",",
+                    "\"dynamodb:GetItem\",",
+                    "\"logs:PutLogEvents\"",
+                    "\"dynamodb:PutItem\",",
+                    "\"Resource\": \"arn:aws:dynamodb:*:*:table/SampleTable\"",
+                    "\"dynamodb:UpdateItem\""
                 ]
             }
         },
@@ -67,25 +67,25 @@
         {
             "Policy Name": "iamPolicy/policy.json",
             "Findings": [
-                "No faults found within policy"
+                "LOW - Unnecessary use of Resource * -  - ['s3:CreateBucket', 's3:DeleteBucket'] - {'line': 12, 'column': 9, 'filepath': '/home/user/COMP9447/astStaticAnalysis/iamPolicy/policy.json'}"
             ],
             "Differences": {
                 "Contents found in iamPolicy/policy.json but not in iamPolicy/goodPolicy.json": [
+                    "\"s3:CreateBucket\",",
+                    "\"Sid\": \"Statement2\",",
                     "\"Sid\": \"Statement1\",",
-                    "\"Resource\": \"arn:aws:lambda:us-east-1:221094580673:function:testFunction\"",
-                    "\"lambda:GetFunction\"",
-                    "\"s3:ListAllMyBuckets\"",
-                    "\"Sid\": \"Statement2\","
+                    "\"s3:DeleteBucket\"",
+                    "\"lambda:ListFunctions\""
                 ],
                 "Contents found in iamPolicy/policy.json but not in iamPolicy/badPolicy.json": [
-                    "\"Sid\": \"Statement1\",",
-                    "],",
-                    "\"Resource\": \"arn:aws:lambda:us-east-1:221094580673:function:testFunction\"",
-                    "\"lambda:GetFunction\"",
-                    "},",
-                    "\"s3:ListAllMyBuckets\"",
+                    "\"s3:CreateBucket\",",
                     "\"Sid\": \"Statement2\",",
-                    "\"Action\": ["
+                    "},",
+                    "\"Sid\": \"Statement1\",",
+                    "\"Action\": [",
+                    "\"s3:DeleteBucket\"",
+                    "],",
+                    "\"lambda:ListFunctions\""
                 ]
             }
         }

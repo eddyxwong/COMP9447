@@ -109,10 +109,26 @@ project.
    ```sh
    $ cd astStaticAnalysis
    ```
-2. Run program by parsing Python script as command-line argument into [astBoto3.py](./astStaticAnalysis/astBoto3.py). Currently only limited functionality with the [astTest.py](./astStaticAnalysis/astTest.py) script guaranteed to work.
+2. Run program by adding -h flag to print a help message.
     ```sh
-   $ python3 astBoto3.py astTest.py
+   $ python3 astBoto3.py -h
    ```
+3. Files can be parse with no flags
+    ```sh
+   $ python3 astBoto3.py ./testDir/astTest.py ./testDir1/astTest1.py
+4. Directorys can be parsed using the dir flag
+    ```sh
+   $ python3 astBoto3.py --dir ./testDir
+   ```
+5. IAC templates can be generated using either the tf or cfn flag
+    ```sh
+   $ python3 astBoto3.py --dir ./testDir --tf --cfn
+   ```
+6. Policy difference checker can you accessed by adding a diff flag
+    ```sh
+   $ python3 astBoto3.py --dir ./testDir --tf --cfn --diff
+   ```
+
 ## Comparing Policies
 1. cd into the astStaticAnalysis directory
    ```sh
@@ -139,11 +155,10 @@ project.
 
 <!-- ROADMAP -->
 ## Roadmap
-- [ ] Decide on project name
-- [ ] IAM policy generator
-- [ ] Github Action integration
-- [ ] Policy 'git diff' checker
-- [ ] Policy toxic combination checker
+- [X] Decide on project name
+- [X] IAM policy generator
+- [X] Github Action integration
+- [X] Policy 'git diff' checker
 - [ ] Rules engine to account for policies granting permissions not used in codebase
 See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
 
