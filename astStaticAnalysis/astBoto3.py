@@ -76,6 +76,12 @@ def dirAstConvert(dirargs):
 
 
 def createCFNTemplate(cfnArg:bool, iamPolicy:json):
+    """generates a cloudformation template from an IAM policy
+
+    Args:
+        cfnArg (bool): cfn command line flag
+        iamPolicy (json): AWS IAM policy
+    """
     if(cfnArg):
         
         stream= os.popen('git rev-parse --show-toplevel')
@@ -98,6 +104,12 @@ def createCFNTemplate(cfnArg:bool, iamPolicy:json):
 
 
 def createTerraformTemplate(tfArg: bool, policyFile:json):
+    """generates a terraform template from IAM policy
+
+    Args:
+        tfArg (bool): tf cli flag
+        policyFile (json): IAM policy file
+    """
     if(tfArg):
         stream= os.popen('git rev-parse --show-toplevel')
         dir = stream.read().strip()
@@ -181,6 +193,11 @@ def fileASTConvert(fileargs):
 
 
 def parseArgs():
+    """function to handle argument parsing
+
+    Returns:
+        _type_: returns parsed CLI args
+    """
     parser = argparse.ArgumentParser()
     parser.add_argument('files', nargs='*', help="list of files")
     parser.add_argument('--dir' ,nargs='+', help="a directory of files")
