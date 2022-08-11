@@ -157,7 +157,7 @@ Either navigate to the job named:
    ```sh
    "Create The Master Analysis"
    ```
-   locate the log named:
+   and locate the log named:
    ```sh
    "Displaying The Master Analysis" 
    ```
